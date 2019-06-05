@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	F_DATETIME = "2006-01-02 15:04:05"
-	F_DATE     = "2006-01-02"
-	F_TIME     = "15:04:05"
+	DATETIME = "2006-01-02 15:04:05"
+	DATE     = "2006-01-02"
+	TIME     = "15:04:05"
 )
 
 var localFlag string //本地时区 标识 CST：北京时区
@@ -45,17 +45,17 @@ func Format(format string, t ...time.Time) string {
 
 //格式化时间 格式："2006-01-02"
 func FormatDate(t ...time.Time) string {
-	return Format(F_DATE, t...)
+	return Format(DATE, t...)
 }
 
 //格式化时间 格式："15:04:05"
 func FormatTime(t ...time.Time) string {
-	return Format(F_TIME, t...)
+	return Format(TIME, t...)
 }
 
 //格式化时间 格式："2006-01-02 15:04:05"
 func FormatDateTime(t ...time.Time) string {
-	return Format(F_DATETIME, t...)
+	return Format(DATETIME, t...)
 }
 
 //格式化时间戳 格式指定
