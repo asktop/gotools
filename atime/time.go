@@ -13,14 +13,7 @@ const (
 	TIME     = "15:04:05"
 )
 
-var (
-	localFlag  string        //本地时区 标识 CST：北京时区
-	offsetTime time.Duration //时间偏移量
-)
-
-func init() {
-	localFlag = strings.Split(time.Now().Local().String(), " ")[3]
-}
+var offsetTime time.Duration //时间偏移量
 
 //设置时间偏量（改变当前时间）
 func Offset(offset time.Duration) {
@@ -77,61 +70,7 @@ func NanoToMilli(timestamp int64) int64 {
 	return timestamp / 1e6
 }
 
-//格式化时间 格式指定
-func Format(format string, t ...time.Time) string {
-	fn := Now()
-	if len(t) > 0 {
-		fn = t[0]
-	}
-	return fn.Format(format)
-}
-
-//格式化时间 格式："2006-01-02"
-func FormatDate(t ...time.Time) string {
-	return Format(DATE, t...)
-}
-
-//格式化时间 格式："15:04:05"
-func FormatTime(t ...time.Time) string {
-	return Format(TIME, t...)
-}
-
-//格式化时间 格式："2006-01-02 15:04:05"
-func FormatDateTime(t ...time.Time) string {
-	return Format(DATETIME, t...)
-}
-
-//格式化时间戳 格式指定
-func FormatTimestamp(format string, timestamp interface{}) string {
-	fn, err := ParseTimestamp(timestamp)
-	if err != nil {
-		fmt.Println("github.com/asktop/gotools/atime ParseTimestamp", "timestamp:", timestamp, "err:", err)
-		return ""
-	}
-	return fn.Format(format)
-}
-
-//格式化时间戳 格式："2006-01-02"
-func FormatDateT(timestamp interface{}) string {
-	return FormatTimestamp(DATE, timestamp)
-}
-
-//格式化时间戳 格式："15:04:05"
-func FormatTimeT(timestamp interface{}) string {
-	return FormatTimestamp(TIME, timestamp)
-}
-
-//格式化时间戳 格式："2006-01-02 15:04:05"
-func FormatDateTimeT(timestamp interface{}) string {
-	return FormatTimestamp(DATETIME, timestamp)
-}
-
-//将 本地时区的字符串时间 转换成 本地时区时间（默认会转换成UTC时区的时间）
-func Parse(format string, timeStr string) (time.Time, error) {
-	return time.Parse(fmt.Sprintf("%s MST", format), fmt.Sprintf("%s %s", timeStr, localFlag))
-}
-
-//将 时间戳 转换成 本地时区时间（默认会转换成UTC时区的时间）
+//将 时间戳 转换成 本地时区时间
 func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	var err error
 	var sec, nsec int64
@@ -166,29 +105,81 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	return time.Unix(sec, nsec), nil
 }
 
-//获取 当前时间 或 指定时间戳 的 当天开始时间
-func DayStart(timestamp ...interface{}) time.Time {
+//格式化时间戳 格式指定
+func FormatTimestamp(format string, timestamp interface{}) string {
+	fn, err := ParseTimestamp(timestamp)
+	if err != nil {
+		fmt.Println("github.com/asktop/gotools/atime ParseTimestamp", "timestamp:", timestamp, "err:", err)
+		return ""
+	}
+	return fn.Format(format)
+}
+
+//格式化时间戳 格式："2006-01-02"
+func FormatDateT(timestamp interface{}) string {
+	return FormatTimestamp(DATE, timestamp)
+}
+
+//格式化时间戳 格式："15:04:05"
+func FormatTimeT(timestamp interface{}) string {
+	return FormatTimestamp(TIME, timestamp)
+}
+
+//格式化时间戳 格式："2006-01-02 15:04:05"
+func FormatDateTimeT(timestamp interface{}) string {
+	return FormatTimestamp(DATETIME, timestamp)
+}
+
+//格式化时间 格式指定
+func Format(format string, t ...time.Time) string {
+	fn := Now()
+	if len(t) > 0 {
+		fn = t[0]
+	}
+	return fn.Format(format)
+}
+
+//格式化时间 格式："2006-01-02"
+func FormatDate(t ...time.Time) string {
+	return Format(DATE, t...)
+}
+
+//格式化时间 格式："15:04:05"
+func FormatTime(t ...time.Time) string {
+	return Format(TIME, t...)
+}
+
+//格式化时间 格式："2006-01-02 15:04:05"
+func FormatDateTime(t ...time.Time) string {
+	return Format(DATETIME, t...)
+}
+
+func timeStart(timestamp ...interface{}) time.Time {
 	fn := Now()
 	if len(timestamp) > 0 {
-		fn, _ = ParseTimestamp(timestamp[0])
+		var err error
+		fn, err = ParseTimestamp(timestamp[0])
+		if err != nil {
+			fmt.Println("github.com/asktop/gotools/atime ParseTimestamp", "timestamp:", timestamp, "err:", err)
+		}
 	}
+	return fn
+}
+
+//获取 当前时间 或 指定时间戳 的 当天开始时间
+func DayStart(timestamp ...interface{}) time.Time {
+	fn := timeStart(timestamp)
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), 0, 0, 0, 0, time.Local)
 }
 
 //获取 当前时间 或 指定时间戳 的 当前小时开始时间
 func HourStart(timestamp ...interface{}) time.Time {
-	fn := Now()
-	if len(timestamp) > 0 {
-		fn, _ = ParseTimestamp(timestamp[0])
-	}
+	fn := timeStart(timestamp)
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), 0, 0, 0, time.Local)
 }
 
 //获取 当前时间 或 指定时间戳 的 当前分钟开始时间
 func MinuteStart(timestamp ...interface{}) time.Time {
-	fn := Now()
-	if len(timestamp) > 0 {
-		fn, _ = ParseTimestamp(timestamp[0])
-	}
+	fn := timeStart(timestamp)
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), fn.Minute(), 0, 0, time.Local)
 }

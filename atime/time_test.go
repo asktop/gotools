@@ -6,45 +6,13 @@ import (
 	"time"
 )
 
-func TestTime(t *testing.T) {
-	fmt.Println("-----初始-----")
-
-	now := time.Now()
-	fmt.Println(now)
-	fmt.Println(now.Unix())
-	nowstr := now.Format("2006-01-02 15:04:05")
-	fmt.Println(nowstr)
-
-	fmt.Println("-----错误-----", "time.Parse", "没有转换为本地时区，转成了UTC时区")
-
-	now2, _ := time.Parse("2006-01-02 15:04:05", nowstr)
-	fmt.Println(now2)
-	fmt.Println(now2.Local())
-	fmt.Println(now2.Unix())
-	now2str := now2.Format("2006-01-02 15:04:05")
-	fmt.Println(now2str)
-
-	fmt.Println("-----正常-----")
-
-	now3, _ := Parse("2006-01-02 15:04:05", nowstr)
-	fmt.Println(now3)
-	fmt.Println(now3.Local())
-	fmt.Println(now3.Unix())
-	now3str := now3.Format("2006-01-02 15:04:05")
-	fmt.Println(now3str)
-
-	fmt.Println("----------")
-
-	now4str := FormatTimestamp("2006-01-02 15:04:05", now.Unix())
-	fmt.Println(now4str)
-}
-
+//时间偏移
 func TestOffset(t *testing.T) {
 	now := Now()
 	fmt.Println(now)
 	fmt.Println(now.UnixNano())
 
-	Offset(time.Second*60)
+	Offset(time.Second * 60)
 	now = Now()
 	fmt.Println(now)
 	fmt.Println(now.UnixNano())
@@ -131,14 +99,31 @@ func TestInt642Time(t *testing.T) {
 
 //字符串转时间
 func TestString2Time(t *testing.T) {
-	//转本地时区 +0800 CST 时间（非同一时间）
-	time1, _ := time.Parse("2006-01-02 15:04:05 MST", "2017-03-04 13:21:45 CST")
-	fmt.Println(time1)
-	fmt.Println(time1.Unix())
-	//转UTC时区 +0000 UTC 时间（非同一时间）
-	time2, _ := time.Parse("2006-01-02 15:04:05", "2017-03-04 13:21:45")
-	fmt.Println(time2)
-	fmt.Println(time2.Unix())
+	fmt.Println("-----初始-----")
+
+	now := time.Now()
+	fmt.Println(now)
+	fmt.Println(now.Unix())
+	nowstr := now.Format("2006-01-02 15:04:05")
+	fmt.Println(nowstr)
+
+	fmt.Println("-----错误-----", "time.Parse", "没有转换为本地时区，转成了UTC时区")
+
+	now2, _ := time.Parse("2006-01-02 15:04:05", nowstr)
+	fmt.Println(now2)
+	fmt.Println(now2.Local())
+	fmt.Println(now2.Unix())
+	now2str := now2.Format("2006-01-02 15:04:05")
+	fmt.Println(now2str)
+
+	fmt.Println("-----正常-----")
+
+	now21, _ := time.ParseInLocation("2006-01-02 15:04:05", nowstr, time.Local)
+	fmt.Println(now21)
+	fmt.Println(now21.Local())
+	fmt.Println(now21.Unix())
+	now21str := now21.Format("2006-01-02 15:04:05")
+	fmt.Println(now21str)
 }
 
 //时间转时间戳
@@ -159,8 +144,9 @@ func TestTime2String(t *testing.T) {
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05.999999"))
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05.999"))
 	fmt.Println(time.Now().Format("2006-01-02 15:04:05"))
-	fmt.Println(time.Now().Format("2006-01-02 15:00:00"))
+	fmt.Println(time.Now().Format("2006-01-02 15:00:00")) //整点
 	fmt.Println(time.Now().Format("2006-01-02"))
+	fmt.Println(time.Now().Format("15:04:05"))
 }
 
 //时间工具
