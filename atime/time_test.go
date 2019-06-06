@@ -40,13 +40,19 @@ func TestTime(t *testing.T) {
 }
 
 func TestOffset(t *testing.T) {
-	fmt.Println(Now())
+	now := Now()
+	fmt.Println(now)
+	fmt.Println(now.UnixNano())
 
 	Offset(time.Second*60)
-	fmt.Println(Now())
+	now = Now()
+	fmt.Println(now)
+	fmt.Println(now.UnixNano())
 
 	Offset(0)
-	fmt.Println(Now())
+	now = Now()
+	fmt.Println(now)
+	fmt.Println(now.UnixNano())
 }
 
 //定时器

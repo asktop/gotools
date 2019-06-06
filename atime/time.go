@@ -29,11 +29,7 @@ func Offset(offset time.Duration) {
 
 //当前时间
 func Now() time.Time {
-	now := time.Now()
-	if offsetTime != 0 {
-		now = now.Add(offsetTime)
-	}
-	return now
+	return time.Now().Add(offsetTime)
 }
 
 //获取当前时间 秒级时间戳
@@ -109,7 +105,7 @@ func FormatDateTime(t ...time.Time) string {
 func FormatTimestamp(format string, timestamp interface{}) string {
 	fn, err := ParseTimestamp(timestamp)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("github.com/asktop/gotools/atime ParseTimestamp", "timestamp:", timestamp, "err:", err)
 		return ""
 	}
 	return fn.Format(format)
