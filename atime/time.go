@@ -90,6 +90,21 @@ func Format(format string, t ...time.Time) string {
 	return fn.Format(format)
 }
 
+//格式化时间 格式："2006-01-02"
+func FormatDate(t ...time.Time) string {
+	return Format(DATE, t...)
+}
+
+//格式化时间 格式："15:04:05"
+func FormatTime(t ...time.Time) string {
+	return Format(TIME, t...)
+}
+
+//格式化时间 格式："2006-01-02 15:04:05"
+func FormatDateTime(t ...time.Time) string {
+	return Format(DATETIME, t...)
+}
+
 //格式化时间戳 格式指定
 func FormatTimestamp(format string, timestamp interface{}) string {
 	fn, err := ParseTimestamp(timestamp)
@@ -101,17 +116,17 @@ func FormatTimestamp(format string, timestamp interface{}) string {
 }
 
 //格式化时间戳 格式："2006-01-02"
-func FormatDate(timestamp interface{}) string {
+func FormatDateT(timestamp interface{}) string {
 	return FormatTimestamp(DATE, timestamp)
 }
 
 //格式化时间戳 格式："15:04:05"
-func FormatTime(timestamp interface{}) string {
+func FormatTimeT(timestamp interface{}) string {
 	return FormatTimestamp(TIME, timestamp)
 }
 
 //格式化时间戳 格式："2006-01-02 15:04:05"
-func FormatDateTime(timestamp interface{}) string {
+func FormatDateTimeT(timestamp interface{}) string {
 	return FormatTimestamp(DATETIME, timestamp)
 }
 
