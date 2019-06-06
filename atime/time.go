@@ -185,7 +185,7 @@ func HourStart(timestamp ...interface{}) time.Time {
 }
 
 //获取 当前时间 或 指定时间戳 的 当前分钟开始时间
-func MiniteStart(timestamp ...interface{}) time.Time {
+func MinuteStart(timestamp ...interface{}) time.Time {
 	fn := Now()
 	if len(timestamp) > 0 {
 		fn, _ = ParseTimestamp(timestamp[0])
