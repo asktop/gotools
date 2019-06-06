@@ -165,3 +165,30 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	}
 	return time.Unix(sec, nsec), nil
 }
+
+//获取 当前时间 或 指定时间戳 的 当天开始时间
+func DayStart(timestamp ...interface{}) time.Time {
+	fn := Now()
+	if len(timestamp) > 0 {
+		fn, _ = ParseTimestamp(timestamp[0])
+	}
+	return time.Date(fn.Year(), fn.Month(), fn.Day(), 0, 0, 0, 0, time.Local)
+}
+
+//获取 当前时间 或 指定时间戳 的 当前小时开始时间
+func HourStart(timestamp ...interface{}) time.Time {
+	fn := Now()
+	if len(timestamp) > 0 {
+		fn, _ = ParseTimestamp(timestamp[0])
+	}
+	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), 0, 0, 0, time.Local)
+}
+
+//获取 当前时间 或 指定时间戳 的 当前分钟开始时间
+func MiniteStart(timestamp ...interface{}) time.Time {
+	fn := Now()
+	if len(timestamp) > 0 {
+		fn, _ = ParseTimestamp(timestamp[0])
+	}
+	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), fn.Minute(), 0, 0, time.Local)
+}
