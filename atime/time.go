@@ -13,15 +13,47 @@ const (
 	TIME     = "15:04:05"
 )
 
-var localFlag string //本地时区 标识 CST：北京时区
+var (
+	localFlag  string        //本地时区 标识 CST：北京时区
+	offsetTime time.Duration //时间偏移量
+)
 
 func init() {
 	localFlag = strings.Split(time.Now().Local().String(), " ")[3]
 }
 
+//设置时间偏量（改变当前时间）
+func Offset(offset time.Duration) {
+	offsetTime = offset
+}
+
 //当前时间
 func Now() time.Time {
-	return time.Now()
+	now := time.Now()
+	if offsetTime != 0 {
+		now = now.Add(offsetTime)
+	}
+	return now
+}
+
+//获取当前时间 秒级时间戳
+func NowUnix() int64 {
+	return Now().Unix()
+}
+
+//获取当前时间 毫秒级时间戳
+func NowMilli() int64 {
+	return Now().UnixNano() / 1e6
+}
+
+//获取当前时间 纳秒级时间戳
+func NowNano() int64 {
+	return Now().UnixNano()
+}
+
+//秒级时间戳 转换为 毫秒级时间戳
+func UnixToMilli(timestamp int64) int64 {
+	return timestamp * 1e3
 }
 
 //秒级时间戳 转换为 纳秒级时间戳
@@ -29,9 +61,24 @@ func UnixToNano(timestamp int64) int64 {
 	return timestamp * 1e9
 }
 
+//毫秒级时间戳 转换为 秒级时间戳
+func MilliToUnix(timestamp int64) int64 {
+	return timestamp / 1e3
+}
+
+//毫秒级时间戳 转换为 纳秒时间戳
+func MilliToNano(timestamp int64) int64 {
+	return timestamp * 1e6
+}
+
 //纳秒级时间戳 转换为 秒级时间戳
 func NanoToUnix(timestamp int64) int64 {
 	return timestamp / 1e9
+}
+
+//纳秒级时间戳 转换为 毫秒级时间戳
+func NanoToMilli(timestamp int64) int64 {
+	return timestamp / 1e6
 }
 
 //格式化时间 格式指定
@@ -43,21 +90,6 @@ func Format(format string, t ...time.Time) string {
 	return fn.Format(format)
 }
 
-//格式化时间 格式："2006-01-02"
-func FormatDate(t ...time.Time) string {
-	return Format(DATE, t...)
-}
-
-//格式化时间 格式："15:04:05"
-func FormatTime(t ...time.Time) string {
-	return Format(TIME, t...)
-}
-
-//格式化时间 格式："2006-01-02 15:04:05"
-func FormatDateTime(t ...time.Time) string {
-	return Format(DATETIME, t...)
-}
-
 //格式化时间戳 格式指定
 func FormatTimestamp(format string, timestamp interface{}) string {
 	fn, err := ParseTimestamp(timestamp)
@@ -66,6 +98,21 @@ func FormatTimestamp(format string, timestamp interface{}) string {
 		return ""
 	}
 	return fn.Format(format)
+}
+
+//格式化时间戳 格式："2006-01-02"
+func FormatDate(timestamp interface{}) string {
+	return FormatTimestamp(DATE, timestamp)
+}
+
+//格式化时间戳 格式："15:04:05"
+func FormatTime(timestamp interface{}) string {
+	return FormatTimestamp(TIME, timestamp)
+}
+
+//格式化时间戳 格式："2006-01-02 15:04:05"
+func FormatDateTime(timestamp interface{}) string {
+	return FormatTimestamp(DATETIME, timestamp)
 }
 
 //将 本地时区的字符串时间 转换成 本地时区时间（默认会转换成UTC时区的时间）

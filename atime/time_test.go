@@ -39,6 +39,16 @@ func TestTime(t *testing.T) {
 	fmt.Println(now4str)
 }
 
+func TestOffset(t *testing.T) {
+	fmt.Println(Now())
+
+	Offset(time.Second*60)
+	fmt.Println(Now())
+
+	Offset(0)
+	fmt.Println(Now())
+}
+
 //定时器
 var ticker *time.Ticker
 
