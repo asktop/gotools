@@ -154,7 +154,7 @@ func FormatDateTime(t ...time.Time) string {
 	return Format(DATETIME, t...)
 }
 
-func timeStart(timestamp ...interface{}) time.Time {
+func startTime(timestamp ...interface{}) time.Time {
 	fn := Now()
 	if len(timestamp) > 0 {
 		var err error
@@ -166,20 +166,26 @@ func timeStart(timestamp ...interface{}) time.Time {
 	return fn
 }
 
+//获取 当前时间 或 指定时间戳 的 当前月开始时间
+func StartMonth(timestamp ...interface{}) time.Time {
+	fn := startTime(timestamp)
+	return time.Date(fn.Year(), fn.Month(), 1, 0, 0, 0, 0, time.Local)
+}
+
 //获取 当前时间 或 指定时间戳 的 当天开始时间
-func DayStart(timestamp ...interface{}) time.Time {
-	fn := timeStart(timestamp)
+func StartDay(timestamp ...interface{}) time.Time {
+	fn := startTime(timestamp)
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), 0, 0, 0, 0, time.Local)
 }
 
 //获取 当前时间 或 指定时间戳 的 当前小时开始时间
-func HourStart(timestamp ...interface{}) time.Time {
-	fn := timeStart(timestamp)
+func StartHour(timestamp ...interface{}) time.Time {
+	fn := startTime(timestamp)
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), 0, 0, 0, time.Local)
 }
 
 //获取 当前时间 或 指定时间戳 的 当前分钟开始时间
-func MinuteStart(timestamp ...interface{}) time.Time {
-	fn := timeStart(timestamp)
+func StartMinute(timestamp ...interface{}) time.Time {
+	fn := startTime(timestamp)
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), fn.Minute(), 0, 0, time.Local)
 }
