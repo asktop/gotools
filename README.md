@@ -1,10 +1,14 @@
 # gotools（golang工具包）
 
-## 1. omap模块：有序map
+## 1. 安装与更新
 
-获取：`go get github.com/asktop/gotools/omap`
+安装：`go get github.com/asktop/gotools`  
+更新：`go get -u github.com/asktop/gotools`
 
-## 2. atime模块：时间工具
-
-获取：`go get github.com/asktop/gotools/atime`
-
+## 2. 模块
+| 模块 | 说明 |
+| --- | --- |
+|afile|文件工具|
+|atime|时间工具|
+|omap|有序map|
+|||
