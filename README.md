@@ -10,5 +10,6 @@
 | --- | --- |
 |afile|文件工具|
 |atime|时间工具|
+|cast|interface数据类型转换|
 |omap|有序map|
 |||
