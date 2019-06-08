@@ -13,4 +13,5 @@ import (
 	_ "github.com/asktop/gotools/secret"
 	_ "github.com/asktop/gotools/slice"
 	_ "github.com/asktop/gotools/unique"
+	_ "github.com/asktop/gotools/yaml"
 )
