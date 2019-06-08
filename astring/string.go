@@ -1,6 +1,7 @@
 package astring
 
 import (
+	"strconv"
 	"strings"
 	"unicode/utf8"
 )
@@ -88,4 +89,19 @@ func ReplaceNoCase(s string, old string, new string, n int) string {
 	}
 	w += copy(ns[w:], s[start:])
 	return string(ns[0:w])
+}
+
+// int 转换成指定长度的 string
+func IntToStr(num int, length int) string {
+	if length <= 0 {
+		return "0"
+	} else {
+		if num < 0 {
+			numStr := strings.Repeat("0", length) + strconv.Itoa(-num)
+			return "-" + numStr[len(numStr)-length:]
+		} else {
+			numStr := strings.Repeat("0", length) + strconv.Itoa(num)
+			return numStr[len(numStr)-length:]
+		}
+	}
 }
