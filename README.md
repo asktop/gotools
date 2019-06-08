@@ -14,6 +14,7 @@
 |astring|string字符串工具|
 |atime|时间工具|
 |cast|interface数据类型转换|
+|gzip|gzip压缩工具|
 |omap|有序map|
 |secret|base64、md5、sha1等加密工具|
 |slice|切片工具|
