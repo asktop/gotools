@@ -9,6 +9,7 @@
 | 模块 | 说明 |
 | --- | --- |
 |afile|文件工具|
+|ajson|json工具|
 |amath|数学工具（decimal.Big）|
 |asort|slice切片、map排序工具|
 |astring|string字符串工具|
