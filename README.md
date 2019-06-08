@@ -9,6 +9,7 @@
 | 模块 | 说明 |
 | --- | --- |
 |afile|文件工具|
+|amath|数学工具（decimal.Big）|
 |atime|时间工具|
 |cast|interface数据类型转换|
 |omap|有序map|
