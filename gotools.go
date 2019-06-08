@@ -8,5 +8,6 @@ import (
 	_ "github.com/asktop/gotools/atime"
 	_ "github.com/asktop/gotools/cast"
 	_ "github.com/asktop/gotools/omap"
+	_ "github.com/asktop/gotools/secret"
 	_ "github.com/asktop/gotools/slice"
 )
