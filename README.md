@@ -17,7 +17,8 @@
 |cast|interface数据类型转换|
 |gzip|gzip压缩工具|
 |omap|有序map|
+|php|php序列化工具|
 |secret|base64、md5、sha1等加密工具|
 |slice|切片工具|
 |unique|唯一字符串工具|
-|yaml|yaml工具|
+|yaml|yaml序列化工具|
