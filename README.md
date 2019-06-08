@@ -23,4 +23,5 @@
 |slice|切片工具|`go get github.com/asktop/gotools/slice`|
 |tag|为结构添加tag标签工具|`go get github.com/asktop/gotools/tag`|
 |unique|唯一字符串工具|`go get github.com/asktop/gotools/unique`|
+|uuid|uuid工具|`go get github.com/asktop/gotools/uuid`|
 |yaml|yaml序列化工具|`go get github.com/asktop/gotools/yaml`|

@@ -16,5 +16,6 @@ import (
 	_ "github.com/asktop/gotools/slice"
 	_ "github.com/asktop/gotools/tag"
 	_ "github.com/asktop/gotools/unique"
+	_ "github.com/asktop/gotools/uuid"
 	_ "github.com/asktop/gotools/yaml"
 )
