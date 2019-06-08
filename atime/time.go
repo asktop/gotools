@@ -2,7 +2,7 @@ package atime
 
 import (
 	"fmt"
-	"github.com/spf13/cast"
+	"github.com/asktop/gotools/cast"
 	"strings"
 	"time"
 )

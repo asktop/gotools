@@ -2,7 +2,7 @@ package omap
 
 import (
 	"encoding/json"
-	"github.com/spf13/cast"
+	"github.com/asktop/gotools/cast"
 	"sort"
 	"strings"
 )
