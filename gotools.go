@@ -4,6 +4,7 @@ import (
 	_ "github.com/asktop/gotools/afile"
 	_ "github.com/asktop/gotools/ajson"
 	_ "github.com/asktop/gotools/amath"
+	_ "github.com/asktop/gotools/amsg"
 	_ "github.com/asktop/gotools/asort"
 	_ "github.com/asktop/gotools/astring"
 	_ "github.com/asktop/gotools/atime"
