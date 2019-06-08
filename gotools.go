@@ -10,4 +10,5 @@ import (
 	_ "github.com/asktop/gotools/omap"
 	_ "github.com/asktop/gotools/secret"
 	_ "github.com/asktop/gotools/slice"
+	_ "github.com/asktop/gotools/unique"
 )

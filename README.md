@@ -17,3 +17,4 @@
 |omap|有序map|
 |secret|base64、md5、sha1等加密工具|
 |slice|切片工具|
+|unique|唯一字符串工具|
