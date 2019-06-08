@@ -19,6 +19,7 @@
 |gzip|gzip压缩工具|`go get github.com/asktop/gotools/gzip`|
 |omap|有序map|`go get github.com/asktop/gotools/omap`|
 |php|php序列化工具|`go get github.com/asktop/gotools/php`|
+|scan|扩展Scanner Scan工具|`go get github.com/asktop/gotools/scan`|
 |secret|base64、md5、sha1等加密工具|`go get github.com/asktop/gotools/secret`|
 |slice|切片工具|`go get github.com/asktop/gotools/slice`|
 |tag|为结构添加tag标签工具|`go get github.com/asktop/gotools/tag`|
