@@ -6,6 +6,17 @@ import (
 	"testing"
 )
 
+func TestSetMap(t *testing.T) {
+	data := map[string]string{}
+	data["k1"] = "v1"
+	data["k3"] = "v3"
+	data["k2"] = "v2"
+	odata := SetMap(data)
+	fmt.Println(odata)
+	odata.SortKey()
+	fmt.Println(odata)
+}
+
 func TestOrderMapRange(t *testing.T) {
 	o := New()
 	o.Set("number", 3)

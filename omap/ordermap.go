@@ -3,6 +3,7 @@ package omap
 import (
 	"encoding/json"
 	"github.com/asktop/gotools/cast"
+	"reflect"
 	"sort"
 	"strings"
 )
@@ -19,6 +20,27 @@ func New() *OrderMap {
 	o.keys = []string{}
 	o.values = map[string]interface{}{}
 	return &o
+}
+
+//创建有序map
+func SetMap(mapData interface{}) *OrderMap {
+	o := OrderMap{}
+	o.keys = []string{}
+	o.values = map[string]interface{}{}
+
+	mapVal := reflect.ValueOf(mapData)
+	if mapVal.Kind() == reflect.Map {
+		keyVals := mapVal.MapKeys()
+		for _, keyVal := range keyVals {
+			key := cast.ToString(keyVal.Interface())
+			value := mapVal.MapIndex(keyVal).Interface()
+			o.keys = append(o.keys, key)
+			o.values[key] = value
+		}
+		return &o
+	} else {
+		return nil
+	}
 }
 
 //获取所有的key
