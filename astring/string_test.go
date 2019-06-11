@@ -1,9 +1,18 @@
 package astring
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
+
+func TestJoin(t *testing.T) {
+	a := map[string]interface{}{}
+	a["a"] = "abc"
+	a["b"] = 123
+	e := errors.New("err")
+	fmt.Println(Join("uid:", 111, "data:", a, e))
+}
 
 func TestTrimSpaceToOne(t *testing.T) {
 	fmt.Println("---" + TrimSpaceToOne("\ta	b	  c  d	") + "---")

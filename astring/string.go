@@ -1,11 +1,35 @@
 package astring
 
 import (
+	"github.com/asktop/gotools/ajson"
+	"github.com/asktop/gotools/cast"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
 	"unicode/utf8"
 )
+
+//将多个对象拼接成字符串
+func Join(args ...interface{}) string {
+	var rs string
+	for _, arg := range args {
+		if err, ok := arg.(error); ok {
+			rs += err.Error() + " "
+			continue
+		}
+		argVal := reflect.ValueOf(arg)
+		if argVal.Kind() == reflect.Ptr {
+			argVal = argVal.Elem()
+		}
+		if argVal.Kind() == reflect.Struct || argVal.Kind() == reflect.Slice || argVal.Kind() == reflect.Map {
+			rs += ajson.Encode(argVal.Interface()) + " "
+		} else {
+			rs += cast.ToString(argVal.Interface()) + " "
+		}
+	}
+	return strings.TrimSpace(rs)
+}
 
 // int 转换成指定长度的 string
 func IntToStr(num int, length int) string {
