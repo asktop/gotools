@@ -5,6 +5,11 @@ import (
 	"testing"
 )
 
+func TestTrimSpaceToOne(t *testing.T) {
+	fmt.Println("---" + TrimSpaceToOne("\ta	b	  c  d	") + "---")
+	fmt.Println("---" + TrimSpaceToOne("a\t b	  c  d ") + "---")
+}
+
 func TestHidePwd(t *testing.T) {
 	fmt.Println(HidePwd(""))
 	fmt.Println(HidePwd("as"))

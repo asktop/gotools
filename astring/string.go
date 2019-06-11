@@ -1,6 +1,7 @@
 package astring
 
 import (
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode/utf8"
@@ -104,6 +105,21 @@ func ReplaceNoCase(s string, old string, new string, n int) string {
 	}
 	w += copy(ns[w:], s[start:])
 	return string(ns[0:w])
+}
+
+//删除字符串两端的空格(含tab)，同时将中间多个空格(含tab)的转换为一个
+func TrimSpaceToOne(s string) string {
+	s = strings.TrimSpace(s)
+	s = strings.Replace(s, "	", " ", -1)      //替换tab为空格
+	reg, _ := regexp.Compile("\\s{2,}")          //编译正则表达式
+	s2 := make([]byte, len(s))                   //定义字符数组切片
+	copy(s2, s)                                  //将字符串复制到切片
+	spc_index := reg.FindStringIndex(string(s2)) //在字符串中搜索
+	for len(spc_index) > 0 { //找到适配项
+		s2 = append(s2[:spc_index[0]+1], s2[spc_index[1]:]...) //删除多余空格
+		spc_index = reg.FindStringIndex(string(s2))            //继续在字符串中搜索
+	}
+	return string(s2)
 }
 
 //隐藏 密码
