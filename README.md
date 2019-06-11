@@ -12,6 +12,7 @@
 |ajson|json工具|`go get github.com/asktop/gotools/ajson`|
 |amath|数学工具（decimal.Big）|`go get github.com/asktop/gotools/amath`|
 |amsg|扩展error为msg|`go get github.com/asktop/gotools/amsg`|
+|arand|随机数字、随机字符串工具|`go get github.com/asktop/gotools/arand`|
 |asort|slice切片、map排序工具|`go get github.com/asktop/gotools/asort`|
 |astring|string字符串工具|`go get github.com/asktop/gotools/astring`|
 |atime|时间工具|`go get github.com/asktop/gotools/atime`|

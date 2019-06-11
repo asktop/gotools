@@ -17,15 +17,3 @@ func TestUniqueNo(t *testing.T) {
 		fmt.Println(UniqueNo(15, "USER"))
 	}
 }
-
-func TestRandStr(t *testing.T) {
-	for i := 0; i < 10; i++ {
-		fmt.Println(RandStr(10))
-	}
-}
-
-func TestRandMd5(t *testing.T) {
-	for i := 0; i < 10; i++ {
-		fmt.Println(RandMd5())
-	}
-}
