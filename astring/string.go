@@ -6,6 +6,21 @@ import (
 	"unicode/utf8"
 )
 
+// int 转换成指定长度的 string
+func IntToStr(num int, length int) string {
+	if length <= 0 {
+		return strconv.Itoa(num)
+	} else {
+		if num < 0 {
+			numStr := strings.Repeat("0", length) + strconv.Itoa(-num)
+			return "-" + numStr[len(numStr)-length:]
+		} else {
+			numStr := strings.Repeat("0", length) + strconv.Itoa(num)
+			return numStr[len(numStr)-length:]
+		}
+	}
+}
+
 //截取字符串
 // @param length 负数：截取全部
 func Substr(s string, start int, length int) string {
@@ -91,17 +106,53 @@ func ReplaceNoCase(s string, old string, new string, n int) string {
 	return string(ns[0:w])
 }
 
-// int 转换成指定长度的 string
-func IntToStr(num int, length int) string {
-	if length <= 0 {
-		return "0"
+//隐藏 密码
+func HidePwd(s string, allHide ...bool) string {
+	s = strings.TrimSpace(s)
+	if (len(allHide) > 0 && allHide[0]) {
+		return "******"
 	} else {
-		if num < 0 {
-			numStr := strings.Repeat("0", length) + strconv.Itoa(-num)
-			return "-" + numStr[len(numStr)-length:]
+		var pwd string
+		rs := []rune(s)
+		length := len(rs)
+		switch length {
+		case 0:
+			pwd = "******"
+		case 1:
+			pwd = s + "*****"
+		case 2:
+			pwd = Substr(s, 0, 1) + "****" + Substr(s, 1, 1)
+		default:
+			pwd = Substr(s, 0, 2) + "***" + Substr(s, length-2, 1)
+		}
+		return pwd
+	}
+}
+
+//隐藏 手机号
+func HidePhone(s string) string {
+	s = strings.TrimSpace(s)
+	length := len(s)
+	if strings.Contains(s, "+") {
+		return Substr(s, 0, length-8) + "****" + SubstrByEnd(s, length-4, 0)
+	} else {
+		if strings.Contains(s, "-") || strings.Contains(s, "_") || strings.Contains(s, " ") {
+			return Substr(s, 0, length-6) + "***" + SubstrByEnd(s, length-3, 0)
 		} else {
-			numStr := strings.Repeat("0", length) + strconv.Itoa(num)
-			return numStr[len(numStr)-length:]
+			if length == 11 {
+				return Substr(s, 0, 3) + "****" + SubstrByEnd(s, length-4, 0)
+			} else {
+				return Substr(s, 0, length-6) + "***" + SubstrByEnd(s, length-3, 0)
+			}
 		}
 	}
+}
+
+//隐藏 邮箱
+func HideEmail(s string) string {
+	emails := strings.Split(s, "@")
+	if len(emails) != 2 {
+		return s
+	}
+	return HidePwd(emails[0]) + "@" + emails[1]
 }
