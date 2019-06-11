@@ -117,7 +117,7 @@ func HidePwd(s string, allHide ...bool) string {
 		length := len(rs)
 		switch length {
 		case 0:
-			pwd = "******"
+			pwd = ""
 		case 1:
 			pwd = s + "*****"
 		case 2:
@@ -133,6 +133,9 @@ func HidePwd(s string, allHide ...bool) string {
 func HidePhone(s string) string {
 	s = strings.TrimSpace(s)
 	length := len(s)
+	if length == 0 {
+		return ""
+	}
 	if strings.Contains(s, "+") {
 		return Substr(s, 0, length-8) + "****" + SubstrByEnd(s, length-4, 0)
 	} else {
