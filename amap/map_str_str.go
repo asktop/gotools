@@ -149,21 +149,32 @@ func (m *StrStrMap) Clear() {
 	m.mu.Unlock()
 }
 
-// IsEmpty checks whether the map is empty.
-// It returns true if map is empty, or else false.
-func (m *StrStrMap) IsEmpty() bool {
-	m.mu.RLock()
-	empty := len(m.data) == 0
-	m.mu.RUnlock()
-	return empty
-}
-
 // Size returns the size of the map.
 func (m *StrStrMap) Size() int {
 	m.mu.RLock()
 	length := len(m.data)
 	m.mu.RUnlock()
 	return length
+}
+
+// IsEmpty checks whether the map is empty.
+// It returns true if map is empty, or else false.
+func (m *StrStrMap) IsEmpty() bool {
+	return m.Size() == 0
+}
+
+// LockFunc locks writing with given callback function <f> within RWMutex.Lock.
+func (m *StrStrMap) LockFunc(f func(data map[string]string)) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	f(m.data)
+}
+
+// RLockFunc locks reading with given callback function <f> within RWMutex.RLock.
+func (m *StrStrMap) RLockFunc(f func(data map[string]string)) {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	f(m.data)
 }
 
 // Clone returns a new hash map with copy of current map data.
@@ -196,20 +207,6 @@ func (m *StrStrMap) Flip() {
 	m.data = n
 }
 
-// LockFunc locks writing with given callback function <f> within RWMutex.Lock.
-func (m *StrStrMap) LockFunc(f func(data map[string]string)) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-	f(m.data)
-}
-
-// RLockFunc locks reading with given callback function <f> within RWMutex.RLock.
-func (m *StrStrMap) RLockFunc(f func(data map[string]string)) {
-	m.mu.RLock()
-	defer m.mu.RUnlock()
-	f(m.data)
-}
-
 // doSetWithLockCheck checks whether value of the key exists with mutex.Lock,
 // if not exists, set value to the map with given <key>,
 // or else just return the existing value.
@@ -239,4 +236,9 @@ func (m *StrStrMap) UnmarshalJSON(b []byte) error {
 		m.Sets(data)
 		return nil
 	}
+}
+
+func (m *StrStrMap) String() string {
+	rs, _ := m.MarshalJSON()
+	return string(rs)
 }
