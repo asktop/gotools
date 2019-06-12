@@ -10,42 +10,6 @@ import (
 	"unicode/utf8"
 )
 
-//将多个对象拼接成字符串
-func Join(args ...interface{}) string {
-	var rs string
-	for _, arg := range args {
-		if err, ok := arg.(error); ok {
-			rs += err.Error() + " "
-			continue
-		}
-		argVal := reflect.ValueOf(arg)
-		if argVal.Kind() == reflect.Ptr {
-			argVal = argVal.Elem()
-		}
-		if argVal.Kind() == reflect.Struct || argVal.Kind() == reflect.Slice || argVal.Kind() == reflect.Map {
-			rs += ajson.Encode(argVal.Interface()) + " "
-		} else {
-			rs += cast.ToString(argVal.Interface()) + " "
-		}
-	}
-	return strings.TrimSpace(rs)
-}
-
-// int 转换成指定长度的 string
-func IntToStr(num int, length int) string {
-	if length <= 0 {
-		return strconv.Itoa(num)
-	} else {
-		if num < 0 {
-			numStr := strings.Repeat("0", length) + strconv.Itoa(-num)
-			return "-" + numStr[len(numStr)-length:]
-		} else {
-			numStr := strings.Repeat("0", length) + strconv.Itoa(num)
-			return numStr[len(numStr)-length:]
-		}
-	}
-}
-
 //截取字符串
 // @param length 负数：截取全部
 func Substr(s string, start int, length int) string {
@@ -95,7 +59,12 @@ func SubstrByEnd(s string, start int, end int) string {
 	return string(rs[start:end])
 }
 
-//替换字符串不区分大小写
+//字符串是否相同（不区分大小写）
+func EqualNoCase(str1 interface{}, str2 interface{}) bool {
+	return strings.ToLower(cast.ToString(str1)) == strings.ToLower(cast.ToString(str2))
+}
+
+//替换字符串（不区分大小写）
 func ReplaceNoCase(s string, old string, new string, n int) string {
 	if n == 0 {
 		return s
@@ -144,6 +113,42 @@ func TrimSpaceToOne(s string) string {
 		spc_index = reg.FindStringIndex(string(s2))            //继续在字符串中搜索
 	}
 	return string(s2)
+}
+
+// int 转换成指定长度的 string
+func IntToStr(num int, length int) string {
+	if length <= 0 {
+		return strconv.Itoa(num)
+	} else {
+		if num < 0 {
+			numStr := strings.Repeat("0", length) + strconv.Itoa(-num)
+			return "-" + numStr[len(numStr)-length:]
+		} else {
+			numStr := strings.Repeat("0", length) + strconv.Itoa(num)
+			return numStr[len(numStr)-length:]
+		}
+	}
+}
+
+//将多个对象拼接成字符串
+func Join(args ...interface{}) string {
+	var rs string
+	for _, arg := range args {
+		if err, ok := arg.(error); ok {
+			rs += err.Error() + " "
+			continue
+		}
+		argVal := reflect.ValueOf(arg)
+		if argVal.Kind() == reflect.Ptr {
+			argVal = argVal.Elem()
+		}
+		if argVal.Kind() == reflect.Struct || argVal.Kind() == reflect.Slice || argVal.Kind() == reflect.Map {
+			rs += ajson.Encode(argVal.Interface()) + " "
+		} else {
+			rs += cast.ToString(argVal.Interface()) + " "
+		}
+	}
+	return strings.TrimSpace(rs)
 }
 
 //隐藏 密码
