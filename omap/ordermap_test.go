@@ -11,7 +11,7 @@ func TestSetMap(t *testing.T) {
 	data["k1"] = "v1"
 	data["k3"] = "v3"
 	data["k2"] = "v2"
-	odata := SetMap(data)
+	odata := Adds(data)
 	fmt.Println(odata)
 	odata.SortKey()
 	fmt.Println(odata)
@@ -55,12 +55,12 @@ func TestOrderMap(t *testing.T) {
 	// Keys method
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 
 	// delete
-	o.Delete("strings")
+	o.Remove("strings")
 	fmt.Println(o)
 }
 
@@ -106,7 +106,7 @@ func TestOrderedMap_UnmarshalJSON(t *testing.T) {
 
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 }
@@ -121,7 +121,7 @@ func TestOrderedMap_SortKey(t *testing.T) {
 	o.Set("e", 2)
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 
@@ -129,7 +129,7 @@ func TestOrderedMap_SortKey(t *testing.T) {
 
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 
@@ -137,7 +137,7 @@ func TestOrderedMap_SortKey(t *testing.T) {
 
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 }
@@ -152,7 +152,7 @@ func TestOrderedMap_SortValue(t *testing.T) {
 	o.Set("e", 2)
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 
@@ -160,7 +160,7 @@ func TestOrderedMap_SortValue(t *testing.T) {
 
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 
@@ -168,7 +168,7 @@ func TestOrderedMap_SortValue(t *testing.T) {
 
 	fmt.Println(o)
 	for _, key := range o.Keys() {
-		v, _ := o.GetOk(key)
+		v, _ := o.Search(key)
 		fmt.Println(key, ":", v)
 	}
 }

@@ -35,106 +35,106 @@ func NewStringSetFrom(items []string, safe ...bool) *StringSet {
 }
 
 // Add adds one or multiple items to the set.
-func (set *StringSet) Add(item ...string) *StringSet {
-	set.mu.Lock()
+func (s *StringSet) Add(item ...string) *StringSet {
+	s.mu.Lock()
 	for _, v := range item {
-		set.m[v] = struct{}{}
+		s.m[v] = struct{}{}
 	}
-	set.mu.Unlock()
-	return set
+	s.mu.Unlock()
+	return s
 }
 
 // Contains checks whether the set contains <item>.
-func (set *StringSet) Contains(item string) bool {
-	set.mu.RLock()
-	_, exists := set.m[item]
-	set.mu.RUnlock()
+func (s *StringSet) Contains(item string) bool {
+	s.mu.RLock()
+	_, exists := s.m[item]
+	s.mu.RUnlock()
 	return exists
 }
 
 // Iterator iterates the set with given callback function <f>,
 // if <f> returns true then continue iterating; or false to stop.
-func (set *StringSet) Iterator(f func(v string) bool) *StringSet {
-	set.mu.RLock()
-	defer set.mu.RUnlock()
-	for k, _ := range set.m {
+func (s *StringSet) Iterator(f func(v string) bool) *StringSet {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	for k, _ := range s.m {
 		if !f(k) {
 			break
 		}
 	}
-	return set
+	return s
 }
 
 // Slice returns the a of items of the set as slice.
-func (set *StringSet) Slice() []string {
-	set.mu.RLock()
-	ret := make([]string, len(set.m))
+func (s *StringSet) Slice() []string {
+	s.mu.RLock()
+	ret := make([]string, len(s.m))
 	i := 0
-	for item := range set.m {
+	for item := range s.m {
 		ret[i] = item
 		i++
 	}
-	set.mu.RUnlock()
+	s.mu.RUnlock()
 	return ret
 }
 
 // Remove deletes <item> from set.
-func (set *StringSet) Remove(item ...string) *StringSet {
-	set.mu.Lock()
+func (s *StringSet) Remove(item ...string) *StringSet {
+	s.mu.Lock()
 	for _, v := range item {
-		delete(set.m, v)
+		delete(s.m, v)
 	}
-	set.mu.Unlock()
-	return set
+	s.mu.Unlock()
+	return s
 }
 
 // Clear deletes all items of the set.
-func (set *StringSet) Clear() *StringSet {
-	set.mu.Lock()
-	set.m = make(map[string]struct{})
-	set.mu.Unlock()
-	return set
+func (s *StringSet) Clear() *StringSet {
+	s.mu.Lock()
+	s.m = make(map[string]struct{})
+	s.mu.Unlock()
+	return s
 }
 
 // Size returns the size of the set.
-func (set *StringSet) Size() int {
-	set.mu.RLock()
-	l := len(set.m)
-	set.mu.RUnlock()
+func (s *StringSet) Size() int {
+	s.mu.RLock()
+	l := len(s.m)
+	s.mu.RUnlock()
 	return l
 }
 
-func (set *StringSet) IsEmpty() bool {
-	return set.Size() == 0
+func (s *StringSet) IsEmpty() bool {
+	return s.Size() == 0
 }
 
 // LockFunc locks writing with callback function <f>.
-func (set *StringSet) LockFunc(f func(m map[string]struct{})) {
-	set.mu.Lock()
-	defer set.mu.Unlock()
-	f(set.m)
+func (s *StringSet) LockFunc(f func(m map[string]struct{})) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	f(s.m)
 }
 
 // RLockFunc locks reading with callback function <f>.
-func (set *StringSet) RLockFunc(f func(m map[string]struct{})) {
-	set.mu.RLock()
-	defer set.mu.RUnlock()
-	f(set.m)
+func (s *StringSet) RLockFunc(f func(m map[string]struct{})) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	f(s.m)
 }
 
 // Equal checks whether the two sets equal.
-func (set *StringSet) Equal(other *StringSet) bool {
-	if set == other {
+func (s *StringSet) Equal(other *StringSet) bool {
+	if s == other {
 		return true
 	}
-	set.mu.RLock()
-	defer set.mu.RUnlock()
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	other.mu.RLock()
 	defer other.mu.RUnlock()
-	if len(set.m) != len(other.m) {
+	if len(s.m) != len(other.m) {
 		return false
 	}
-	for key := range set.m {
+	for key := range s.m {
 		if _, ok := other.m[key]; !ok {
 			return false
 		}
@@ -143,15 +143,15 @@ func (set *StringSet) Equal(other *StringSet) bool {
 }
 
 // IsSubsetOf checks whether the current set is a sub-set of <other>.
-func (set *StringSet) IsSubsetOf(other *StringSet) bool {
-	if set == other {
+func (s *StringSet) IsSubsetOf(other *StringSet) bool {
+	if s == other {
 		return true
 	}
-	set.mu.RLock()
-	defer set.mu.RUnlock()
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	other.mu.RLock()
 	defer other.mu.RUnlock()
-	for key := range set.m {
+	for key := range s.m {
 		if _, ok := other.m[key]; !ok {
 			return false
 		}
@@ -159,47 +159,47 @@ func (set *StringSet) IsSubsetOf(other *StringSet) bool {
 	return true
 }
 
-func (set *StringSet) Clone() *StringSet {
-	return NewStringSetFrom(set.Slice(), set.mu.IsSafe())
+func (s *StringSet) Clone() *StringSet {
+	return NewStringSetFrom(s.Slice(), s.mu.IsSafe())
 }
 
 // Merge adds items from <others> sets into <set>.
-func (set *StringSet) Merge(others ...*StringSet) *StringSet {
-	set.mu.Lock()
-	defer set.mu.Unlock()
+func (s *StringSet) Merge(others ...*StringSet) *StringSet {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	for _, other := range others {
-		if set != other {
+		if s != other {
 			other.mu.RLock()
 		}
 		for k, v := range other.m {
-			set.m[k] = v
+			s.m[k] = v
 		}
-		if set != other {
+		if s != other {
 			other.mu.RUnlock()
 		}
 	}
-	return set
+	return s
 }
 
 // Union returns a new set which is the union of <set> and <other>.
 // Which means, all the items in <newSet> are in <set> or in <other>.
-func (set *StringSet) Union(others ...*StringSet) (newSet *StringSet) {
+func (s *StringSet) Union(others ...*StringSet) (newSet *StringSet) {
 	newSet = NewStringSet(true)
-	set.mu.RLock()
-	defer set.mu.RUnlock()
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	for _, other := range others {
-		if set != other {
+		if s != other {
 			other.mu.RLock()
 		}
-		for k, v := range set.m {
+		for k, v := range s.m {
 			newSet.m[k] = v
 		}
-		if set != other {
+		if s != other {
 			for k, v := range other.m {
 				newSet.m[k] = v
 			}
 		}
-		if set != other {
+		if s != other {
 			other.mu.RUnlock()
 		}
 	}
@@ -209,16 +209,16 @@ func (set *StringSet) Union(others ...*StringSet) (newSet *StringSet) {
 
 // Diff returns a new set which is the difference set from <set> to <other>.
 // Which means, all the items in <newSet> are in <set> but not in <other>.
-func (set *StringSet) Diff(others ...*StringSet) (newSet *StringSet) {
+func (s *StringSet) Diff(others ...*StringSet) (newSet *StringSet) {
 	newSet = NewStringSet(true)
-	set.mu.RLock()
-	defer set.mu.RUnlock()
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	for _, other := range others {
-		if set == other {
+		if s == other {
 			continue
 		}
 		other.mu.RLock()
-		for k, v := range set.m {
+		for k, v := range s.m {
 			if _, ok := other.m[k]; !ok {
 				newSet.m[k] = v
 			}
@@ -230,20 +230,20 @@ func (set *StringSet) Diff(others ...*StringSet) (newSet *StringSet) {
 
 // Intersect returns a new set which is the intersection from <set> to <other>.
 // Which means, all the items in <newSet> are in <set> and also in <other>.
-func (set *StringSet) Intersect(others ...*StringSet) (newSet *StringSet) {
+func (s *StringSet) Intersect(others ...*StringSet) (newSet *StringSet) {
 	newSet = NewStringSet(true)
-	set.mu.RLock()
-	defer set.mu.RUnlock()
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 	for _, other := range others {
-		if set != other {
+		if s != other {
 			other.mu.RLock()
 		}
-		for k, v := range set.m {
+		for k, v := range s.m {
 			if _, ok := other.m[k]; ok {
 				newSet.m[k] = v
 			}
 		}
-		if set != other {
+		if s != other {
 			other.mu.RUnlock()
 		}
 	}
@@ -255,16 +255,16 @@ func (set *StringSet) Intersect(others ...*StringSet) (newSet *StringSet) {
 //
 // It returns the difference between <full> and <set>
 // if the given set <full> is not the full set of <set>.
-func (set *StringSet) Complement(full *StringSet) (newSet *StringSet) {
+func (s *StringSet) Complement(full *StringSet) (newSet *StringSet) {
 	newSet = NewStringSet(true)
-	set.mu.RLock()
-	defer set.mu.RUnlock()
-	if set != full {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	if s != full {
 		full.mu.RLock()
 		defer full.mu.RUnlock()
 	}
 	for k, v := range full.m {
-		if _, ok := set.m[k]; !ok {
+		if _, ok := s.m[k]; !ok {
 			newSet.m[k] = v
 		}
 	}
@@ -274,36 +274,36 @@ func (set *StringSet) Complement(full *StringSet) (newSet *StringSet) {
 // Sum sums items.
 // Note: The items should be converted to int type,
 // or you'd get a result that you unexpected.
-func (set *StringSet) Sum() (sum int) {
-	set.mu.RLock()
-	defer set.mu.RUnlock()
-	for k, _ := range set.m {
+func (s *StringSet) Sum() (sum int) {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	for k, _ := range s.m {
 		sum += cast.ToInt(k)
 	}
 	return
 }
 
 // Join joins items with a string <sep>.
-func (set *StringSet) Join(sep string) string {
-	return strings.Join(set.Slice(), sep)
+func (s *StringSet) Join(sep string) string {
+	return strings.Join(s.Slice(), sep)
 }
 
-func (set *StringSet) MarshalJSON() ([]byte, error) {
-	return json.Marshal(set.Slice())
+func (s *StringSet) MarshalJSON() ([]byte, error) {
+	return json.Marshal(s.Slice())
 }
 
-func (set *StringSet) UnmarshalJSON(b []byte) error {
+func (s *StringSet) UnmarshalJSON(b []byte) error {
 	var data []string
 	err := json.Unmarshal(b, &data)
 	if err != nil {
 		return err
 	} else {
-		set.Add(data...)
+		s.Add(data...)
 		return nil
 	}
 }
 
-func (set *StringSet) String() string {
-	rs, _ := set.MarshalJSON()
+func (s *StringSet) String() string {
+	rs, _ := s.MarshalJSON()
 	return string(rs)
 }

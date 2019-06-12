@@ -2,125 +2,224 @@ package omap
 
 import (
 	"encoding/json"
+	"github.com/asktop/gotools/async"
 	"github.com/asktop/gotools/cast"
-	"reflect"
+	"github.com/asktop/gotools/slice"
 	"sort"
 	"strings"
 )
 
 //有序map
 type OrderMap struct {
-	keys   []string
-	values map[string]interface{}
+	mu   *async.RWMutex
+	keys []string
+	data map[string]interface{}
 }
 
 //创建有序map
-func New() *OrderMap {
-	o := OrderMap{}
-	o.keys = []string{}
-	o.values = map[string]interface{}{}
-	return &o
-}
-
-//创建有序map
-func SetMap(mapData interface{}) *OrderMap {
-	o := OrderMap{}
-	o.keys = []string{}
-	o.values = map[string]interface{}{}
-
-	mapVal := reflect.ValueOf(mapData)
-	if mapVal.Kind() == reflect.Map {
-		keyVals := mapVal.MapKeys()
-		for _, keyVal := range keyVals {
-			key := cast.ToString(keyVal.Interface())
-			value := mapVal.MapIndex(keyVal).Interface()
-			o.keys = append(o.keys, key)
-			o.values[key] = value
-		}
-		return &o
-	} else {
-		return nil
+func New(safe ...bool) *OrderMap {
+	return &OrderMap{
+		mu:   async.New(safe...),
+		data: make(map[string]interface{}),
 	}
 }
 
-//获取所有的key
-func (o *OrderMap) Keys() []string {
-	return o.keys
-}
-
-//获取所有的值（map类型）
-func (o *OrderMap) Values() map[string]interface{} {
-	return o.values
-}
-
-//赋值
-func (o *OrderMap) Set(key string, value interface{}) *OrderMap {
-	_, ok := o.values[key]
-	if !ok {
-		o.keys = append(o.keys, key)
+//追加值（若key已存在，则顺序和值均被替换）
+func (o *OrderMap) Add(key string, value interface{}) *OrderMap {
+	o.mu.Lock()
+	if _, ok := o.data[key]; ok {
+		o.keys = slice.RemoveString(o.keys, key)
 	}
-	o.values[key] = value
+	o.keys = append(o.keys, key)
+	o.data[key] = value
+	o.mu.Unlock()
 	return o
 }
 
-//取值
-func (o *OrderMap) Get(key string) interface{} {
-	return o.values[key]
+//赋值（若key已存在，则只有值被替换）
+func (o *OrderMap) Set(key string, value interface{}) *OrderMap {
+	o.mu.Lock()
+	if _, ok := o.data[key]; !ok {
+		o.keys = append(o.keys, key)
+	}
+	o.data[key] = value
+	o.mu.Unlock()
+	return o
 }
 
-//获取 bool 类型
-func (o *OrderMap) GetBool(key string) bool {
-	return cast.ToBool(o.values[key])
+//赋值（若key已存在，则不替换，返回原值）
+func (o *OrderMap) SetOrGet(key string, value interface{}) interface{} {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if v, ok := o.data[key]; !ok {
+		o.keys = append(o.keys, key)
+		o.data[key] = value
+	} else {
+		return v
+	}
+	return value
 }
 
-//获取 int64 类型
-func (o *OrderMap) GetInt64(key string) int64 {
-	return cast.ToInt64(o.values[key])
+//包含
+func (o *OrderMap) Contains(key string) bool {
+	o.mu.Lock()
+	_, ok := o.data[key]
+	o.mu.Unlock()
+	return ok
 }
 
-//获取 string 类型
-func (o *OrderMap) GetString(key string) string {
-	return cast.ToString(o.values[key])
+//下标
+func (o *OrderMap) Index(key string) int {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if _, ok := o.data[key]; ok {
+		return slice.IndexString(o.keys, key)
+	} else {
+		return -1
+	}
 }
 
 //取值并判断是否存在key
-func (o *OrderMap) GetOk(key string) (interface{}, bool) {
-	value, ok := o.values[key]
+func (o *OrderMap) Search(key string) (interface{}, bool) {
+	o.mu.Lock()
+	value, ok := o.data[key]
+	o.mu.Unlock()
 	return value, ok
 }
 
 //获取 bool 类型并判断是否存在key
-func (o *OrderMap) GetBoolOk(key string) (bool, bool) {
-	value, ok := o.values[key]
-	if ok {
+func (o *OrderMap) SearchBool(key string) (bool, bool) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if value, ok := o.data[key]; ok {
 		return cast.ToBool(value), ok
+	} else {
+		return false, ok
 	}
-	return false, ok
+}
+
+//获取 int 类型并判断是否存在key
+func (o *OrderMap) SearchInt(key string) (int, bool) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if value, ok := o.data[key]; ok {
+		return cast.ToInt(value), ok
+	} else {
+		return 0, ok
+	}
 }
 
 //获取 int64 类型并判断是否存在key
-func (o *OrderMap) GetInt64Ok(key string) (int64, bool) {
-	value, ok := o.values[key]
-	if ok {
+func (o *OrderMap) SearchInt64(key string) (int64, bool) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if value, ok := o.data[key]; ok {
 		return cast.ToInt64(value), ok
+	} else {
+		return 0, ok
 	}
-	return 0, ok
 }
 
 //获取 string 类型并判断是否存在key
-func (o *OrderMap) GetStringOk(key string) (string, bool) {
-	value, ok := o.values[key]
-	if ok {
+func (o *OrderMap) SearchString(key string) (string, bool) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if value, ok := o.data[key]; ok {
 		return cast.ToString(value), ok
+	} else {
+		return "", ok
 	}
-	return "", ok
+}
+
+//取值
+func (o *OrderMap) Get(key string) interface{} {
+	o.mu.Lock()
+	val := o.data[key]
+	o.mu.Unlock()
+	return val
+}
+
+//获取 bool 类型
+func (o *OrderMap) GetBool(key string) bool {
+	o.mu.Lock()
+	val := cast.ToBool(o.data[key])
+	o.mu.Unlock()
+	return val
+}
+
+//获取 int 类型
+func (o *OrderMap) GetInt(key string) int {
+	o.mu.Lock()
+	val := cast.ToInt(o.data[key])
+	o.mu.Unlock()
+	return val
+}
+
+//获取 int64 类型
+func (o *OrderMap) GetInt64(key string) int64 {
+	o.mu.Lock()
+	val := cast.ToInt64(o.data[key])
+	o.mu.Unlock()
+	return val
+}
+
+//获取 string 类型
+func (o *OrderMap) GetString(key string) string {
+	o.mu.Lock()
+	val := cast.ToString(o.data[key])
+	o.mu.Unlock()
+	return val
+}
+
+func (o *OrderMap) Iterator(f func(k string, v interface{}) bool) {
+	o.mu.RLock()
+	defer o.mu.RUnlock()
+	for _, k := range o.keys {
+		v := o.data[k]
+		if !f(k, v) {
+			break
+		}
+	}
+}
+
+//获取所有的值（map类型）
+func (o *OrderMap) Map() map[string]interface{} {
+	o.mu.RLock()
+	data := make(map[string]interface{}, len(o.data))
+	for k, v := range o.data {
+		data[k] = v
+	}
+	o.mu.RUnlock()
+	return data
+}
+
+//获取所有的key
+func (o *OrderMap) Keys() []string {
+	o.mu.RLock()
+	keys := make([]string, len(o.keys))
+	copy(keys, o.keys)
+	o.mu.RUnlock()
+	return keys
+}
+
+//获取所有的值（与key一一对应）
+func (o *OrderMap) Values() []interface{} {
+	o.mu.RLock()
+	values := make([]interface{}, len(o.keys))
+	for _, k := range o.keys {
+		v := o.data[k]
+		values = append(values, v)
+	}
+	o.mu.RUnlock()
+	return values
 }
 
 //删除
-func (o *OrderMap) Delete(keys ...string) *OrderMap {
+func (o *OrderMap) Remove(keys ...string) *OrderMap {
+	o.mu.RLock()
 	for _, key := range keys {
 		// check key is in use
-		_, ok := o.values[key]
+		_, ok := o.data[key]
 		if !ok {
 			continue
 		}
@@ -131,20 +230,102 @@ func (o *OrderMap) Delete(keys ...string) *OrderMap {
 				break
 			}
 		}
-		// remove from values
-		delete(o.values, key)
+		// remove from data
+		delete(o.data, key)
 	}
+	o.mu.RUnlock()
 	return o
+}
+
+func (o *OrderMap) Clear() *OrderMap {
+	o.mu.RLock()
+	o.keys = []string{}
+	o.data = make(map[string]interface{})
+	o.mu.RUnlock()
+	return o
+}
+
+func (o *OrderMap) Size() int {
+	o.mu.RLock()
+	length := len(o.data)
+	o.mu.RUnlock()
+	return length
+}
+
+func (o *OrderMap) IsEmpty() bool {
+	return o.Size() == 0
+}
+
+func (o *OrderMap) Clone() *OrderMap {
+	o.mu.RLock()
+	no := &OrderMap{
+		mu:   async.New(o.mu.IsSafe()),
+		data: make(map[string]interface{}),
+	}
+
+	keys := make([]string, len(o.keys))
+	copy(keys, o.keys)
+	no.keys = keys
+
+	data := make(map[string]interface{}, len(o.data))
+	for k, v := range o.data {
+		data[k] = v
+	}
+	no.data = data
+
+	o.mu.RUnlock()
+	return no
+}
+
+func (o *OrderMap) Merge(other *OrderMap) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if other != o {
+		other.mu.RLock()
+		defer other.mu.RUnlock()
+	}
+	for _, k := range other.keys {
+		if _, ok := o.data[k]; ok {
+			o.data[k] = other.data[k]
+		} else {
+			o.keys = append(o.keys, k)
+			o.data[k] = other.data[k]
+		}
+	}
+}
+
+func (o *OrderMap) Flip() {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	nkeys := []string{}
+	ndata := make(map[string]interface{})
+	for _, k := range o.keys {
+		v := o.data[k]
+		nk := cast.ToString(v)
+		nv := k
+		if _, ok := ndata[nk]; ok {
+			ndata[nk] = nv
+		} else {
+			nkeys = append(nkeys, nk)
+			ndata[nk] = nv
+		}
+	}
+	o.keys = nkeys
+	o.data = ndata
 }
 
 //按key排序
 func (o *OrderMap) SortKey() *OrderMap {
+	o.mu.Lock()
+	defer o.mu.Unlock()
 	sort.Strings(o.keys)
 	return o
 }
 
 //按key倒序排序
 func (o *OrderMap) RSortKey() *OrderMap {
+	o.mu.Lock()
+	defer o.mu.Unlock()
 	o.Sort(func(a *OrderMapPair, b *OrderMapPair) bool {
 		return a.key > b.key
 	})
@@ -153,6 +334,8 @@ func (o *OrderMap) RSortKey() *OrderMap {
 
 //按value排序
 func (o *OrderMap) SortValue() *OrderMap {
+	o.mu.Lock()
+	defer o.mu.Unlock()
 	o.Sort(func(a *OrderMapPair, b *OrderMapPair) bool {
 		return cast.ToString(a.value) < cast.ToString(b.value)
 	})
@@ -161,6 +344,8 @@ func (o *OrderMap) SortValue() *OrderMap {
 
 //按value倒序排序
 func (o *OrderMap) RSortValue() *OrderMap {
+	o.mu.Lock()
+	defer o.mu.Unlock()
 	o.Sort(func(a *OrderMapPair, b *OrderMapPair) bool {
 		return cast.ToString(a.value) > cast.ToString(b.value)
 	})
@@ -169,9 +354,11 @@ func (o *OrderMap) RSortValue() *OrderMap {
 
 // Sort Sort the map using your sort func
 func (o *OrderMap) Sort(lessFunc func(a *OrderMapPair, b *OrderMapPair) bool) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
 	pairs := make([]*OrderMapPair, len(o.keys))
 	for i, key := range o.keys {
-		pairs[i] = &OrderMapPair{key, o.values[key]}
+		pairs[i] = &OrderMapPair{key, o.data[key]}
 	}
 
 	sort.Sort(ByOrderMapPair{pairs, lessFunc})
@@ -183,13 +370,15 @@ func (o *OrderMap) Sort(lessFunc func(a *OrderMapPair, b *OrderMapPair) bool) {
 
 //实现json序列化接口，保证对象序列化后和map序列化后一致
 func (o OrderMap) MarshalJSON() ([]byte, error) {
+	o.mu.Lock()
+	defer o.mu.Unlock()
 	s := "{"
 	for _, k := range o.keys {
 		// add key
 		kEscaped := strings.Replace(k, `"`, `\"`, -1)
 		s = s + `"` + kEscaped + `":`
 		// add value
-		v := o.values[k]
+		v := o.data[k]
 		vBytes, err := json.Marshal(v)
 		if err != nil {
 			return []byte{}, err
@@ -205,8 +394,10 @@ func (o OrderMap) MarshalJSON() ([]byte, error) {
 
 //实现json反序列化接口，保证map的json可以序列化到ordermap中
 func (o *OrderMap) UnmarshalJSON(b []byte) error {
-	if o.values == nil {
-		o.values = map[string]interface{}{}
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if o.data == nil {
+		o.data = map[string]interface{}{}
 	}
 	var err error
 	err = mapStringToOrderedMap(string(b), o)
@@ -214,6 +405,11 @@ func (o *OrderMap) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	return nil
+}
+
+func (o *OrderMap) String() string {
+	rs, _ := o.MarshalJSON()
+	return string(rs)
 }
 
 func mapStringToOrderedMap(s string, o *OrderMap) error {
@@ -282,7 +478,7 @@ func mapStringToOrderedMap(s string, o *OrderMap) error {
 						i = i + 1
 					}
 					// convert to orderedmap
-					// this may be recursive it values in the map are also maps
+					// this may be recursive it data in the map are also maps
 					if hasValidJson {
 						newMap := New()
 						err := mapStringToOrderedMap(valueStr, newMap)
@@ -314,7 +510,7 @@ func mapStringToOrderedMap(s string, o *OrderMap) error {
 					}
 					// convert to slice with any map items converted to
 					// orderedmaps
-					// this may be recursive if values in the slice are slices
+					// this may be recursive if data in the slice are slices
 					if hasValidJson {
 						var newSlice []interface{}
 						err := sliceStringToSliceWithOrderedMaps(valueStr, &newSlice)
@@ -337,8 +533,8 @@ func mapStringToOrderedMap(s string, o *OrderMap) error {
 	for _, ki := range orderedKeys {
 		k = append(k, ki.Key)
 	}
-	// Set the OrderMap values
-	o.values = m
+	// Set the OrderMap data
+	o.data = m
 	o.keys = k
 	return nil
 }
