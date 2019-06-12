@@ -59,32 +59,65 @@ func JoinFromInt64(source []int64, sep string) (str string) {
 	return strings.TrimSuffix(str, sep)
 }
 
+//int 切片 元素下标
+func IndexInt(slice []int, elem int) int {
+	index := -1
+	for i, s := range slice {
+		if s == elem {
+			index = i
+			break
+		}
+	}
+	return index
+}
+
+//int64 切片 元素下标
+func IndexInt64(slice []int64, elem int64) int {
+	index := -1
+	for i, s := range slice {
+		if s == elem {
+			index = i
+			break
+		}
+	}
+	return index
+}
+
+//string 切片 元素下标
+func IndexString(slice []string, elem string) int {
+	index := -1
+	for i, s := range slice {
+		if s == elem {
+			index = i
+			break
+		}
+	}
+	return index
+}
+
 //int 切片 是否包含元素
 func ContainInt(slice []int, elem int) bool {
-	for _, s := range slice {
-		if s == elem {
-			return true
-		}
+	index := IndexInt(slice, elem)
+	if index >= 0 {
+		return true
 	}
 	return false
 }
 
 //int64 切片 是否包含元素
 func ContainInt64(slice []int64, elem int64) bool {
-	for _, s := range slice {
-		if s == elem {
-			return true
-		}
+	index := IndexInt64(slice, elem)
+	if index >= 0 {
+		return true
 	}
 	return false
 }
 
 //string 切片 是否包含元素
 func ContainString(slice []string, elem string) bool {
-	for _, s := range slice {
-		if s == elem {
-			return true
-		}
+	index := IndexString(slice, elem)
+	if index >= 0 {
+		return true
 	}
 	return false
 }
