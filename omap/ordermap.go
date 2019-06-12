@@ -181,7 +181,7 @@ func (o *OrderMap) Sort(lessFunc func(a *OrderMapPair, b *OrderMapPair) bool) {
 	}
 }
 
-//实现json序列化接口，保证对象序列化后和map序列化后一直
+//实现json序列化接口，保证对象序列化后和map序列化后一致
 func (o OrderMap) MarshalJSON() ([]byte, error) {
 	s := "{"
 	for _, k := range o.keys {
