@@ -6,17 +6,26 @@ import (
 	"testing"
 )
 
+func TestSubstr(t *testing.T) {
+	str := "0123456789"
+	fmt.Println(Substr(str, 8))
+	fmt.Println(Substr(str, 8, 3))
+	fmt.Println(Substr(str, 0, 3))
+	fmt.Println(Substr(str, 0, -3))
+	fmt.Println(Substr(str, 1, -3))
+}
+
+func TestTrimSpaceToOne(t *testing.T) {
+	fmt.Println("---" + TrimSpaceToOne("\ta	b	  c  d	") + "---")
+	fmt.Println("---" + TrimSpaceToOne("a\t b	  c  d ") + "---")
+}
+
 func TestJoin(t *testing.T) {
 	a := map[string]interface{}{}
 	a["a"] = "abc"
 	a["b"] = 123
 	e := errors.New("err")
 	fmt.Println(Join("uid:", 111, "data:", a, e))
-}
-
-func TestTrimSpaceToOne(t *testing.T) {
-	fmt.Println("---" + TrimSpaceToOne("\ta	b	  c  d	") + "---")
-	fmt.Println("---" + TrimSpaceToOne("a\t b	  c  d ") + "---")
 }
 
 func TestHidePwd(t *testing.T) {

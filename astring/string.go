@@ -10,26 +10,50 @@ import (
 	"unicode/utf8"
 )
 
+func Len(s string) int {
+	return len([]rune(s))
+}
+
 //截取字符串
-// @param length 负数：截取全部
-func Substr(s string, start int, length int) string {
+// @param length 不设置：截取全部；负数：向前截取
+func Substr(s string, start int, length ...int) string {
 	rs := []rune(s)
-
-	if start < 0 {
-		start = 0
+	l := len(rs)
+	if len(length) > 0 {
+		l = length[0]
 	}
-	if start > len(rs) {
-		start = start % len(rs)
-	}
+	if l > 0 {
+		if start <= 0 {
+			start = 0
+		} else {
+			if start > len(rs) {
+				start = start % len(rs)
+			}
+		}
 
-	var end int
-	if length < 0 || start+length > len(rs) {
-		end = len(rs)
+		end := start + l
+		if start+l > len(rs) {
+			end = len(rs)
+		}
+		return string(rs[start:end])
+	} else if l < 0 {
+		if start <= 0 {
+			start = len(rs)
+		} else {
+			if start > len(rs) {
+				start = start % len(rs)
+			}
+		}
+		end := start
+
+		start = end + l
+		if end+l < 0 {
+			start = 0
+		}
+		return string(rs[start:end])
 	} else {
-		end = start + length
+		return ""
 	}
-
-	return string(rs[start:end])
 }
 
 //截取字符串
