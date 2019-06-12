@@ -3,7 +3,7 @@ package aset
 import (
 	"encoding/json"
 	"github.com/asktop/gotools/async"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 	"strings"
 )
 
@@ -278,7 +278,7 @@ func (s *StringSet) Sum() (sum int) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	for k, _ := range s.m {
-		sum += cast.ToInt(k)
+		sum += acast.ToInt(k)
 	}
 	return
 }

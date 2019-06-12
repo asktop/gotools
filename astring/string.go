@@ -2,7 +2,7 @@ package astring
 
 import (
 	"github.com/asktop/gotools/ajson"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -85,7 +85,7 @@ func SubstrByEnd(s string, start int, end int) string {
 
 //字符串是否相同（不区分大小写）
 func EqualNoCase(str1 interface{}, str2 interface{}) bool {
-	return strings.ToLower(cast.ToString(str1)) == strings.ToLower(cast.ToString(str2))
+	return strings.ToLower(acast.ToString(str1)) == strings.ToLower(acast.ToString(str2))
 }
 
 //替换字符串（不区分大小写）
@@ -169,7 +169,7 @@ func Join(args ...interface{}) string {
 		if argVal.Kind() == reflect.Struct || argVal.Kind() == reflect.Slice || argVal.Kind() == reflect.Map {
 			rs += ajson.Encode(argVal.Interface()) + " "
 		} else {
-			rs += cast.ToString(argVal.Interface()) + " "
+			rs += acast.ToString(argVal.Interface()) + " "
 		}
 	}
 	return strings.TrimSpace(rs)

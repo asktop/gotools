@@ -3,7 +3,7 @@ package amap
 import (
 	"encoding/json"
 	"github.com/asktop/gotools/async"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 )
 
 type StrIntMap struct {
@@ -203,7 +203,7 @@ func (m *StrIntMap) Flip() {
 	defer m.mu.Unlock()
 	n := make(map[string]int, len(m.data))
 	for k, v := range m.data {
-		n[cast.ToString(v)] = cast.ToInt(k)
+		n[acast.ToString(v)] = acast.ToInt(k)
 	}
 	m.data = n
 }

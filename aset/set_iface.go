@@ -3,7 +3,7 @@ package aset
 import (
 	"encoding/json"
 	"github.com/asktop/gotools/async"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 	"strings"
 )
 
@@ -26,7 +26,7 @@ func NewIfaceSet(safe ...bool) *IfaceSet {
 // Parameter <items> can be either a variable of any type, or a slice.
 func NewIfaceSetFrom(items interface{}, unsafe ...bool) *IfaceSet {
 	m := make(map[interface{}]struct{})
-	for _, v := range cast.ToIfaceSlice(items) {
+	for _, v := range acast.ToIfaceSlice(items) {
 		m[v] = struct{}{}
 	}
 	return &IfaceSet{
@@ -277,14 +277,14 @@ func (s *IfaceSet) Sum() (sum int) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	for k, _ := range s.m {
-		sum += cast.ToInt(k)
+		sum += acast.ToInt(k)
 	}
 	return
 }
 
 // Join joins items with a string <sep>.
 func (s *IfaceSet) Join(sep string) string {
-	return strings.Join(cast.ToStringSlice(s.Slice()), sep)
+	return strings.Join(acast.ToStringSlice(s.Slice()), sep)
 }
 
 func (s *IfaceSet) MarshalJSON() ([]byte, error) {

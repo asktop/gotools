@@ -1,7 +1,6 @@
 package aurl
 
 import (
-	"fmt"
 	"net/url"
 	"testing"
 )
@@ -11,29 +10,29 @@ var urlEncode string = `https%3A%2F%2Fgolang.org%2Fx%2Fcrypto%3Fgo-get%3D1+%2B`
 var rawUrlEncode string = `https%3A%2F%2Fgolang.org%2Fx%2Fcrypto%3Fgo-get%3D1%20%2B`
 
 func TestEncodeAndDecode(t *testing.T) {
-	fmt.Println(Encode(urlStr) == urlEncode)
-	fmt.Println(Encode(urlStr))
+	t.Log(Encode(urlStr) == urlEncode)
+	t.Log(Encode(urlStr))
 
 	res, err := Decode(urlEncode)
 	if err != nil {
 		t.Errorf("decode failed. %v", err)
 		return
 	}
-	fmt.Println(res == urlStr)
-	fmt.Println(res)
+	t.Log(res == urlStr)
+	t.Log(res)
 }
 
 func TestRowEncodeAndDecode(t *testing.T) {
-	fmt.Println(RawEncode(urlStr) == rawUrlEncode)
-	fmt.Println(RawEncode(urlStr))
+	t.Log(RawEncode(urlStr) == rawUrlEncode)
+	t.Log(RawEncode(urlStr))
 
 	res, err := RawDecode(rawUrlEncode)
 	if err != nil {
 		t.Errorf("decode failed. %v", err)
 		return
 	}
-	fmt.Println(res == urlStr)
-	fmt.Println(res)
+	t.Log(res == urlStr)
+	t.Log(res)
 }
 
 func TestBuildQuery(t *testing.T) {
@@ -44,8 +43,8 @@ func TestBuildQuery(t *testing.T) {
 	}
 	expect := "a=a2&a=a1&b=b2&b=b1&c=c1&c=c2"
 
-	fmt.Println(BuildQuery(src) == expect)
-	fmt.Println(BuildQuery(src))
+	t.Log(BuildQuery(src) == expect)
+	t.Log(BuildQuery(src))
 }
 
 func TestParseURL(t *testing.T) {
@@ -76,10 +75,10 @@ func TestParseURL(t *testing.T) {
 		}
 
 		if v == "all" {
-			fmt.Println(res)
+			t.Log(res)
 		} else {
-			fmt.Println(res[v] == expect[v])
-			fmt.Println(res[v])
+			t.Log(res[v] == expect[v])
+			t.Log(res[v])
 		}
 	}
 }

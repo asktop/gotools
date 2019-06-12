@@ -2,7 +2,7 @@ package atime
 
 import (
 	"fmt"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 	"strings"
 	"time"
 )
@@ -75,13 +75,13 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	var err error
 	var sec, nsec int64
 	fn := Now()
-	tsStr, err := cast.ToStringE(timestamp)
+	tsStr, err := acast.ToStringE(timestamp)
 	if err != nil {
 		return fn, err
 	}
 	tsLen := len(tsStr)
 	if tsLen <= 10 {
-		sec, err = cast.ToInt64E(tsStr)
+		sec, err = acast.ToInt64E(tsStr)
 		if err != nil {
 			return fn, err
 		}
@@ -91,11 +91,11 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 		}
 		secStr := tsStr[0:10]
 		nsecStr := tsStr[11:]
-		sec, err = cast.ToInt64E(secStr)
+		sec, err = acast.ToInt64E(secStr)
 		if err != nil {
 			return fn, err
 		}
-		nsec, err = cast.ToInt64E(nsecStr)
+		nsec, err = acast.ToInt64E(nsecStr)
 		if err != nil {
 			return fn, err
 		}

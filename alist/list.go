@@ -4,7 +4,7 @@ import (
 	"container/list"
 	"encoding/json"
 	"github.com/asktop/gotools/async"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 	"strings"
 )
 
@@ -322,7 +322,7 @@ func (l *List) RLockFunc(f func(list *list.List)) {
 
 // Join joins items with a string <sep>.
 func (l *List) Join(sep string) string {
-	return strings.Join(cast.ToStringSlice(l.FrontAll()), sep)
+	return strings.Join(acast.ToStringSlice(l.FrontAll()), sep)
 }
 
 func (l *List) MarshalJSON() ([]byte, error) {

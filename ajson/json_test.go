@@ -2,7 +2,6 @@ package ajson
 
 import (
 	"encoding/json"
-	"fmt"
 	"testing"
 )
 
@@ -34,7 +33,7 @@ func TestMarshal(t *testing.T) {
 	//w.Write(b)
 
 	//将对象转成json字符串
-	fmt.Println(string(b))
+	t.Log(string(b))
 }
 
 //json反序列化：将json字符串或json字节码转化为对象
@@ -45,12 +44,12 @@ func TestUnmarshal(t *testing.T) {
 	//json反序列化
 	json.Unmarshal([]byte(str), &s)
 
-	fmt.Println(s)
+	t.Log(s)
 }
 
 //自定义json反序列化：解析json.Number为map[string]string
 func TestDecodeToMapString(t *testing.T) {
 	str := `{"ID":"127","serverName":"Shanghai_VPN","serverIP":"127.0.0.1","code":180}`
 	params, _ := DecodeToMapString([]byte(str))
-	fmt.Println(params)
+	t.Log(params)
 }

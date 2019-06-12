@@ -3,7 +3,7 @@ package amap
 import (
 	"encoding/json"
 	"github.com/asktop/gotools/async"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 )
 
 type StrIfaceMap struct {
@@ -203,7 +203,7 @@ func (m *StrIfaceMap) Flip() {
 	defer m.mu.Unlock()
 	n := make(map[string]interface{}, len(m.data))
 	for k, v := range m.data {
-		n[cast.ToString(v)] = k
+		n[acast.ToString(v)] = k
 	}
 	m.data = n
 }

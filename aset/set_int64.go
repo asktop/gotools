@@ -3,7 +3,7 @@ package aset
 import (
 	"encoding/json"
 	"github.com/asktop/gotools/async"
-	"github.com/asktop/gotools/cast"
+	"github.com/asktop/gotools/acast"
 	"strings"
 )
 
@@ -283,7 +283,7 @@ func (s *Int64Set) Sum() (sum int64) {
 
 // Join joins items with a string <sep>.
 func (s *Int64Set) Join(sep string) string {
-	return strings.Join(cast.ToStringSlice(s.Slice()), sep)
+	return strings.Join(acast.ToStringSlice(s.Slice()), sep)
 }
 
 func (s *Int64Set) MarshalJSON() ([]byte, error) {

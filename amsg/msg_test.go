@@ -7,31 +7,31 @@ import (
 
 func TestMsg(t *testing.T) {
 	msg1 := testMsg1()
-	fmt.Println(msg1)
-	fmt.Println(msg1.Error())
-	fmt.Println(msg1.Format())
+	t.Log(msg1)
+	t.Log(msg1.Error())
+	t.Log(msg1.Format())
 
-	fmt.Println("---------")
+	t.Log("---------")
 
 	msg2 := testMsg2()
-	fmt.Println(msg2)
-	fmt.Println(msg2.Error())
-	fmt.Println(msg2.Format())
+	t.Log(msg2)
+	t.Log(msg2.Error())
+	t.Log(msg2.Format())
 
-	fmt.Println("---------")
+	t.Log("---------")
 
 	msg3 := testMsg3()
-	fmt.Println(msg3)
-	fmt.Println(msg3.Error())
-	fmt.Println(msg3.Format())
+	t.Log(msg3)
+	t.Log(msg3.Error())
+	t.Log(msg3.Format())
 }
 
 func TestMsgStatus(t *testing.T) {
 	msg4 := testMsg4()
-	fmt.Println(msg4)
-	fmt.Println(msg4.Error())
-	fmt.Println(msg4.Format())
-	fmt.Println(msg4.Status())
+	t.Log(msg4)
+	t.Log(msg4.Error())
+	t.Log(msg4.Format())
+	t.Log(msg4.Status())
 }
 
 func testMsg1() Msg {

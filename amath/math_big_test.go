@@ -1,7 +1,6 @@
 package amath
 
 import (
-	"fmt"
 	"github.com/ericlagergren/decimal"
 	"testing"
 )
@@ -9,48 +8,48 @@ import (
 func TestBigMath(t *testing.T) {
 	x := new(decimal.Big)
 	x.SetString("123.1453")
-	fmt.Println(x)
+	t.Log(x)
 	_, ok := x.SetString("")
-	fmt.Println(ok)
-	fmt.Println(x)
+	t.Log(ok)
+	t.Log(x)
 }
 
 func TestBigRound(t *testing.T) {
 	x := new(decimal.Big)
 	x.SetString("123.1453")
-	fmt.Println(BigRound(x, 0).String())
-	fmt.Println(BigRound(x, 2).String())
-	fmt.Println(BigRound(x, 8).String())
+	t.Log(BigRound(x, 0).String())
+	t.Log(BigRound(x, 2).String())
+	t.Log(BigRound(x, 8).String())
 	x.SetString("-123.1453")
-	fmt.Println(BigRound(x, 2).String())
+	t.Log(BigRound(x, 2).String())
 }
 
 func TestBigScale(t *testing.T) {
 	x := new(decimal.Big)
 	x.SetString("123.1453")
-	fmt.Println(BigScale(x, 0).String())
-	fmt.Println(BigScale(x, 2).String())
-	fmt.Println(BigScale(x, 8).String())
+	t.Log(BigScale(x, 0).String())
+	t.Log(BigScale(x, 2).String())
+	t.Log(BigScale(x, 8).String())
 	x.SetString("-123.1453")
-	fmt.Println(BigScale(x, 2).String())
+	t.Log(BigScale(x, 2).String())
 }
 
 func TestBigCeil(t *testing.T) {
 	x := new(decimal.Big)
 	x.SetString("123.1453")
-	fmt.Println(BigCeil(x, 0).String())
-	fmt.Println(BigCeil(x, 2).String())
-	fmt.Println(BigCeil(x, 8).String())
+	t.Log(BigCeil(x, 0).String())
+	t.Log(BigCeil(x, 2).String())
+	t.Log(BigCeil(x, 8).String())
 	x.SetString("-123.1453")
-	fmt.Println(BigCeil(x, 2).String())
+	t.Log(BigCeil(x, 2).String())
 }
 
 func TestBigFloor(t *testing.T) {
 	x := new(decimal.Big)
 	x.SetString("123.1453")
-	fmt.Println(BigFloor(x, 0).String())
-	fmt.Println(BigFloor(x, 2).String())
-	fmt.Println(BigFloor(x, 8).String())
+	t.Log(BigFloor(x, 0).String())
+	t.Log(BigFloor(x, 2).String())
+	t.Log(BigFloor(x, 8).String())
 	x.SetString("-123.1453")
-	fmt.Println(BigFloor(x, 2).String())
+	t.Log(BigFloor(x, 2).String())
 }
