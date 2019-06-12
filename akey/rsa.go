@@ -1,4 +1,4 @@
-package asecret
+package akey
 
 import (
 	"crypto/rsa"
