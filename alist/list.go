@@ -335,7 +335,7 @@ func (l *List) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	} else {
-		l.PushBack(data)
+		l.PushBack(data...)
 		return nil
 	}
 }
