@@ -10,22 +10,25 @@ func TestRand(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		fmt.Println(rand.Intn(10))
 	}
+	for i := 0; i < 10; i++ {
+		fmt.Println(Rand(1, 3))
+	}
+	for i := 0; i < 10; i++ {
+		fmt.Println(Rand(-1, 1))
+	}
 }
 
-func TestRandom(t *testing.T) {
+func TestRandStr(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		fmt.Println(Random(1, 3))
+		fmt.Println(RandStr(1, "0"))
+	}
+	for i := 0; i < 10; i++ {
+		fmt.Println(RandStr(6))
 	}
 }
 
 func TestRandMd5(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		fmt.Println(RandMd5())
-	}
-}
-
-func TestRandStr(t *testing.T) {
-	for i := 0; i < 10; i++ {
-		fmt.Println(RandStr(10))
 	}
 }
