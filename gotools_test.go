@@ -1,4 +1,4 @@
-package gotools
+package main
 
 import "testing"
 

@@ -1,6 +1,7 @@
-package gotools
+package main
 
 import (
+	"fmt"
 	_ "github.com/asktop/gotools/acast"
 	_ "github.com/asktop/gotools/acharset"
 	_ "github.com/asktop/gotools/afile"
@@ -29,3 +30,7 @@ import (
 	_ "github.com/asktop/gotools/ayaml"
 	_ "github.com/asktop/gotools/azlib"
 )
+
+func main() {
+	fmt.Println("github.com/asktop/gotools")
+}
