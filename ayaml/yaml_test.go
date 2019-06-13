@@ -9,8 +9,8 @@ import (
 //安装 go get -u gopkg.in/yaml.v2
 func TestYaml(t *testing.T) {
 	type Config struct {
-		Name string `yaml:"name"`
-		Age  int    `yaml:"age"`
+		Name   string `yaml:"name"`
+		Age    int    `yaml:"age"`
 		Spouse struct {
 			Name string `yaml:"name"`
 			Age  int    `yaml:"age"`
