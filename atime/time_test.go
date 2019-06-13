@@ -11,11 +11,13 @@ func TestOffset(t *testing.T) {
 	t.Log(now)
 	t.Log(now.UnixNano())
 
+	//时间偏移设置
 	Offset(time.Second * 60)
 	now = Now()
 	t.Log(now)
 	t.Log(now.UnixNano())
 
+	//时间偏移恢复
 	Offset(0)
 	now = Now()
 	t.Log(now)

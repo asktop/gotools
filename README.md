@@ -29,7 +29,7 @@
 | go get github.com/asktop/gotools/async    | sync锁扩展 |
 | go get github.com/asktop/gotools/atag     | json、db等标签生成 |
 | go get github.com/asktop/gotools/atest    | 单元测试、断言 |
-| go get github.com/asktop/gotools/atime    | 时间管理 |
+| go get github.com/asktop/gotools/atime    | 时间管理、时间偏移 |
 | go get github.com/asktop/gotools/aunique  | 唯一编码生成 |
 | go get github.com/asktop/gotools/aurl     | url编解码 |
 | go get github.com/asktop/gotools/auuid    | uuid生成 |
