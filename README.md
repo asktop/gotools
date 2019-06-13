@@ -27,7 +27,7 @@
 | go get github.com/asktop/gotools/asort    | slice/map排序 |
 | go get github.com/asktop/gotools/astring  | 字符串处理、正则验证 |
 | go get github.com/asktop/gotools/async    | sync锁扩展 |
-| go get github.com/asktop/gotools/atag     | 标签生成 |
+| go get github.com/asktop/gotools/atag     | json、db等标签生成 |
 | go get github.com/asktop/gotools/atest    | 单元测试、断言 |
 | go get github.com/asktop/gotools/atime    | 时间管理 |
 | go get github.com/asktop/gotools/aunique  | 唯一编码生成 |
