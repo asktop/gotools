@@ -12,6 +12,7 @@ func TestNew(t *testing.T) {
 	l1.PushBack("c")
 	t.Log(l1)
 
+
 	l2 := New()
 	s2 := []interface{}{"s1", 123, "s3"}
 	rs, _ := json.Marshal(s2)
