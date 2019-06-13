@@ -45,20 +45,18 @@ func TestOrderMap(t *testing.T) {
 		"1",
 		1,
 	})
-	// orderedmap
+
 	n := NewOrderMap()
 	n.Set("e", 1)
 	n.Set("a", 2)
 	o.Set("orderedmap", n)
 
-	// Keys method
 	t.Log(o)
 	for _, key := range o.Keys() {
 		v, _ := o.Search(key)
 		t.Log(key, ":", v)
 	}
 
-	// delete
 	o.Remove("strings")
 	t.Log(o)
 }
@@ -79,14 +77,14 @@ func TestOrderedMap_MarshalJSON(t *testing.T) {
 		"1",
 		1,
 	})
-	// orderedmap
+
 	n := NewOrderMap()
 	n.Set("e", 1)
 	n.Set("a", 2)
 	o.Set("orderedmap", n)
 
 	t.Log(o)
-	// convert to json
+
 	b, err := json.Marshal(o)
 	if err != nil {
 		t.Error("Marshalling json", err)
