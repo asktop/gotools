@@ -8,6 +8,7 @@ func TestStripTags(t *testing.T) {
 	src := `<p>Test paragraph.</p><!-- Comment -->  <a href="#fragment">Other text</a>`
 	dst := `Test paragraph.  Other text`
 
+
 	t.Log(StripTags(src) == dst)
 	t.Log(StripTags(src))
 }
