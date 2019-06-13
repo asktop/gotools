@@ -110,5 +110,4 @@ func TestErrConvert(t *testing.T) {
 	if err != nil {
 		t.Errorf("convert error. %v", err)
 	}
-
 }
