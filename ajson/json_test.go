@@ -42,7 +42,10 @@ func TestUnmarshal(t *testing.T) {
 	str := `{"servers":[{"ID":127,"serverName":"Shanghai_VPN","serverIP":"127.0.0.1","code":"180"},{"serverName":"Beijing_VPN","serverIP":"","code":"300","timestamp":1542077370}]}`
 
 	//json反序列化
-	json.Unmarshal([]byte(str), &s)
+	err := json.Unmarshal([]byte(str), &s)
+	if err != nil {
+		t.Error(err)
+	}
 
 	t.Log(s)
 }
