@@ -11,6 +11,7 @@ func TestStrScale(t *testing.T) {
 	t.Log(num.Scale())
 	t.Log(StrScale(numStr, 2))
 
+
 	numStr2 := "-0.12"
 	num2, _ := new(decimal.Big).SetString(numStr2)
 	t.Log(num2.Scale())
