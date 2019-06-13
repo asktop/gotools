@@ -2,6 +2,7 @@ package auuid
 
 import "testing"
 
+//uuid生成
 func TestNew(t *testing.T) {
 	for i := 0; i < 5; i++ {
 		t.Log(New().String())
