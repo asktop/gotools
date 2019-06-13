@@ -26,8 +26,8 @@ func buildXml(charsetStr string, str string) (string, string) {
 	srcXml := strings.Replace(head, "UTF-8", charsetStr, -1)
 
 	srcMap := map[string]interface{}{
-		"name":str,
-		"age": "12",
+		"name": str,
+		"age":  "12",
 	}
 
 	s, err := Encode(srcMap)
