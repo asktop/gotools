@@ -11,6 +11,33 @@ func TestIsNum_EN(t *testing.T) {
 	t.Log(IsNum_EN("jasdf_29.34_"))
 }
 
+func TestIsUpperChar(t *testing.T) {
+	a := "a"
+	b := "A"
+	c := "Aa"
+	t.Log(IsUpperChar(a))
+	t.Log(IsUpperChar(b))
+	t.Log(IsUpperChar(c))
+
+	t.Log("----------")
+
+	t.Log(HasUpperChar(a))
+	t.Log(HasUpperChar(b))
+	t.Log(HasUpperChar(c))
+
+	t.Log("----------")
+
+	t.Log(IsLowerChar(a))
+	t.Log(IsLowerChar(b))
+	t.Log(IsLowerChar(c))
+
+	t.Log("----------")
+
+	t.Log(HasLowerChar(a))
+	t.Log(HasLowerChar(b))
+	t.Log(HasLowerChar(c))
+}
+
 func TestIsAllDecimal(t *testing.T) {
 	t.Log(IsAllDecimal("213123_2934"))
 	t.Log(IsAllDecimal("-213123.2934"))

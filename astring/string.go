@@ -1,8 +1,8 @@
 package astring
 
 import (
-	"github.com/asktop/gotools/ajson"
 	"github.com/asktop/gotools/acast"
+	"github.com/asktop/gotools/ajson"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -227,4 +227,67 @@ func HideEmail(s string) string {
 		return s
 	}
 	return HidePwd(emails[0]) + "@" + emails[1]
+}
+
+//转换成 首字母大写
+func ToFirstUpper(s string) string {
+	s = strings.TrimSpace(s)
+	if s != "" {
+		s = strings.ToUpper(s[:1]) + s[1:]
+	}
+	return s
+}
+
+//转换成 首字母小写
+func ToFirstLower(s string) string {
+	s = strings.TrimSpace(s)
+	if s != "" {
+		s = strings.ToLower(s[:1]) + s[1:]
+	}
+	return s
+}
+
+//转换成 大驼峰命名（UserId）
+func ToCamelCase(s string) string {
+	if IsNum_EN(s) {
+		var rs string
+		s = strings.TrimSpace(s)
+		es := strings.Split(s, "_")
+		for _, e := range es {
+			rs += ToFirstUpper(e)
+		}
+		return rs
+	} else {
+		return s
+	}
+}
+
+//转换成 小驼峰命名（userId）
+func TocamelCase(s string) string {
+	return ToFirstLower(ToCamelCase(s))
+}
+
+//转换成 大下划线命名（USER_ID）
+func ToUnderscoreCase(s string) string {
+	return strings.ToUpper(TounderscoreCase(s))
+}
+
+//转换成 小下划线命名（user_id）
+func TounderscoreCase(s string) string {
+	if IsNum_EN(s) {
+		var rs string
+		l := len(s)
+		for i := 0; i < l; i++ {
+			e := s[i : i+1]
+			if IsUpperChar(e) {
+				e = "_" + strings.ToLower(e)
+			}
+			rs += e
+		}
+		rs = strings.TrimPrefix(rs, "_")
+		rs = strings.Replace(rs, "__", "_", -1)
+		return rs
+	} else {
+		return s
+	}
 }

@@ -140,6 +140,46 @@ func HasEN(data string) bool {
 	return ok
 }
 
+//是大写字母
+func IsUpperChar(char string) bool {
+	ok, err := regexp.MatchString("^[A-Z]$", char)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return ok
+}
+
+//包含大写字母
+func HasUpperChar(str string) bool {
+	ok, err := regexp.MatchString("[A-Z]", str)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return ok
+}
+
+//是小写字母
+func IsLowerChar(char string) bool {
+	ok, err := regexp.MatchString("^[a-z]$", char)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return ok
+}
+
+//包含小写字母
+func HasLowerChar(str string) bool {
+	ok, err := regexp.MatchString("[a-z]", str)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return ok
+}
+
 //包含标点字符
 func HasChar(data string) bool {
 	ok, err := regexp.MatchString(`[\.~!@#$%^&*()\-=_+:;,?]`, data)

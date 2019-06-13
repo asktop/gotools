@@ -50,3 +50,42 @@ func TestHideEmail(t *testing.T) {
 	t.Log(HideEmail("123456789@163.com"))
 	t.Log(HideEmail("13412345678@163.com"))
 }
+
+func TestToFirstUpper(t *testing.T) {
+	a := "abcdef"
+	t.Log(ToFirstUpper(a))
+	b := "ABCDEF"
+	t.Log(ToFirstLower(b))
+}
+
+func TestToCamelCase(t *testing.T) {
+	a := "user_id"
+	b := "User_Id"
+	c := "userId"
+	d := "UserId"
+	t.Log(ToCamelCase(a))
+	t.Log(ToCamelCase(b))
+	t.Log(ToCamelCase(c))
+	t.Log(ToCamelCase(d))
+
+	t.Log("----------")
+
+	t.Log(TocamelCase(a))
+	t.Log(TocamelCase(b))
+	t.Log(TocamelCase(c))
+	t.Log(TocamelCase(d))
+
+	t.Log("----------")
+
+	t.Log(ToUnderscoreCase(a))
+	t.Log(ToUnderscoreCase(b))
+	t.Log(ToUnderscoreCase(c))
+	t.Log(ToUnderscoreCase(d))
+
+	t.Log("----------")
+
+	t.Log(TounderscoreCase(a))
+	t.Log(TounderscoreCase(b))
+	t.Log(TounderscoreCase(c))
+	t.Log(TounderscoreCase(d))
+}
