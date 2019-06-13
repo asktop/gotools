@@ -11,6 +11,7 @@ func TestMsg(t *testing.T) {
 	t.Log(msg1.Error())
 	t.Log(msg1.Format())
 
+
 	t.Log("---------")
 
 	msg2 := testMsg2()
