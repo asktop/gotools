@@ -13,6 +13,7 @@ func TestEncodeAndDecode(t *testing.T) {
 	t.Log(Encode(urlStr) == urlEncode)
 	t.Log(Encode(urlStr))
 
+
 	res, err := Decode(urlEncode)
 	if err != nil {
 		t.Errorf("decode failed. %v", err)
