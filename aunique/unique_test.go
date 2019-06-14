@@ -14,6 +14,16 @@ func TestUniqueNo(t *testing.T) {
 
 	for i := 0; i < 10; i++ {
 		time.Sleep(time.Millisecond * 300)
-		t.Log(UniqueNo(15, "USER"))
+		t.Log(UniqueNo(18, "USER_"))
+	}
+}
+
+func TestUniqueNo2(t *testing.T) {
+	for i := 0; i < 1010; i++ {
+		if i > 995 {
+			t.Log(UniqueNo(15))
+		} else {
+			UniqueNo(15)
+		}
 	}
 }
