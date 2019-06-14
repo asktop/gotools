@@ -59,6 +59,20 @@ func JoinFromInt64(source []int64, sep string) (str string) {
 	return strings.TrimSuffix(str, sep)
 }
 
+func SumInt(source []int) (sum int) {
+	for _, v := range source {
+		sum += v
+	}
+	return
+}
+
+func SumInt64(source []int64) (sum int64) {
+	for _, v := range source {
+		sum += v
+	}
+	return
+}
+
 //int 切片 元素下标
 func IndexInt(slice []int, elem int) int {
 	index := -1
