@@ -21,6 +21,7 @@
 | go get github.com/asktop/gotools/amsg     | error扩展 |
 | go get github.com/asktop/gotools/aphp     | php编解码 |
 | go get github.com/asktop/gotools/arand    | 随机数 |
+| go get github.com/asktop/gotools/areflect | 反射扩展，获取方法名等 |
 | go get github.com/asktop/gotools/ascan    | 数值scan |
 | go get github.com/asktop/gotools/aset     | 并发安全set |
 | go get github.com/asktop/gotools/aslice   | slice切片处理 |
