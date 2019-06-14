@@ -28,6 +28,7 @@ import (
 	_ "github.com/asktop/gotools/aunique"
 	_ "github.com/asktop/gotools/aurl"
 	_ "github.com/asktop/gotools/auuid"
+	_ "github.com/asktop/gotools/avalid"
 	_ "github.com/asktop/gotools/axml"
 	_ "github.com/asktop/gotools/ayaml"
 	_ "github.com/asktop/gotools/azlib"

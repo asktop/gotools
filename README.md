@@ -34,6 +34,7 @@
 | go get github.com/asktop/gotools/aunique  | 唯一编码生成 |
 | go get github.com/asktop/gotools/aurl     | url编解码 |
 | go get github.com/asktop/gotools/auuid    | uuid生成 |
+| go get github.com/asktop/gotools/avalid   | 表单验证工具 |
 | go get github.com/asktop/gotools/axml     | xml编解码 |
 | go get github.com/asktop/gotools/ayaml    | yaml编解码 |
 | go get github.com/asktop/gotools/azlib    | zlib压缩、解压 |
