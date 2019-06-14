@@ -1,6 +1,8 @@
 package avalid
 
-import "github.com/asktop/gotools/acast"
+import (
+	"github.com/asktop/gotools/acast"
+)
 
 type Valids struct {
 	valids []*Valid
@@ -10,9 +12,14 @@ func News() *Valids {
 	return &Valids{}
 }
 
-func (vs *Valids) Valid(title string, value interface{}) *Valids {
+func (vs *Valids) Valid(name string, value interface{}, title ...string) *Valids {
 	valid := &Valid{}
-	valid.title = title
+	valid.Name = name
+	if len(title) > 0 {
+		valid.title = title[0]
+	} else {
+		valid.title = name
+	}
 	valid.value = value
 	valid.valueStr = acast.ToString(value)
 	vs.valids = append(vs.valids, valid)
@@ -190,4 +197,23 @@ func (vs *Valids) Check() (msg string, ok bool) {
 		}
 	}
 	return "", true
+}
+
+//执行验证
+func (vs *Valids) Checks() (msgs map[string]string, ok bool) {
+	msgs = map[string]string{}
+	for _, v := range vs.valids {
+		for _, vc := range v.checks {
+			msg, ok := vc.Check()
+			if !ok {
+				msgs[v.Name] = msg
+				break
+			}
+		}
+	}
+	if len(msgs) > 0 {
+		return msgs, false
+	} else {
+		return msgs, true
+	}
 }

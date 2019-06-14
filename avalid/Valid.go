@@ -3,6 +3,7 @@ package avalid
 import "github.com/asktop/gotools/acast"
 
 type Valid struct {
+	Name     string
 	title    string
 	value    interface{}
 	valueStr string
@@ -10,9 +11,14 @@ type Valid struct {
 }
 
 //创建验证
-func New(title string, value interface{}) *Valid {
+func New(name string, value interface{}, title ...string) *Valid {
 	valid := &Valid{}
-	valid.title = title
+	valid.Name = name
+	if len(title) > 0 {
+		valid.title = title[0]
+	} else {
+		valid.title = name
+	}
 	valid.value = value
 	valid.valueStr = acast.ToString(value)
 	return valid
@@ -147,4 +153,17 @@ func (v *Valid) Check() (msg string, ok bool) {
 		}
 	}
 	return "", true
+}
+
+//执行验证
+func (v *Valid) Checks() (msgs map[string]string, ok bool) {
+	msgs = map[string]string{}
+	for _, vc := range v.checks {
+		msg, ok := vc.Check()
+		if !ok {
+			msgs[v.Name] = msg
+			return msgs, false
+		}
+	}
+	return msgs, true
 }
