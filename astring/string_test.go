@@ -19,6 +19,12 @@ func TestTrimSpaceToOne(t *testing.T) {
 	t.Log("---" + TrimSpaceToOne("a\t b	  c  d ") + "---")
 }
 
+func TestIntToStr(t *testing.T) {
+	t.Log(IntToStr(123, 6))
+	t.Log(IntToStr(123456789, 6))
+	t.Log(IntToStr(123456789, 6, true))
+}
+
 func TestJoin(t *testing.T) {
 	a := map[string]interface{}{}
 	a["a"] = "abc"

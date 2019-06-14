@@ -140,16 +140,27 @@ func TrimSpaceToOne(s string) string {
 }
 
 // int 转换成指定长度的 string
-func IntToStr(num int, length int) string {
+// @param force 强制转换，当num长度大于length时，删除前面超过的部分
+func IntToStr(num int, length int, force ...bool) string {
 	if length <= 0 {
 		return strconv.Itoa(num)
 	} else {
 		if num < 0 {
-			numStr := strings.Repeat("0", length) + strconv.Itoa(-num)
-			return "-" + numStr[len(numStr)-length:]
+			numStr := strconv.Itoa(-num)
+			if len(force) > 0 && force[0] || len(numStr) < length {
+				numStr = strings.Repeat("0", length) + numStr
+				return "-" + numStr[len(numStr)-length:]
+			} else {
+				return "-" + numStr
+			}
 		} else {
-			numStr := strings.Repeat("0", length) + strconv.Itoa(num)
-			return numStr[len(numStr)-length:]
+			numStr := strconv.Itoa(num)
+			if len(force) > 0 && force[0] || len(numStr) < length {
+				numStr = strings.Repeat("0", length) + numStr
+				return numStr[len(numStr)-length:]
+			} else {
+				return numStr
+			}
 		}
 	}
 }
