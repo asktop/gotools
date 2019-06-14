@@ -141,9 +141,9 @@ func TestTime2Int64(t *testing.T) {
 
 //时间转字符串
 func TestTime2String(t *testing.T) {
-	t.Log(time.Now().Format("2006-01-02 15:04:05.999999999"))
-	t.Log(time.Now().Format("2006-01-02 15:04:05.999999"))
-	t.Log(time.Now().Format("2006-01-02 15:04:05.999"))
+	t.Log(time.Now().Format("2006-01-02 15:04:05.000000000"))
+	t.Log(time.Now().Format("2006-01-02 15:04:05.000000"))
+	t.Log(time.Now().Format("2006-01-02 15:04:05.000"))
 	t.Log(time.Now().Format("2006-01-02 15:04:05"))
 	t.Log(time.Now().Format("2006-01-02 15:00:00")) //整点
 	t.Log(time.Now().Format("2006-01-02"))
