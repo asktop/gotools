@@ -2,7 +2,6 @@ package arand
 
 import (
 	"encoding/base32"
-	"encoding/base64"
 	"encoding/hex"
 	"math/rand"
 	"strings"
@@ -30,20 +29,21 @@ func RandStr(length int, sources ...string) string {
 	var source []rune
 	if len(sources) > 0 {
 		typ := sources[0]
-		switch typ {
-		case "0":
+		if typ == "0" {
 			source = []rune("0123456789")
-		case "A":
+		} else if typ == "A" {
 			source = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-		case "a":
+		} else if typ == "a" {
 			source = []rune("abcdefghijklmnopqrstuvwxyz")
-		case "Aa":
+		} else if typ == "0A" || typ == "A0" {
+			source = []rune("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+		} else if typ == "0a" || typ == "a0" {
+			source = []rune("0123456789abcdefghijklmnopqrstuvwxyz")
+		} else if typ == "Aa" || typ == "aA" {
 			source = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-		case "aA":
-			source = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-		case "_":
+		} else if typ == "0Aa_" || typ == "_" {
 			source = []rune("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_")
-		default:
+		} else {
 			source = []rune(strings.Join(sources, ""))
 		}
 	} else {
@@ -61,39 +61,28 @@ func RandStr(length int, sources ...string) string {
 	return string(rs)
 }
 
-//随机md5字符串 32位 52fdfc072182654f163f5f0f9a621d72
-func RandMd5() string {
-	data := make([]byte, 16)
+//随机md5字符串，size默认16
+// size = 16 返回32位 52fdfc072182654f163f5f0f9a621d72
+// size = 10 返回20位 52fdfc072182654f163f
+func RandMd5(size ...int) string {
+	siz := 16
+	if len(size) > 0 {
+		siz = size[0]
+	}
+	data := make([]byte, siz)
 	rand.Read(data)
 	return hex.EncodeToString(data)
 }
 
-//随机base32字符串 32位 SVTMOTIQAN6E2653AQD5DYWGJE======
-func RandBase32() string {
-	data := make([]byte, 16)
+//随机base32字符串，size默认16
+// size = 16 返回32位 SVTMOTIQAN6E2653AQD5DYWGJE======
+// size = 10 返回16位 KL67YBZBQJSU6FR7
+func RandBase32(size ...int) string {
+	siz := 16
+	if len(size) > 0 {
+		siz = size[0]
+	}
+	data := make([]byte, siz)
 	rand.Read(data)
 	return base32.StdEncoding.EncodeToString(data)
-}
-
-//随机base32字符串 26位 SVTMOTIQAN6E2653AQD5DYWGJE
-func RandBase32Trim() string {
-	data := make([]byte, 16)
-	rand.Read(data)
-	randStr := base32.StdEncoding.EncodeToString(data)
-	return strings.TrimRight(randStr, "=")
-}
-
-//随机base64字符串 24位 gYVa2GgdDYbR6R4AFnk5yw==
-func RandBase64() string {
-	data := make([]byte, 16)
-	rand.Read(data)
-	return base64.StdEncoding.EncodeToString(data)
-}
-
-//随机base64字符串 22位 gYVa2GgdDYbR6R4AFnk5yw
-func RandBase64Trim() string {
-	data := make([]byte, 16)
-	rand.Read(data)
-	randStr := base64.StdEncoding.EncodeToString(data)
-	return strings.TrimRight(randStr, "=")
 }
