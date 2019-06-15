@@ -34,3 +34,17 @@ func TestRandMd5(t *testing.T) {
 		t.Log(RandMd5())
 	}
 }
+
+func TestRandBase32(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		a := RandBase32()
+		t.Log(a)
+	}
+}
+
+func TestRandBase64(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		a := RandBase64()
+		t.Log(a)
+	}
+}

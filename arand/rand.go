@@ -1,6 +1,8 @@
 package arand
 
 import (
+	"encoding/base32"
+	"encoding/base64"
 	"encoding/hex"
 	"math/rand"
 	"strings"
@@ -64,4 +66,18 @@ func RandMd5() string {
 	data := make([]byte, 16)
 	rand.Read(data)
 	return hex.EncodeToString(data)
+}
+
+//随机base32字符串 32位
+func RandBase32() string {
+	data := make([]byte, 16)
+	rand.Read(data)
+	return base32.StdEncoding.EncodeToString(data)
+}
+
+//随机base64字符串 24位
+func RandBase64() string {
+	data := make([]byte, 16)
+	rand.Read(data)
+	return base64.StdEncoding.EncodeToString(data)
 }
