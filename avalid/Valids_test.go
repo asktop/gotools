@@ -5,7 +5,7 @@ import (
 )
 
 func TestNew(t *testing.T) {
-	msg, ok := New("username", "abcd", "用户名").Required().Check()
+	msg, ok := New("username", "abcd", "用户名").Required("自定义返回消息：用户名必须").Check()
 	t.Log(ok, msg)
 	msg, ok = New("username", "abcd", "用户名").Required().Length(6, 20).Check()
 	t.Log(ok, msg)
@@ -13,7 +13,7 @@ func TestNew(t *testing.T) {
 	t.Log(ok, msg)
 	msg, ok = New("username", "abcd", "用户名").Required().InSlice([]string{"a", "b", "c", "abc"}).Check()
 	t.Log(ok, msg)
-	msg, ok = New("amount", "12.3456", "金额").Required().IsInt().Check()
+	msg, ok = New("amount", "12.3456", "金额").Required().IsInt("自定义返回消息：金额必须是整数").Check()
 	t.Log(ok, msg)
 	msg, ok = New("amount", "12.3456", "金额").Required().IsDecimal(nil).Check()
 	t.Log(ok, msg)

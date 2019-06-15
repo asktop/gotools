@@ -7,6 +7,7 @@ type Valid struct {
 	title    string
 	value    interface{}
 	valueStr string
+	isCheck  bool
 	checks   []checkIface
 }
 
@@ -21,77 +22,31 @@ func New(name string, value interface{}, title ...string) *Valid {
 	}
 	valid.value = value
 	valid.valueStr = acast.ToString(value)
+	valid.isCheck = true
 	return valid
 }
 
-//数值的范围
-func (v *Valid) Between(min interface{}, max interface{}, msg ...string) *Valid {
-	v.checks = append(v.checks, &between{
-		title:    v.title,
-		value:    v.value,
-		valueStr: v.valueStr,
-		msgs:     msg,
-		min:      min,
-		max:      max,
+//执行是否进行校验方法
+func (v *Valid) IsCheck(f func() bool) *Valid {
+	v.isCheck = f()
+	return v
+}
+
+//执行自定义方法
+func (v *Valid) Func(f func() (msg string, ok bool)) *Valid {
+	v.checks = append(v.checks, &funcExec{
+		f: f,
 	})
 	return v
 }
 
-//数值相等
-func (v *Valid) Equal(equalVal interface{}, msg ...string) *Valid {
-	v.checks = append(v.checks, &equal{
+//必需
+func (v *Valid) Required(msg ...string) *Valid {
+	v.checks = append(v.checks, &required{
 		title:    v.title,
 		value:    v.value,
 		valueStr: v.valueStr,
 		msgs:     msg,
-		equalVal: equalVal,
-	})
-	return v
-}
-
-//在切片中
-func (v *Valid) InSlice(slice interface{}, msg ...string) *Valid {
-	v.checks = append(v.checks, &inSlice{
-		title:    v.title,
-		value:    v.value,
-		valueStr: v.valueStr,
-		msgs:     msg,
-		slice:    slice,
-	})
-	return v
-}
-
-//必须为数值
-func (v *Valid) IsDecimal(length interface{}, msg ...string) *Valid {
-	v.checks = append(v.checks, &isDecimal{
-		title:    v.title,
-		value:    v.value,
-		valueStr: v.valueStr,
-		msgs:     msg,
-		length:   length,
-	})
-	return v
-}
-
-//必须为整数
-func (v *Valid) IsInt(msg ...string) *Valid {
-	v.checks = append(v.checks, &isInt{
-		title:    v.title,
-		value:    v.value,
-		valueStr: v.valueStr,
-		msgs:     msg,
-	})
-	return v
-}
-
-//必须为数字字符串
-func (v *Valid) IsNumber(length interface{}, msg ...string) *Valid {
-	v.checks = append(v.checks, &isNumber{
-		title:    v.title,
-		value:    v.value,
-		valueStr: v.valueStr,
-		msgs:     msg,
-		length:   length,
 	})
 	return v
 }
@@ -121,13 +76,14 @@ func (v *Valid) Regex(exp string, msg ...string) *Valid {
 	return v
 }
 
-//必需
-func (v *Valid) Required(msg ...string) *Valid {
-	v.checks = append(v.checks, &required{
+//在切片中
+func (v *Valid) InSlice(slice interface{}, msg ...string) *Valid {
+	v.checks = append(v.checks, &inSlice{
 		title:    v.title,
 		value:    v.value,
 		valueStr: v.valueStr,
 		msgs:     msg,
+		slice:    slice,
 	})
 	return v
 }
@@ -144,12 +100,96 @@ func (v *Valid) Same(sameVal interface{}, msg ...string) *Valid {
 	return v
 }
 
+//数值的范围
+func (v *Valid) Between(min interface{}, max interface{}, msg ...string) *Valid {
+	v.checks = append(v.checks, &between{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+		min:      min,
+		max:      max,
+	})
+	return v
+}
+
+//数值相等
+func (v *Valid) Equal(equalVal interface{}, msg ...string) *Valid {
+	v.checks = append(v.checks, &equal{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+		equalVal: equalVal,
+	})
+	return v
+}
+
+//必须为整数
+func (v *Valid) IsInt(msg ...string) *Valid {
+	v.checks = append(v.checks, &isInt{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+	})
+	return v
+}
+
+//必须为数值
+func (v *Valid) IsDecimal(length interface{}, msg ...string) *Valid {
+	v.checks = append(v.checks, &isDecimal{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+		length:   length,
+	})
+	return v
+}
+
+//必须为数字字符串
+func (v *Valid) IsNumber(length interface{}, msg ...string) *Valid {
+	v.checks = append(v.checks, &isNumber{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+		length:   length,
+	})
+	return v
+}
+
+//必须为手机号
+func (v *Valid) IsPhone(length interface{}, msg ...string) *Valid {
+	v.checks = append(v.checks, &isPhone{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+	})
+	return v
+}
+
+//必须为Email
+func (v *Valid) IsEmail(length interface{}, msg ...string) *Valid {
+	v.checks = append(v.checks, &isEmail{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+	})
+	return v
+}
+
 //执行验证
 func (v *Valid) Check() (msg string, ok bool) {
-	for _, vc := range v.checks {
-		msg, ok = vc.Check()
-		if !ok {
-			return
+	if v.isCheck {
+		for _, vc := range v.checks {
+			msg, ok = vc.Check()
+			if !ok {
+				return
+			}
 		}
 	}
 	return "", true
@@ -158,11 +198,13 @@ func (v *Valid) Check() (msg string, ok bool) {
 //执行验证
 func (v *Valid) Checks() (msgs map[string]string, ok bool) {
 	msgs = map[string]string{}
-	for _, vc := range v.checks {
-		msg, ok := vc.Check()
-		if !ok {
-			msgs[v.Name] = msg
-			return msgs, false
+	if v.isCheck {
+		for _, vc := range v.checks {
+			msg, ok := vc.Check()
+			if !ok {
+				msgs[v.Name] = msg
+				return msgs, false
+			}
 		}
 	}
 	return msgs, true
