@@ -61,23 +61,39 @@ func RandStr(length int, sources ...string) string {
 	return string(rs)
 }
 
-//随机md5字符串 32位
+//随机md5字符串 32位 52fdfc072182654f163f5f0f9a621d72
 func RandMd5() string {
 	data := make([]byte, 16)
 	rand.Read(data)
 	return hex.EncodeToString(data)
 }
 
-//随机base32字符串 32位
+//随机base32字符串 32位 SVTMOTIQAN6E2653AQD5DYWGJE======
 func RandBase32() string {
 	data := make([]byte, 16)
 	rand.Read(data)
 	return base32.StdEncoding.EncodeToString(data)
 }
 
-//随机base64字符串 24位
+//随机base32字符串 26位 SVTMOTIQAN6E2653AQD5DYWGJE
+func RandBase32Trim() string {
+	data := make([]byte, 16)
+	rand.Read(data)
+	randStr := base32.StdEncoding.EncodeToString(data)
+	return strings.TrimRight(randStr, "=")
+}
+
+//随机base64字符串 24位 gYVa2GgdDYbR6R4AFnk5yw==
 func RandBase64() string {
 	data := make([]byte, 16)
 	rand.Read(data)
 	return base64.StdEncoding.EncodeToString(data)
+}
+
+//随机base64字符串 22位 gYVa2GgdDYbR6R4AFnk5yw
+func RandBase64Trim() string {
+	data := make([]byte, 16)
+	rand.Read(data)
+	randStr := base64.StdEncoding.EncodeToString(data)
+	return strings.TrimRight(randStr, "=")
 }

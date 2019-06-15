@@ -37,14 +37,14 @@ func TestRandMd5(t *testing.T) {
 
 func TestRandBase32(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		a := RandBase32()
-		t.Log(a)
+		t.Log(RandBase32())
+		t.Log(RandBase32Trim())
 	}
 }
 
 func TestRandBase64(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		a := RandBase64()
-		t.Log(a)
+		t.Log(RandBase64())
+		t.Log(RandBase64Trim())
 	}
 }
