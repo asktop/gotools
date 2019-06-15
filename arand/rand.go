@@ -3,16 +3,39 @@ package arand
 import (
 	"encoding/base32"
 	"encoding/hex"
+	"github.com/asktop/gotools/atime"
 	"math/rand"
 	"strings"
 )
 
+func Rand() *rand.Rand {
+	return rand.New(rand.NewSource(atime.NowNano() + rand.Int63n(1e10)))
+}
+
+func Intn(n int) int {
+	random := Rand()
+	return random.Intn(n)
+}
+
+func Int63n(n int64) int64 {
+	random := Rand()
+	return random.Int63n(n)
+}
+
 //生成在 min 和 max 之间的随机数（包含 min 和 max）
-func Rand(min int64, max int64) int64 {
+func RandInt(min int, max int) int {
 	if min >= max {
 		return min
 	}
-	return rand.Int63n(max-min+1) + min
+	return Intn(max-min+1) + min
+}
+
+//生成在 min 和 max 之间的随机数（包含 min 和 max）
+func RandInt64(min int64, max int64) int64 {
+	if min >= max {
+		return min
+	}
+	return Int63n(max-min+1) + min
 }
 
 //随机字符串 指定长度
@@ -55,7 +78,7 @@ func RandStr(length int, sources ...string) string {
 	}
 
 	for i := range rs {
-		rs[i] = source[rand.Intn(sourceLen)]
+		rs[i] = source[Intn(sourceLen)]
 	}
 
 	return string(rs)
@@ -70,7 +93,7 @@ func RandMd5(size ...int) string {
 		siz = size[0]
 	}
 	data := make([]byte, siz)
-	rand.Read(data)
+	Rand().Read(data)
 	return hex.EncodeToString(data)
 }
 
@@ -83,6 +106,6 @@ func RandBase32(size ...int) string {
 		siz = size[0]
 	}
 	data := make([]byte, siz)
-	rand.Read(data)
+	Rand().Read(data)
 	return base32.StdEncoding.EncodeToString(data)
 }
