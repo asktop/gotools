@@ -13,6 +13,7 @@ import (
 	_ "github.com/asktop/gotools/amap"
 	_ "github.com/asktop/gotools/amath"
 	_ "github.com/asktop/gotools/amsg"
+	_ "github.com/asktop/gotools/aotp"
 	_ "github.com/asktop/gotools/aphp"
 	_ "github.com/asktop/gotools/arand"
 	_ "github.com/asktop/gotools/areflect"

@@ -19,6 +19,7 @@
 | go get github.com/asktop/gotools/amap     | 并发安全map、有序map |
 | go get github.com/asktop/gotools/amath    | decimal数值处理 |
 | go get github.com/asktop/gotools/amsg     | error扩展 |
+| go get github.com/asktop/gotools/aotp     | OTP动态口令（基于时间） |
 | go get github.com/asktop/gotools/aphp     | php编解码 |
 | go get github.com/asktop/gotools/arand    | 随机数 |
 | go get github.com/asktop/gotools/areflect | 反射扩展，获取方法名等 |

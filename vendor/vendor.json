@@ -57,6 +57,24 @@
 			"revisionTime": "2018-07-09T20:31:17Z"
 		},
 		{
+			"checksumSHA1": "9Z2Zj+AZ469pc5vicvHos0eEM8k=",
+			"path": "github.com/skip2/go-qrcode",
+			"revision": "dc11ecdae0a9889dc81a343585516404e8dc6ead",
+			"revisionTime": "2019-01-10T00:05:54Z"
+		},
+		{
+			"checksumSHA1": "qL15ukdhUafj3A8C/uGiFFkRSX0=",
+			"path": "github.com/skip2/go-qrcode/bitset",
+			"revision": "dc11ecdae0a9889dc81a343585516404e8dc6ead",
+			"revisionTime": "2019-01-10T00:05:54Z"
+		},
+		{
+			"checksumSHA1": "XXgEc+wD56i7AKhxPob96njB5KU=",
+			"path": "github.com/skip2/go-qrcode/reedsolomon",
+			"revision": "dc11ecdae0a9889dc81a343585516404e8dc6ead",
+			"revisionTime": "2019-01-10T00:05:54Z"
+		},
+		{
 			"checksumSHA1": "Mr4ur60bgQJnQFfJY0dGtwWwMPE=",
 			"path": "golang.org/x/text/encoding",
 			"revision": "bdc33b6dce42243a4ea8a799f3abb1cb5469aeb8",
