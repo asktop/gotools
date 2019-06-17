@@ -57,7 +57,7 @@ func IsTel(data string) bool {
 	return MatchString(`^((\d{3,4})|\d{3,4}-)?\d{7,8}$`, data)
 }
 
-//是手机或电话号码
+//手机或电话号码
 func IsTelOrPhone(data string) bool {
 	if IsTel(data) || IsPhone(data) {
 		return true
@@ -65,9 +65,20 @@ func IsTelOrPhone(data string) bool {
 	return false
 }
 
-//是Email地址
+//Email地址
 func IsEmail(data string) bool {
-	return MatchString(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`, data)
+	//return MatchString(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`, data)
+	return MatchString(`^[a-zA-Z0-9_\-\.]+@[a-zA-Z0-9_\-]+(\.[a-zA-Z0-9_\-]+)+$`, data)
+}
+
+//URL地址
+func IsUrl(data string) bool {
+	return MatchString(`(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]`, data)
+}
+
+//Mac地址
+func IsMac(data string) bool {
+	return MatchString(`^([0-9A-Fa-f]{2}[\-:]){5}[0-9A-Fa-f]{2}$`, data)
 }
 
 //腾讯QQ号，从10000开始
