@@ -194,6 +194,17 @@ func (v *Valid) IsIDCard(msg ...string) *Valid {
 	return v
 }
 
+//必须为银行卡号
+func (v *Valid) IsBankCard(msg ...string) *Valid {
+	v.checks = append(v.checks, &isBankCard{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+	})
+	return v
+}
+
 //检查账号（字母开头，数字字母下划线）
 func (v *Valid) IsAccount(length []int, msg ...string) *Valid {
 	v.checks = append(v.checks, &isAccount{

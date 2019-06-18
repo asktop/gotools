@@ -255,6 +255,21 @@ func (vs *Valids) IsIDCard(msg ...string) *Valids {
 	return vs
 }
 
+//必须为银行卡号
+func (vs *Valids) IsBankCard(msg ...string) *Valids {
+	l := len(vs.valids)
+	if l != 0 {
+		v := vs.valids[l-1]
+		v.checks = append(v.checks, &isBankCard{
+			title:    v.title,
+			value:    v.value,
+			valueStr: v.valueStr,
+			msgs:     msg,
+		})
+	}
+	return vs
+}
+
 //检查账号（字母开头，数字字母下划线）
 func (vs *Valids) IsAccount(length []int, msg ...string) *Valids {
 	l := len(vs.valids)

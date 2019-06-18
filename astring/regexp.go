@@ -50,7 +50,7 @@ func isIDCard(data string) bool {
 	return MatchString(`(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)`, data)
 }
 
-//GB 11643-1999 检验身份证校验码
+//第二代身份证校验码（GB 11643-1999）
 func checkIDCardLast(data string) bool {
 	cardNo := strings.ToUpper(data)
 	checks := []string{"1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"}
@@ -61,6 +61,33 @@ func checkIDCardLast(data string) bool {
 		sum += n * p
 	}
 	return cardNo[17:] == checks[sum%11]
+}
+
+//银行卡号
+func IsBankCard(data string) bool {
+	return MatchString(`^[0-9]{13,19}$`, data) && checkLuhn(data)
+}
+
+//银行卡号校验：Luhn算法（模10算法）
+//Luhn校验规则：16位银行卡号（19位通用）:
+//1.将未带校验位的 15（或18）位卡号从右依次编号 1 到 15（18），位于奇数位号上的数字乘以 2。
+//2.将奇位乘积的个十位全部相加，再加上所有偶数位上的数字。
+//3.将加法和加上校验位能被 10 整除。
+func checkLuhn(bankNo string) bool {
+	var sum int
+	oddSum := []int{0, 2, 4, 6, 8, 1, 3, 5, 7, 9}
+	odd := len(bankNo) & 1
+	for i, c := range bankNo {
+		if c < '0' || c > '9' {
+			return false
+		}
+		if i&1 == odd {
+			sum += oddSum[c-'0']
+		} else {
+			sum += int(c - '0')
+		}
+	}
+	return sum%10 == 0
 }
 
 /*
