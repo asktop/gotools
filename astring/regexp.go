@@ -40,13 +40,17 @@ func MatchString(pattern string, str string) bool {
  */
 func IsIDCard(data string) bool {
 	if len(data) == 18 {
-		return checkIDCardLast(data) && MatchString(`(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)`, data)
+		return checkIDCardLast(data) && isIDCard(data)
 	} else {
-		return MatchString(`(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)`, data)
+		return isIDCard(data)
 	}
 }
 
-//检验身份证最后一位验证码
+func isIDCard(data string) bool {
+	return MatchString(`(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)`, data)
+}
+
+//GB 11643-1999 检验身份证校验码
 func checkIDCardLast(data string) bool {
 	cardNo := strings.ToUpper(data)
 	checks := []string{"1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"}
@@ -77,14 +81,6 @@ func IsTel(data string) bool {
 	return MatchString(`^((\d{3,4})|\d{3,4}-)?\d{7,8}$`, data)
 }
 
-//手机或电话号码
-func IsTelOrPhone(data string) bool {
-	if IsTel(data) || IsPhone(data) {
-		return true
-	}
-	return false
-}
-
 //Email地址
 func IsEmail(data string) bool {
 	//return MatchString(`^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$`, data)
@@ -111,14 +107,42 @@ func IsPostCode(data string) bool {
 	return MatchString(`^\d{6}$`, data)
 }
 
-//账号/密码（字母开头，数字字母下划线）
+//账号（字母开头，数字字母下划线）
 func IsAccount(data string, length ...int) bool {
+	var lengthStr string
 	if len(length) >= 2 && length[0] > 0 && length[1] > 0 && length[0] < length[1] {
-		return MatchString(fmt.Sprintf(`^[A-Za-z]{1}[0-9A-Za-z_]{%d,%d}$`, length[0]-1, length[1]-1), data)
+		lengthStr = fmt.Sprintf("{%d,%d}", length[0]-1, length[1]-1)
 	} else if len(length) >= 1 && length[0] > 0 {
-		return MatchString(fmt.Sprintf(`^[A-Za-z]{1}[0-9A-Za-z_]{%d}$`, length[0]-1), data)
+		lengthStr = fmt.Sprintf("{%d,}", length[0]-1)
 	} else {
-		return MatchString("^[A-Za-z]{1}[0-9A-Za-z_]+$", data)
+		lengthStr = "{6,20}"
+	}
+	return MatchString(fmt.Sprintf(`^[A-Za-z]{1}[0-9A-Za-z_]%s$`, lengthStr), data)
+}
+
+//检查密码
+func CheckPwd(data string, level int, length ...int) bool {
+	var lengthStr string
+	if len(length) >= 2 && length[0] > 0 && length[1] > 0 && length[0] < length[1] {
+		lengthStr = fmt.Sprintf("{%d,%d}", length[0]-1, length[1]-1)
+	} else if len(length) >= 1 && length[0] > 0 {
+		lengthStr = fmt.Sprintf("{%d,}", length[0]-1)
+	} else {
+		lengthStr = "{6,20}"
+	}
+	switch level {
+	case 1:
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data)
+	case 2: //包含数字、字母
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasEN(data)
+	case 3: //包含数字、大小写字母
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasUpperChar(data) && HasLowerChar(data)
+	case 4: //包含数字、大小写字母、下划线
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasUpperChar(data) && HasLowerChar(data) && HasNum_EN(data)
+	case 5: //包含数字、大小写字母、特殊字符
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasUpperChar(data) && HasLowerChar(data) && HasChar(data)
+	default:
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data)
 	}
 }
 

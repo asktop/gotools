@@ -9,6 +9,7 @@ import (
 func TestIsNum_EN(t *testing.T) {
 	t.Log(IsNum_EN("jasdf_2934_"))
 	t.Log(IsNum_EN("jasdf_29.34_"))
+	t.Log(HasNum_EN("jasdf-29.34"))
 }
 
 func TestIsUpperChar(t *testing.T) {
