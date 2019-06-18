@@ -186,27 +186,36 @@ func Join(args ...interface{}) string {
 	return strings.TrimSpace(rs)
 }
 
-//隐藏 密码
-func HidePwd(s string, allHide ...bool) string {
+//隐藏字符串
+// start：前端显示长度
+// end：后端显示长度
+// length：指定显示总长度，若不指定，则按原字符串长度输出
+func HideNo(s string, start int, end int, length ...int) string {
 	s = strings.TrimSpace(s)
-	if (len(allHide) > 0 && allHide[0]) {
-		return "******"
-	} else {
-		var pwd string
-		rs := []rune(s)
-		length := len(rs)
-		switch length {
-		case 0:
-			pwd = ""
-		case 1:
-			pwd = s + "*****"
-		case 2:
-			pwd = Substr(s, 0, 1) + "****" + Substr(s, 1, 1)
-		default:
-			pwd = Substr(s, 0, 2) + "***" + Substr(s, length-2, 1)
-		}
-		return pwd
+	oldLen := len(s)
+	newLen := oldLen
+	if len(length) > 0 {
+		newLen = length[0]
 	}
+	minLen := oldLen
+	if oldLen >= newLen {
+		minLen = newLen
+	}
+	if minLen <= 1 {
+		return strings.Repeat("*", newLen)
+	}
+	if start >= minLen {
+		start = minLen - 1
+		end = 0
+	} else if end >= minLen {
+		start = 0
+		end = minLen - 1
+	} else if start+end >= minLen {
+		start = minLen / 2
+		end = minLen/2 - 1
+	}
+	rs := Substr(s, 0, start) + strings.Repeat("*", newLen-start-end) + Substr(s, 0, -end)
+	return rs
 }
 
 //隐藏 手机号
@@ -237,7 +246,21 @@ func HideEmail(s string) string {
 	if len(emails) != 2 {
 		return s
 	}
-	return HidePwd(emails[0]) + "@" + emails[1]
+	return HideNo(emails[0], 2, 2, 6) + "@" + emails[1]
+}
+
+//隐藏 密码
+func HidePwd(s string, allHide ...bool) string {
+	s = strings.TrimSpace(s)
+	if (len(allHide) > 0 && allHide[0]) {
+		return "******"
+	} else {
+		if len(s) > 0 {
+			return "******"
+		} else {
+			return ""
+		}
+	}
 }
 
 //转换成 首字母大写

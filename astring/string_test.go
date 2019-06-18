@@ -33,11 +33,14 @@ func TestJoin(t *testing.T) {
 	t.Log(Join("uid:", 111, "data:", a, e))
 }
 
-func TestHidePwd(t *testing.T) {
-	t.Log(HidePwd(""))
-	t.Log(HidePwd("as"))
-	t.Log(HidePwd("asdfjkhksdfkj"))
-	t.Log(HidePwd("123456789"))
+func TestHideNo(t *testing.T) {
+	t.Log(HideNo("", 1, 1))
+	t.Log(HideNo("", 1, 1, 6))
+	t.Log(HideNo("a", 2, 2, 6))
+	t.Log(HideNo("as", 2, 2, 6))
+	t.Log(HideNo("asw", 1, 1, 6))
+	t.Log(HideNo("asdfjkhksdfkj", 3, 0, 6))
+	t.Log(HideNo("123456789", 2, 2, 6))
 }
 
 func TestHidePhone(t *testing.T) {
@@ -55,6 +58,13 @@ func TestHideEmail(t *testing.T) {
 	t.Log(HideEmail("asdfjkhksdfkj@163.com"))
 	t.Log(HideEmail("123456789@163.com"))
 	t.Log(HideEmail("13412345678@163.com"))
+}
+
+func TestHidePwd(t *testing.T) {
+	t.Log(HidePwd(""))
+	t.Log(HidePwd("", true))
+	t.Log(HidePwd("asw"))
+	t.Log(HidePwd("123456789"))
 }
 
 func TestToFirstUpper(t *testing.T) {
