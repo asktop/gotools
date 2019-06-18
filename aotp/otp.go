@@ -8,8 +8,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"github.com/asktop/gotools/arand"
-	"github.com/asktop/gotools/atime"
 	"github.com/skip2/go-qrcode"
+	"time"
 )
 
 //OTP（One-Time Password）：OTP动态口令，又称一次性密码（阿里云身份宝、Google Authenticator）
@@ -27,7 +27,7 @@ func NewOtpKey(account string) (otpKey string, otpBody string, otpQrcode string)
 
 // GetOtpCode 根据OTP密钥 和 当前时间戳timestamp 生成基于时间OTP验证码
 func GetOtpCode(otpKey string) string {
-	timestamp := atime.Now().Unix()
+	timestamp := time.Now().Unix()
 	hs, err := hmacSha1(otpKey, timestamp/30)
 	if err != nil {
 		fmt.Println("GetOtpCode err", err.Error())
