@@ -22,11 +22,11 @@ type last struct {
 }
 
 // 唯一序号
-// @param length 序号长度，不少于15（不包括前缀）
+// @param length 序号长度，不少于16（不包括前缀）
 // @param prefix 序号前缀
 func UniqueNo(length int, prefix ...string) string {
-	if length < 15 || length > 20 {
-		panic("length must gte 15 and lte 20")
+	if length < 16 || length > 20 {
+		panic("UniqueNo length must gte 16 and lte 20")
 	}
 	//序号前缀
 	var prefixStr string
@@ -42,7 +42,7 @@ func UniqueNo(length int, prefix ...string) string {
 	lastNo.mu.Lock()
 	defer lastNo.mu.Unlock()
 	nanosecond := atime.Now().Format("060102150405") + fmt.Sprintf("%d", atime.NowNano()%1e9)
-	timestamp := astring.Substr(nanosecond, 0, lastNo.length-3)
+	timestamp := astring.Substr(nanosecond, 0, lastNo.length-4)
 	if lastNo.timestamp == timestamp {
 		lastNo.number++
 	} else {
@@ -60,5 +60,10 @@ func UniqueNo(length int, prefix ...string) string {
 		number = string(tag) + astring.Substr(number, 0, -2)
 	}
 	uniqueNo := lastNo.prefix + timestamp + number
+	var sum int
+	for _, c := range uniqueNo {
+		sum += int(c)
+	}
+	uniqueNo += strconv.Itoa(sum % 10)
 	return uniqueNo
 }

@@ -9,7 +9,7 @@ import (
 func TestUniqueNo(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		time.Sleep(time.Millisecond * 300)
-		t.Log(UniqueNo(15))
+		t.Log(UniqueNo(16))
 	}
 
 	for i := 0; i < 10; i++ {
@@ -21,9 +21,9 @@ func TestUniqueNo(t *testing.T) {
 func TestUniqueNo2(t *testing.T) {
 	for i := 0; i < 1010; i++ {
 		if i > 995 {
-			t.Log(UniqueNo(15))
+			t.Log(UniqueNo(16))
 		} else {
-			UniqueNo(15)
+			UniqueNo(16)
 		}
 	}
 }
