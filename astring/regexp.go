@@ -107,7 +107,7 @@ func IsPostCode(data string) bool {
 	return MatchString(`^\d{6}$`, data)
 }
 
-//账号（字母开头，数字字母下划线）
+//检查账号（字母开头，数字字母下划线）
 func IsAccount(data string, length ...int) bool {
 	var lengthStr string
 	if len(length) >= 2 && length[0] > 0 && length[1] > 0 && length[0] < length[1] {
@@ -121,25 +121,27 @@ func IsAccount(data string, length ...int) bool {
 }
 
 //检查密码
-func CheckPwd(data string, level int, length ...int) bool {
+func IsPwd(data string, level int, length ...int) bool {
 	var lengthStr string
 	if len(length) >= 2 && length[0] > 0 && length[1] > 0 && length[0] < length[1] {
-		lengthStr = fmt.Sprintf("{%d,%d}", length[0]-1, length[1]-1)
+		lengthStr = fmt.Sprintf("{%d,%d}", length[0], length[1])
 	} else if len(length) >= 1 && length[0] > 0 {
-		lengthStr = fmt.Sprintf("{%d,}", length[0]-1)
+		lengthStr = fmt.Sprintf("{%d,}", length[0])
 	} else {
 		lengthStr = "{6,20}"
 	}
 	switch level {
-	case 1:
-		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data)
-	case 2: //包含数字、字母
+	case 1: //包含数字、字母
 		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasEN(data)
-	case 3: //包含数字、大小写字母
+	case 2: //包含数字、字母、下划线
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNum_EN(data)
+	case 3: //包含数字、字母、特殊字符
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasEN(data) && HasChar(data)
+	case 4: //包含数字、大小写字母
 		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasUpperChar(data) && HasLowerChar(data)
-	case 4: //包含数字、大小写字母、下划线
-		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasUpperChar(data) && HasLowerChar(data) && HasNum_EN(data)
-	case 5: //包含数字、大小写字母、特殊字符
+	case 5: //包含数字、大小写字母、下划线
+		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasUpperChar(data) && HasLowerChar(data) && MatchString("[_]", data)
+	case 6: //包含数字、大小写字母、特殊字符
 		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data) && HasNumber(data) && HasUpperChar(data) && HasLowerChar(data) && HasChar(data)
 	default:
 		return MatchString(fmt.Sprintf(`^[\w\S]%s$`, lengthStr), data)

@@ -14,12 +14,14 @@ type isEmail struct {
 }
 
 func (c *isEmail) Check() (msg string, ok bool) {
-	msg = fmt.Sprintf("%s的Email格式不正确", c.title)
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}
-	if astring.IsEmail(c.valueStr) {
-		return "", true
+	if !astring.IsEmail(c.valueStr) {
+		if len(c.msgs) == 0 {
+			msg = fmt.Sprintf("%s Email格式不正确", c.title)
+		}
+		return msg, false
 	}
-	return
+	return "", true
 }

@@ -98,7 +98,7 @@ func (vs *Valids) Regex(exp string, msg ...string) *Valids {
 }
 
 //在切片中
-func (vs *Valids) InSlice(slice interface{}, msg ...string) *Valids {
+func (vs *Valids) InSlice(slice []string, msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
@@ -129,6 +129,24 @@ func (vs *Valids) Same(sameVal interface{}, msg ...string) *Valids {
 	return vs
 }
 
+//数值比较
+// rs：比较状态 0：等于；1：大于；-1：小于；10：大于等于；-10：小于等于
+func (vs *Valids) Cmp(number interface{}, rs int, msg ...string) *Valids {
+	l := len(vs.valids)
+	if l != 0 {
+		v := vs.valids[l-1]
+		v.checks = append(v.checks, &cmp{
+			title:    v.title,
+			value:    v.value,
+			valueStr: v.valueStr,
+			msgs:     msg,
+			number:   number,
+			rs:       rs,
+		})
+	}
+	return vs
+}
+
 //数值的范围
 func (vs *Valids) Between(min interface{}, max interface{}, msg ...string) *Valids {
 	l := len(vs.valids)
@@ -141,22 +159,6 @@ func (vs *Valids) Between(min interface{}, max interface{}, msg ...string) *Vali
 			msgs:     msg,
 			min:      min,
 			max:      max,
-		})
-	}
-	return vs
-}
-
-//数值相等
-func (vs *Valids) Equal(equalVal interface{}, msg ...string) *Valids {
-	l := len(vs.valids)
-	if l != 0 {
-		v := vs.valids[l-1]
-		v.checks = append(v.checks, &equal{
-			title:    v.title,
-			value:    v.value,
-			valueStr: v.valueStr,
-			msgs:     msg,
-			equalVal: equalVal,
 		})
 	}
 	return vs
@@ -178,7 +180,7 @@ func (vs *Valids) IsInt(length interface{}, msg ...string) *Valids {
 }
 
 //必须为数值
-func (vs *Valids) IsDecimal(length interface{}, msg ...string) *Valids {
+func (vs *Valids) IsDecimal(length []int, msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
@@ -193,24 +195,8 @@ func (vs *Valids) IsDecimal(length interface{}, msg ...string) *Valids {
 	return vs
 }
 
-//必须为数字字符串
-func (vs *Valids) IsNumber(length interface{}, msg ...string) *Valids {
-	l := len(vs.valids)
-	if l != 0 {
-		v := vs.valids[l-1]
-		v.checks = append(v.checks, &isNumber{
-			title:    v.title,
-			value:    v.value,
-			valueStr: v.valueStr,
-			msgs:     msg,
-			length:   length,
-		})
-	}
-	return vs
-}
-
 //必须为手机号
-func (vs *Valids) IsPhone(length interface{}, msg ...string) *Valids {
+func (vs *Valids) IsPhone(msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
@@ -224,8 +210,23 @@ func (vs *Valids) IsPhone(length interface{}, msg ...string) *Valids {
 	return vs
 }
 
+//必须为电话号码
+func (vs *Valids) IsTel(msg ...string) *Valids {
+	l := len(vs.valids)
+	if l != 0 {
+		v := vs.valids[l-1]
+		v.checks = append(v.checks, &isTel{
+			title:    v.title,
+			value:    v.value,
+			valueStr: v.valueStr,
+			msgs:     msg,
+		})
+	}
+	return vs
+}
+
 //必须为Email
-func (vs *Valids) IsEmail(length interface{}, msg ...string) *Valids {
+func (vs *Valids) IsEmail(msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
@@ -234,6 +235,61 @@ func (vs *Valids) IsEmail(length interface{}, msg ...string) *Valids {
 			value:    v.value,
 			valueStr: v.valueStr,
 			msgs:     msg,
+		})
+	}
+	return vs
+}
+
+//必须为身份证号码
+func (vs *Valids) IsIDCard(msg ...string) *Valids {
+	l := len(vs.valids)
+	if l != 0 {
+		v := vs.valids[l-1]
+		v.checks = append(v.checks, &isIDCard{
+			title:    v.title,
+			value:    v.value,
+			valueStr: v.valueStr,
+			msgs:     msg,
+		})
+	}
+	return vs
+}
+
+//检查账号（字母开头，数字字母下划线）
+func (vs *Valids) IsAccount(length []int, msg ...string) *Valids {
+	l := len(vs.valids)
+	if l != 0 {
+		v := vs.valids[l-1]
+		v.checks = append(v.checks, &isAccount{
+			title:    v.title,
+			value:    v.value,
+			valueStr: v.valueStr,
+			msgs:     msg,
+			length:   length,
+		})
+	}
+	return vs
+}
+
+//检查密码
+// level: 密码强度级别
+// 	1：包含数字、字母
+// 	2：包含数字、字母、下划线
+// 	3：包含数字、字母、特殊字符
+// 	4：包含数字、大小写字母
+// 	5：包含数字、大小写字母、下划线
+// 	6：包含数字、大小写字母、特殊字符
+func (vs *Valids) IsPwd(level int, length []int, msg ...string) *Valids {
+	l := len(vs.valids)
+	if l != 0 {
+		v := vs.valids[l-1]
+		v.checks = append(v.checks, &isPwd{
+			title:    v.title,
+			value:    v.value,
+			valueStr: v.valueStr,
+			msgs:     msg,
+			level:    level,
+			length:   length,
 		})
 	}
 	return vs

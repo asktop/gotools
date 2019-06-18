@@ -14,12 +14,14 @@ type isPhone struct {
 }
 
 func (c *isPhone) Check() (msg string, ok bool) {
-	msg = fmt.Sprintf("%s的手机号格式不正确", c.title)
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}
-	if astring.IsPhone(c.valueStr) {
-		return "", true
+	if !astring.IsPhone(c.valueStr) {
+		if len(c.msgs) == 0 {
+			msg = fmt.Sprintf("%s 手机号格式不正确", c.title)
+		}
+		return msg, false
 	}
-	return
+	return "", true
 }

@@ -77,7 +77,7 @@ func (v *Valid) Regex(exp string, msg ...string) *Valid {
 }
 
 //在切片中
-func (v *Valid) InSlice(slice interface{}, msg ...string) *Valid {
+func (v *Valid) InSlice(slice []string, msg ...string) *Valid {
 	v.checks = append(v.checks, &inSlice{
 		title:    v.title,
 		value:    v.value,
@@ -100,6 +100,20 @@ func (v *Valid) Same(sameVal interface{}, msg ...string) *Valid {
 	return v
 }
 
+//数值比较
+// rs：比较状态 0：等于；1：大于；-1：小于；10：大于等于；-10：小于等于
+func (v *Valid) Cmp(number interface{}, rs int, msg ...string) *Valid {
+	v.checks = append(v.checks, &cmp{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+		number:   number,
+		rs:       rs,
+	})
+	return v
+}
+
 //数值的范围
 func (v *Valid) Between(min interface{}, max interface{}, msg ...string) *Valid {
 	v.checks = append(v.checks, &between{
@@ -109,18 +123,6 @@ func (v *Valid) Between(min interface{}, max interface{}, msg ...string) *Valid 
 		msgs:     msg,
 		min:      min,
 		max:      max,
-	})
-	return v
-}
-
-//数值相等
-func (v *Valid) Equal(equalVal interface{}, msg ...string) *Valid {
-	v.checks = append(v.checks, &equal{
-		title:    v.title,
-		value:    v.value,
-		valueStr: v.valueStr,
-		msgs:     msg,
-		equalVal: equalVal,
 	})
 	return v
 }
@@ -137,7 +139,7 @@ func (v *Valid) IsInt(msg ...string) *Valid {
 }
 
 //必须为数值
-func (v *Valid) IsDecimal(length interface{}, msg ...string) *Valid {
+func (v *Valid) IsDecimal(length []int, msg ...string) *Valid {
 	v.checks = append(v.checks, &isDecimal{
 		title:    v.title,
 		value:    v.value,
@@ -148,20 +150,8 @@ func (v *Valid) IsDecimal(length interface{}, msg ...string) *Valid {
 	return v
 }
 
-//必须为数字字符串
-func (v *Valid) IsNumber(length interface{}, msg ...string) *Valid {
-	v.checks = append(v.checks, &isNumber{
-		title:    v.title,
-		value:    v.value,
-		valueStr: v.valueStr,
-		msgs:     msg,
-		length:   length,
-	})
-	return v
-}
-
 //必须为手机号
-func (v *Valid) IsPhone(length interface{}, msg ...string) *Valid {
+func (v *Valid) IsPhone(msg ...string) *Valid {
 	v.checks = append(v.checks, &isPhone{
 		title:    v.title,
 		value:    v.value,
@@ -171,13 +161,67 @@ func (v *Valid) IsPhone(length interface{}, msg ...string) *Valid {
 	return v
 }
 
+//必须为电话号码
+func (v *Valid) IsTel(msg ...string) *Valid {
+	v.checks = append(v.checks, &isTel{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+	})
+	return v
+}
+
 //必须为Email
-func (v *Valid) IsEmail(length interface{}, msg ...string) *Valid {
+func (v *Valid) IsEmail(msg ...string) *Valid {
 	v.checks = append(v.checks, &isEmail{
 		title:    v.title,
 		value:    v.value,
 		valueStr: v.valueStr,
 		msgs:     msg,
+	})
+	return v
+}
+
+//必须为身份证号码
+func (v *Valid) IsIDCard(msg ...string) *Valid {
+	v.checks = append(v.checks, &isIDCard{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+	})
+	return v
+}
+
+//检查账号（字母开头，数字字母下划线）
+func (v *Valid) IsAccount(length []int, msg ...string) *Valid {
+	v.checks = append(v.checks, &isAccount{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+		length:   length,
+	})
+	return v
+}
+
+//检查密码
+// level: 密码强度级别
+// 	1：包含数字、字母
+// 	2：包含数字、字母、下划线
+// 	3：包含数字、字母、特殊字符
+// 	4：包含数字、大小写字母
+// 	5：包含数字、大小写字母、下划线
+// 	6：包含数字、大小写字母、特殊字符
+func (v *Valid) IsPwd(level int, length []int, msg ...string) *Valid {
+	v.checks = append(v.checks, &isPwd{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+		level:    level,
+		length:   length,
 	})
 	return v
 }

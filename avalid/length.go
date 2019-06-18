@@ -16,13 +16,14 @@ type length struct {
 }
 
 func (c *length) Check() (msg string, ok bool) {
+	if len(c.msgs) > 0 {
+		msg = c.msgs[0]
+	}
 	val := []rune(c.valueStr)
 	if c.min != nil {
 		mi := acast.ToInt(c.min)
 		if len(val) < mi {
-			if len(c.msgs) > 0 {
-				msg = c.msgs[0]
-			} else {
+			if len(c.msgs) == 0 {
 				msg = fmt.Sprintf("%s长度必须大于等于 %d", c.title, mi)
 			}
 			return msg, false
@@ -31,9 +32,7 @@ func (c *length) Check() (msg string, ok bool) {
 	if c.max != nil {
 		ma := acast.ToInt(c.max)
 		if len(val) > ma {
-			if len(c.msgs) > 0 {
-				msg = c.msgs[0]
-			} else {
+			if len(c.msgs) == 0 {
 				msg = fmt.Sprintf("%s长度必须小于等于 %d", c.title, ma)
 			}
 			return msg, false

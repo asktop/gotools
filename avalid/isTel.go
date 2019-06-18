@@ -5,21 +5,21 @@ import (
 	"github.com/asktop/gotools/astring"
 )
 
-//必须为整数
-type isInt struct {
+//必须为电话号码
+type isTel struct {
 	title    string
 	value    interface{}
 	valueStr string
 	msgs     []string
 }
 
-func (c *isInt) Check() (msg string, ok bool) {
+func (c *isTel) Check() (msg string, ok bool) {
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}
-	if !astring.IsAllInt(c.valueStr) {
+	if !astring.IsTel(c.valueStr) {
 		if len(c.msgs) == 0 {
-			msg = fmt.Sprintf("%s必须为整数", c.title)
+			msg = fmt.Sprintf("%s 电话号码格式不正确", c.title)
 		}
 		return msg, false
 	}

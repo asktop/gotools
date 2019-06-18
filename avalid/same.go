@@ -12,16 +12,14 @@ type same struct {
 }
 
 func (c *same) Check() (msg string, ok bool) {
-	msg = fmt.Sprintf("%s不能为空", c.title)
-	if c.value != nil {
-		if c.value == c.sameVal {
-			return "", true
-		} else {
-			msg = fmt.Sprintf("%s与规定不相同", c.title)
-		}
-		if len(c.msgs) > 0 {
-			msg = c.msgs[0]
-		}
+	if len(c.msgs) > 0 {
+		msg = c.msgs[0]
+	} else {
+		msg = fmt.Sprintf("%s与规定不相同", c.title)
 	}
-	return
+	if c.value == c.sameVal {
+		return "", true
+	} else {
+		return msg, false
+	}
 }

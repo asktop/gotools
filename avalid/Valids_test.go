@@ -17,8 +17,6 @@ func TestNew(t *testing.T) {
 	t.Log(ok, msg)
 	msg, ok = New("amount", "12.3456", "金额").Required().IsDecimal(nil).Check()
 	t.Log(ok, msg)
-	msg, ok = New("amount", "12.3456", "金额").Required().IsNumber(nil).Check()
-	t.Log(ok, msg)
 	msg, ok = New("amount", "12.3456", "金额").Required().Between(12, "12.15").Check()
 	t.Log(ok, msg)
 }

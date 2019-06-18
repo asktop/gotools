@@ -11,14 +11,15 @@ type required struct {
 }
 
 func (c *required) Check() (msg string, ok bool) {
-	msg = fmt.Sprintf("%s不能为空", c.title)
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
+	} else {
+		msg = fmt.Sprintf("%s不能为空", c.title)
 	}
 	if c.value != nil {
 		if c.value != "" {
 			return "", true
 		}
 	}
-	return
+	return msg, false
 }

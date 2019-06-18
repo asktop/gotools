@@ -5,8 +5,8 @@ import (
 	"github.com/asktop/gotools/astring"
 )
 
-//必须为数值
-type isDecimal struct {
+//检查账号（字母开头，数字字母下划线）
+type isAccount struct {
 	title    string
 	value    interface{}
 	valueStr string
@@ -14,19 +14,19 @@ type isDecimal struct {
 	length   []int
 }
 
-func (c *isDecimal) Check() (msg string, ok bool) {
+func (c *isAccount) Check() (msg string, ok bool) {
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}
 	if len(c.length) == 0 {
-		if !astring.IsAllDecimal(c.valueStr) {
+		if !astring.IsAccount(c.valueStr) {
 			if len(c.msgs) == 0 {
-				msg = fmt.Sprintf("%s必须为数值", c.title)
+				msg = fmt.Sprintf("%s不符合要求", c.title)
 			}
 			return msg, false
 		}
 	} else {
-		if !astring.IsAllDecimal(c.valueStr, c.length...) {
+		if !astring.IsAccount(c.valueStr, c.length...) {
 			if len(c.msgs) == 0 {
 				var lenStr string
 				if len(c.length) == 1 {
@@ -34,7 +34,7 @@ func (c *isDecimal) Check() (msg string, ok bool) {
 				} else {
 					lenStr = fmt.Sprintf("%d 至 %d", c.length[0], c.length[1])
 				}
-				msg = fmt.Sprintf("%s必须为数值，且小数位数必须为 %s", c.title, lenStr)
+				msg = fmt.Sprintf("%s不符合要求，且长度必须为 %s", c.title, lenStr)
 			}
 			return msg, false
 		}
