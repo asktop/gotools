@@ -2,7 +2,10 @@ package astring
 
 import (
 	"fmt"
+	"math"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
 func MatchString(pattern string, str string) bool {
@@ -36,7 +39,24 @@ func MatchString(pattern string, str string) bool {
 	(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}$)
  */
 func IsIDCard(data string) bool {
-	return MatchString(`(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)`, data)
+	if len(data) == 18 {
+		return checkIDCardLast(data) && MatchString(`(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)`, data)
+	} else {
+		return MatchString(`(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)`, data)
+	}
+}
+
+//检验身份证最后一位验证码
+func checkIDCardLast(data string) bool {
+	cardNo := strings.ToUpper(data)
+	checks := []string{"1", "0", "X", "9", "8", "7", "6", "5", "4", "3", "2"}
+	var sum int
+	for i := 17; i > 0; i-- {
+		n, _ := strconv.Atoi(cardNo[17-i : 18-i])
+		p := int(math.Pow(2, float64(i))) % 11
+		sum += n * p
+	}
+	return cardNo[17:] == checks[sum%11]
 }
 
 /*
