@@ -1,6 +1,7 @@
 package atime
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -22,6 +23,23 @@ func TestOffset(t *testing.T) {
 	now = Now()
 	t.Log(now)
 	t.Log(now.UnixNano())
+}
+
+func TestFixed(t *testing.T) {
+	now := time.Now()
+	fmt.Println(now)
+
+	//设置固定时间
+	Fixed(&now)
+	fmt.Println(Now())
+
+	time.Sleep(time.Second*3)
+	fmt.Println(Now())
+
+	//清除固定时间
+	Fixed(nil)
+	time.Sleep(time.Second*3)
+	fmt.Println(Now())
 }
 
 //定时器

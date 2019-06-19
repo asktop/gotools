@@ -26,10 +26,10 @@ func Offset(offset time.Duration) {
 }
 
 //设置固定时间（改变当前时间）
-func Fixed(fixed time.Time) {
+func Fixed(fixed *time.Time) {
 	mu.Lock()
 	defer mu.Unlock()
-	fixedTime = &fixed
+	fixedTime = fixed
 }
 
 //当前时间
