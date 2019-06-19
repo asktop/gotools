@@ -21,21 +21,21 @@ var fixedTime *time.Time     //固定时间
 //设置时间偏量（改变当前时间）
 func Offset(offset time.Duration) {
 	mu.Lock()
-	defer mu.Lock()
+	defer mu.Unlock()
 	offsetTime = offset
 }
 
 //设置固定时间（改变当前时间）
 func Fixed(fixed time.Time) {
 	mu.Lock()
-	defer mu.Lock()
+	defer mu.Unlock()
 	fixedTime = &fixed
 }
 
 //当前时间
 func Now() time.Time {
 	mu.Lock()
-	defer mu.Lock()
+	defer mu.Unlock()
 	if fixedTime != nil {
 		return *fixedTime
 	}
