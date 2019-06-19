@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/asktop/gotools/acast"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -13,15 +14,31 @@ const (
 	TIME     = "15:04:05"
 )
 
+var mu sync.RWMutex
 var offsetTime time.Duration //时间偏移量
+var fixedTime *time.Time     //固定时间
 
 //设置时间偏量（改变当前时间）
 func Offset(offset time.Duration) {
+	mu.Lock()
+	defer mu.Lock()
 	offsetTime = offset
+}
+
+//设置固定时间（改变当前时间）
+func Fixed(fixed time.Time) {
+	mu.Lock()
+	defer mu.Lock()
+	fixedTime = &fixed
 }
 
 //当前时间
 func Now() time.Time {
+	mu.Lock()
+	defer mu.Lock()
+	if fixedTime != nil {
+		return *fixedTime
+	}
 	return time.Now().Add(offsetTime)
 }
 
