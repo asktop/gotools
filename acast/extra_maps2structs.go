@@ -200,6 +200,13 @@ func (s *tagStore) get(t reflect.Type) []string {
 				continue
 			}
 			if tag == "" {
+				tag = field.Tag.Get("json")
+				if tag == "-" {
+					// ignore
+					continue
+				}
+			}
+			if tag == "" {
 				// no tag, but we can record the field name
 				tag = NameMapping(field.Name)
 			}
