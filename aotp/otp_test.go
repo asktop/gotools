@@ -8,11 +8,11 @@ import (
 
 func TestNewOtpKey(t *testing.T) {
 	email := "asktop@qq.com"
-	otpKey, otpBody, otpQrcode := NewOtpKey(email)
-	fmt.Println(otpKey)
+	otpSecret, otpBody, otpQrcode := NewOtpSecret(email)
+	fmt.Println(otpSecret)
 	fmt.Println(otpBody)
 	fmt.Println(otpQrcode)
-	fmt.Println(GetOtpCode(otpKey))
+	fmt.Println(GetOtpCode(otpSecret))
 	fmt.Println(GetOtpCodeFrom("NERS2IMGVD2ZJPPG", time.Now().Unix()))
 }
 

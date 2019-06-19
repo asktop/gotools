@@ -15,10 +15,10 @@ import (
 //OTP（One-Time Password）：OTP动态口令，又称一次性密码（阿里云身份宝、Google Authenticator）
 
 //生成基于时间的OTP密钥、OTP扫描用字符串、OTP扫描二维码的base64加密字符串
-func NewOtpKey(account string) (otpKey string, otpBody string, otpQrcode string) {
-	otpKey = arand.RandBase32(10)
+func NewOtpSecret(account string) (otpSecret string, otpBody string, otpQrcode string) {
+	otpSecret = arand.RandBase32(10)
 	//OTP扫描用字符串格式：otpauth://totp/[客户端显示的账户信息]?secret=[secretBase32]
-	otpBody = "otpauth://totp/" + account + "?secret=" + otpKey
+	otpBody = "otpauth://totp/" + account + "?secret=" + otpSecret
 	//OTP扫描二维码的base64加密字符串
 	qrdata, _ := qrcode.Encode(otpBody, qrcode.Medium, 256)
 	otpQrcode = "data:image/png;base64," + base64.StdEncoding.EncodeToString(qrdata)
@@ -26,9 +26,9 @@ func NewOtpKey(account string) (otpKey string, otpBody string, otpQrcode string)
 }
 
 // GetOtpCode 根据OTP密钥 和 当前时间戳timestamp 生成基于时间OTP验证码
-func GetOtpCode(otpKey string) string {
+func GetOtpCode(otpSecret string) string {
 	timestamp := time.Now().Unix()
-	hs, err := hmacSha1(otpKey, timestamp/30)
+	hs, err := hmacSha1(otpSecret, timestamp/30)
 	if err != nil {
 		fmt.Println("GetOtpCode err", err.Error())
 		return ""
@@ -38,8 +38,8 @@ func GetOtpCode(otpKey string) string {
 }
 
 // GetOtpCode 根据OTP密钥 和 指定时间戳timestamp 生成基于时间OTP验证码
-func GetOtpCodeFrom(otpKey string, timestamp int64) string {
-	hs, err := hmacSha1(otpKey, timestamp/30)
+func GetOtpCodeFrom(otpSecret string, timestamp int64) string {
+	hs, err := hmacSha1(otpSecret, timestamp/30)
 	if err != nil {
 		fmt.Println("GetOtpCode err", err.Error())
 		return ""
@@ -49,19 +49,19 @@ func GetOtpCodeFrom(otpKey string, timestamp int64) string {
 }
 
 // CheckOtpCode 校验 根据OTP密钥 和 当前时间戳timestamp 生成的基于时间OTP验证码
-func CheckOtpCode(otpKey string, code string) bool {
-	otpCode := GetOtpCode(otpKey)
+func CheckOtpCode(otpSecret string, code string) bool {
+	otpCode := GetOtpCode(otpSecret)
 	return otpCode == code
 }
 
 // CheckOtpCodeFrom 校验 根据OTP密钥 和 指定时间戳timestamp 生成的基于时间OTP验证码
-func CheckOtpCodeFrom(otpKey string, timestamp int64, code string) bool {
-	otpCode := GetOtpCodeFrom(otpKey, timestamp)
+func CheckOtpCodeFrom(otpSecret string, timestamp int64, code string) bool {
+	otpCode := GetOtpCodeFrom(otpSecret, timestamp)
 	return otpCode == code
 }
 
-func hmacSha1(key string, timestamp int64) ([]byte, error) {
-	decodeKey, err := base32.StdEncoding.DecodeString(key)
+func hmacSha1(secret string, timestamp int64) ([]byte, error) {
+	decodeKey, err := base32.StdEncoding.DecodeString(secret)
 	if err != nil {
 		return nil, err
 	}
