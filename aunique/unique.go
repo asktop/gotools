@@ -41,7 +41,7 @@ func UniqueNo(length int, prefix ...string) string {
 	//当前序号
 	lastNo.mu.Lock()
 	defer lastNo.mu.Unlock()
-	nanosecond := atime.Now().Format("060102150405") + fmt.Sprintf("%d", atime.NowNano()%1e9)
+	nanosecond := atime.Now().Format("060102150405") + fmt.Sprintf("%d", atime.Now().Nanosecond())
 	timestamp := astring.Substr(nanosecond, 0, lastNo.length-4)
 	if lastNo.timestamp == timestamp {
 		lastNo.number++
