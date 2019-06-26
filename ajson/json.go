@@ -22,6 +22,20 @@ import (
 
 //将 map或结构 转换成 json类型string
 func Encode(v interface{}) string {
+	switch s := v.(type) {
+	case nil:
+		return ""
+	case string:
+		return s
+	case error:
+		return s.Error()
+	}
+	objVal := reflect.ValueOf(v)
+	if objVal.Kind() == reflect.Ptr {
+		if objVal.IsNil() {
+			return ""
+		}
+	}
 	data, _ := json.Marshal(v)
 	return string(data)
 }

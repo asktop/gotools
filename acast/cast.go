@@ -1,6 +1,8 @@
 package acast
 
 import (
+	"encoding/json"
+	"reflect"
 	"time"
 )
 
@@ -126,6 +128,32 @@ func ToString(i interface{}, defaultVal ...string) string {
 	v, err := ToStringE(i)
 	if len(defaultVal) > 0 && (i == nil || err != nil) {
 		return defaultVal[0]
+	}
+	return v
+}
+
+//强制转换为string
+func ToStringForce(i interface{}, defaultVal ...string) string {
+	var isNil bool
+	if i == nil {
+		isNil = true
+	} else {
+		objVal := reflect.ValueOf(i)
+		if objVal.Kind() == reflect.Ptr {
+			isNil = objVal.IsNil()
+		}
+	}
+	if isNil {
+		if len(defaultVal) > 0 {
+			return defaultVal[0]
+		} else {
+			return ""
+		}
+	}
+	v, err := ToStringE(i)
+	if err != nil {
+		vData, _ := json.Marshal(i)
+		return string(vData)
 	}
 	return v
 }

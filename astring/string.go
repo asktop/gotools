@@ -2,8 +2,6 @@ package astring
 
 import (
 	"github.com/asktop/gotools/acast"
-	"github.com/asktop/gotools/ajson"
-	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -169,19 +167,7 @@ func IntToStr(num int, length int, force ...bool) string {
 func Join(args ...interface{}) string {
 	var rs string
 	for _, arg := range args {
-		if err, ok := arg.(error); ok {
-			rs += err.Error() + " "
-			continue
-		}
-		argVal := reflect.ValueOf(arg)
-		if argVal.Kind() == reflect.Ptr {
-			argVal = argVal.Elem()
-		}
-		if argVal.Kind() == reflect.Struct || argVal.Kind() == reflect.Slice || argVal.Kind() == reflect.Map {
-			rs += ajson.Encode(argVal.Interface()) + " "
-		} else {
-			rs += acast.ToString(argVal.Interface()) + " "
-		}
+		rs += acast.ToStringForce(arg) + " "
 	}
 	return strings.TrimSpace(rs)
 }

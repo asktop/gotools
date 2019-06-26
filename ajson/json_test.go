@@ -2,6 +2,8 @@ package ajson
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"testing"
 )
 
@@ -55,4 +57,12 @@ func TestDecodeToMapString(t *testing.T) {
 	str := `{"ID":"127","serverName":"Shanghai_VPN","serverIP":"127.0.0.1","code":180}`
 	params, _ := DecodeToMapString([]byte(str))
 	t.Log(params)
+}
+
+func TestEncode(t *testing.T) {
+	fmt.Println(Encode(nil))
+	fmt.Println(Encode(12))
+	fmt.Println(Encode("12"))
+	fmt.Println(Encode(true))
+	fmt.Println(Encode(errors.New("12")))
 }
