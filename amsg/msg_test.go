@@ -1,56 +1,75 @@
 package amsg
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
 
-func TestMsg(t *testing.T) {
-	msg1 := testMsg1()
-	t.Log(msg1)
-	t.Log(msg1.Error())
-	t.Log(msg1.Format())
-
-
-	t.Log("---------")
-
-	msg2 := testMsg2()
-	t.Log(msg2)
-	t.Log(msg2.Error())
-	t.Log(msg2.Format())
-
-	t.Log("---------")
-
-	msg3 := testMsg3()
-	t.Log(msg3)
-	t.Log(msg3.Error())
-	t.Log(msg3.Format())
-}
-
-func TestMsgStatus(t *testing.T) {
-	msg4 := testMsg4()
-	t.Log(msg4)
-	t.Log(msg4.Error())
-	t.Log(msg4.Format())
-	t.Log(msg4.Status())
-}
-
-func testMsg1() Msg {
+func msg1() Msg {
 	msg := New("abcdef")
+	msg.Data("AAA")
 	return msg
 }
 
-func testMsg2() Msg {
+func TestMsg1(t *testing.T) {
+	msg := msg1()
+	fmt.Println(msg)
+	fmt.Println("Status", msg.Status())
+	fmt.Println("Error", msg.Error())
+	fmt.Println("String", msg.String())
+	fmt.Println(msg.Stringf())
+	data, _ := json.Marshal(&msg)
+	fmt.Println("json", string(data))
+}
+
+func msg2() Msg {
 	msg := New("abc%sdef", "123")
+	msg.Data("AAA")
 	return msg
 }
 
-func testMsg3() Msg {
+func TestMsg2(t *testing.T) {
+	msg := msg2()
+	fmt.Println(msg)
+	fmt.Println("Status", msg.Status())
+	fmt.Println("Error", msg.Error())
+	fmt.Println("String", msg.String())
+	fmt.Println(msg.Stringf())
+	data, _ := json.Marshal(&msg)
+	fmt.Println("json", string(data))
+}
+
+func msg3() Msg {
 	msg := NewErr(fmt.Errorf("abc%sdef", "123"))
+	msg.Data("AAA")
 	return msg
 }
 
-func testMsg4() Msg {
-	msg := New("abcdef").SetSuccess()
+func TestMsg3(t *testing.T) {
+	msg := msg3()
+	fmt.Println(msg)
+	fmt.Println("Status", msg.Status())
+	fmt.Println("Error", msg.Error())
+	fmt.Println("String", msg.String())
+	fmt.Println(msg.Stringf())
+	data, _ := json.Marshal(&msg)
+	fmt.Println("json", string(data))
+}
+
+func msg4() Msg {
+	msg := NewErr(nil).Msg("abc%sdef", "123")
+	msg.Data("AAA")
 	return msg
+}
+
+func TestMsg4(t *testing.T) {
+	msg := msg4()
+	fmt.Println(msg)
+	fmt.Println("Status", msg.Status())
+	fmt.Println("Error", msg.Error())
+	fmt.Println("String", msg.String())
+	fmt.Println(msg.Stringf())
+	data, _ := json.Marshal(&msg)
+	fmt.Println("json", string(data))
 }
