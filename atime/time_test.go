@@ -42,6 +42,10 @@ func TestFixed(t *testing.T) {
 	fmt.Println(Now())
 }
 
+func TestStartTime(t *testing.T) {
+	fmt.Println(StartDay())
+}
+
 //定时器
 var ticker *time.Ticker
 

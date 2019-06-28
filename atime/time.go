@@ -186,24 +186,44 @@ func startTime(timestamp ...interface{}) time.Time {
 
 //获取 当前时间 或 指定时间戳 的 当前月开始时间
 func StartMonth(timestamp ...interface{}) time.Time {
-	fn := startTime(timestamp)
+	var fn time.Time
+	if len(timestamp) > 0 {
+		fn = startTime(timestamp)
+	} else {
+		fn = startTime()
+	}
 	return time.Date(fn.Year(), fn.Month(), 1, 0, 0, 0, 0, time.Local)
 }
 
 //获取 当前时间 或 指定时间戳 的 当天开始时间
 func StartDay(timestamp ...interface{}) time.Time {
-	fn := startTime(timestamp)
+	var fn time.Time
+	if len(timestamp) > 0 {
+		fn = startTime(timestamp)
+	} else {
+		fn = startTime()
+	}
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), 0, 0, 0, 0, time.Local)
 }
 
 //获取 当前时间 或 指定时间戳 的 当前小时开始时间
 func StartHour(timestamp ...interface{}) time.Time {
-	fn := startTime(timestamp)
+	var fn time.Time
+	if len(timestamp) > 0 {
+		fn = startTime(timestamp)
+	} else {
+		fn = startTime()
+	}
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), 0, 0, 0, time.Local)
 }
 
 //获取 当前时间 或 指定时间戳 的 当前分钟开始时间
 func StartMinute(timestamp ...interface{}) time.Time {
-	fn := startTime(timestamp)
+	var fn time.Time
+	if len(timestamp) > 0 {
+		fn = startTime(timestamp)
+	} else {
+		fn = startTime()
+	}
 	return time.Date(fn.Year(), fn.Month(), fn.Day(), fn.Hour(), fn.Minute(), 0, 0, time.Local)
 }
