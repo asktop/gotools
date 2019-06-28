@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"github.com/asktop/gotools/acast"
 	"github.com/asktop/gotools/ajson"
