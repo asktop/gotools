@@ -37,5 +37,5 @@ import (
 )
 
 func main() {
-	fmt.Println("github.com/asktop/gotools")
+	fmt.Println("go get github.com/asktop/gotools success")
 }
