@@ -43,7 +43,8 @@ func TestFixed(t *testing.T) {
 }
 
 func TestStartTime(t *testing.T) {
-	fmt.Println(StartDay())
+	fmt.Println(StartMinute().Unix())
+	fmt.Println(StartMinute(1561810100).Unix())
 }
 
 //定时器
