@@ -3,7 +3,7 @@ package avalid
 import (
 	"fmt"
 	"github.com/asktop/gotools/acast"
-	"github.com/ericlagergren/decimal"
+	"github.com/asktop/decimal"
 )
 
 //数值的范围

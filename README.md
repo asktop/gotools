@@ -9,11 +9,9 @@
 | 安装 | 模块 | 说明 |
 | --- | --- | --- |
 | go get github.com/asktop/gotools/acast    | acast    | * 数据类型转换：接口转基本类型，map和struct互转等 |
-| go get github.com/asktop/gotools/acharset | acharset | 字符集转换 |
 | go get github.com/asktop/gotools/acron    | acron    | cron表达式、定时任务工具 |
 | go get github.com/asktop/gotools/afile    | afile    | 文件管理 |
 | go get github.com/asktop/gotools/agzip    | agzip    | gzip压缩、解压 |
-| go get github.com/asktop/gotools/ahtml    | ahtml    | html编解码 |
 | go get github.com/asktop/gotools/ajson    | ajson    | json编解码 |
 | go get github.com/asktop/gotools/akey     | akey     | * base64/md5等加密、解密 |
 | go get github.com/asktop/gotools/alist    | alist    | * 并发安全list |
@@ -37,6 +35,5 @@
 | go get github.com/asktop/gotools/aurl     | aurl     | url编解码 |
 | go get github.com/asktop/gotools/auuid    | auuid    | uuid生成 |
 | go get github.com/asktop/gotools/avalid   | avalid   | * 表单验证工具 |
-| go get github.com/asktop/gotools/axml     | axml     | xml编解码 |
 | go get github.com/asktop/gotools/ayaml    | ayaml    | yaml编解码 |
 | go get github.com/asktop/gotools/azlib    | azlib    | zlib压缩、解压 |

@@ -4,24 +4,19 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base32"
-	"encoding/base64"
 	"encoding/binary"
 	"fmt"
 	"github.com/asktop/gotools/arand"
-	"github.com/skip2/go-qrcode"
 	"time"
 )
 
 //OTP（One-Time Password）：OTP动态口令，又称一次性密码（阿里云身份宝、Google Authenticator）
 
-//生成基于时间的OTP密钥、OTP扫描用字符串、OTP扫描二维码的base64加密字符串
-func NewOtpSecret(account string) (otpSecret string, otpBody string, otpQrcode string) {
+//生成基于时间的OTP密钥、OTP扫描用字符串
+func NewOtpSecret(account string) (otpSecret string, otpBody string) {
 	otpSecret = arand.RandBase32(10)
 	//OTP扫描用字符串格式：otpauth://totp/[客户端显示的账户信息]?secret=[secretBase32]
 	otpBody = "otpauth://totp/" + account + "?secret=" + otpSecret
-	//OTP扫描二维码的base64加密字符串
-	qrdata, _ := qrcode.Encode(otpBody, qrcode.Medium, 256)
-	otpQrcode = "data:image/png;base64," + base64.StdEncoding.EncodeToString(qrdata)
 	return
 }
 

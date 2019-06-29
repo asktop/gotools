@@ -3,11 +3,9 @@ package main
 import (
 	"fmt"
 	_ "github.com/asktop/gotools/acast"
-	_ "github.com/asktop/gotools/acharset"
 	_ "github.com/asktop/gotools/acron"
 	_ "github.com/asktop/gotools/afile"
 	_ "github.com/asktop/gotools/agzip"
-	_ "github.com/asktop/gotools/ahtml"
 	_ "github.com/asktop/gotools/ajson"
 	_ "github.com/asktop/gotools/akey"
 	_ "github.com/asktop/gotools/alist"
@@ -31,7 +29,6 @@ import (
 	_ "github.com/asktop/gotools/aurl"
 	_ "github.com/asktop/gotools/auuid"
 	_ "github.com/asktop/gotools/avalid"
-	_ "github.com/asktop/gotools/axml"
 	_ "github.com/asktop/gotools/ayaml"
 	_ "github.com/asktop/gotools/azlib"
 )

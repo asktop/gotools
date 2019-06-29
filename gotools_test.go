@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/asktop/gotools/acast"
 	"github.com/asktop/gotools/ajson"
-	"github.com/ericlagergren/decimal"
+	"github.com/asktop/decimal"
 	"testing"
 )
 

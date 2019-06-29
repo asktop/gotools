@@ -2,7 +2,7 @@ package amath
 
 import (
 	"github.com/asktop/gotools/acast"
-	"github.com/ericlagergren/decimal"
+	"github.com/asktop/decimal"
 	"strings"
 )
 

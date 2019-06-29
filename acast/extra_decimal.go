@@ -1,7 +1,7 @@
 package acast
 
 import (
-	big "github.com/ericlagergren/decimal"
+	big "github.com/asktop/decimal"
 	"github.com/shopspring/decimal"
 )
 

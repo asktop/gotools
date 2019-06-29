@@ -1,7 +1,7 @@
 package amath
 
 import (
-	"github.com/ericlagergren/decimal"
+	"github.com/asktop/decimal"
 	"testing"
 )
 

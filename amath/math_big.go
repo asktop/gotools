@@ -1,8 +1,8 @@
 package amath
 
 import (
-	"github.com/ericlagergren/decimal"
-	"github.com/ericlagergren/decimal/math"
+	"github.com/asktop/decimal"
+	"github.com/asktop/decimal/math"
 	"strings"
 )
 
