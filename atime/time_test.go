@@ -33,18 +33,22 @@ func TestFixed(t *testing.T) {
 	Fixed(&now)
 	fmt.Println(Now())
 
-	time.Sleep(time.Second*3)
+	time.Sleep(time.Second * 3)
 	fmt.Println(Now())
 
 	//清除固定时间
 	Fixed(nil)
-	time.Sleep(time.Second*3)
+	time.Sleep(time.Second * 3)
 	fmt.Println(Now())
 }
 
 func TestStartTime(t *testing.T) {
 	fmt.Println(StartMinute().Unix())
 	fmt.Println(StartMinute(1561810100).Unix())
+}
+
+func TestFormat(t *testing.T) {
+	fmt.Println(FormatTimestamp(DATETIME, "1561969491008"))
 }
 
 //定时器
