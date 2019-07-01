@@ -20,6 +20,14 @@ func NewOtpSecret(account string) (otpSecret string, otpBody string) {
 	return
 }
 
+//生成OTP二维码base64
+//"github.com/skip2/go-qrcode"
+//func MakeOtpQrcode(otpBody string) (otpQrcode string) {
+//	qrdata, _ := qrcode.Encode(otpBody, qrcode.Medium, 256)
+//	otpQrcode = "data:image/png;base64," + base64.StdEncoding.EncodeToString(qrdata)
+//	return otpQrcode
+//}
+
 // GetOtpCode 根据OTP密钥 和 当前时间戳timestamp 生成基于时间OTP验证码
 func GetOtpCode(otpSecret string) string {
 	timestamp := time.Now().Unix()
