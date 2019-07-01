@@ -291,6 +291,9 @@ func (s *Int64Set) MarshalJSON() ([]byte, error) {
 }
 
 func (s *Int64Set) UnmarshalJSON(b []byte) error {
+	if s.mu == nil {
+		s.mu = async.New()
+	}
 	var data []int64
 	err := json.Unmarshal(b, &data)
 	if err != nil {

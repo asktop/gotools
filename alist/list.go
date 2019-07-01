@@ -330,6 +330,9 @@ func (l *List) MarshalJSON() ([]byte, error) {
 }
 
 func (l *List) UnmarshalJSON(b []byte) error {
+	if l.mu == nil {
+		l.mu = async.New()
+	}
 	var data []interface{}
 	err := json.Unmarshal(b, &data)
 	if err != nil {

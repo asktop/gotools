@@ -229,6 +229,9 @@ func (m *StrIntMap) MarshalJSON() ([]byte, error) {
 }
 
 func (m *StrIntMap) UnmarshalJSON(b []byte) error {
+	if m.mu == nil {
+		m.mu = async.New()
+	}
 	data := make(map[string]int)
 	err := json.Unmarshal(b, &data)
 	if err != nil {

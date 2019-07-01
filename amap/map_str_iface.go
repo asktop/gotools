@@ -237,6 +237,9 @@ func (m *StrIfaceMap) MarshalJSON() ([]byte, error) {
 }
 
 func (m *StrIfaceMap) UnmarshalJSON(b []byte) error {
+	if m.mu == nil {
+		m.mu = async.New()
+	}
 	data := make(map[string]interface{})
 	err := json.Unmarshal(b, &data)
 	if err != nil {

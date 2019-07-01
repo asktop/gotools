@@ -417,6 +417,9 @@ func (o OrderMap) MarshalJSON() ([]byte, error) {
 
 //实现json反序列化接口，保证map的json可以序列化到ordermap中
 func (o *OrderMap) UnmarshalJSON(b []byte) error {
+	if o.mu == nil {
+		o.mu = async.New()
+	}
 	o.mu.Lock()
 	defer o.mu.Unlock()
 	if o.data == nil {

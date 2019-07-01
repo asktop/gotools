@@ -292,6 +292,9 @@ func (s *IfaceSet) MarshalJSON() ([]byte, error) {
 }
 
 func (s *IfaceSet) UnmarshalJSON(b []byte) error {
+	if s.mu == nil {
+		s.mu = async.New()
+	}
 	var data []interface{}
 	err := json.Unmarshal(b, &data)
 	if err != nil {

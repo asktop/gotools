@@ -293,6 +293,9 @@ func (s *StringSet) MarshalJSON() ([]byte, error) {
 }
 
 func (s *StringSet) UnmarshalJSON(b []byte) error {
+	if s.mu == nil {
+		s.mu = async.New()
+	}
 	var data []string
 	err := json.Unmarshal(b, &data)
 	if err != nil {
