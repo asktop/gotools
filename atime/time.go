@@ -109,10 +109,13 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 		}
 		secStr := tsStr[0:10]
 		nsecStr := tsStr[10:]
-		nsecStr = strings.TrimLeft(nsecStr, "0")
 		sec, err = acast.ToInt64E(secStr)
 		if err != nil {
 			return fn, err
+		}
+		nsecStr = strings.TrimLeft(nsecStr, "0")
+		if nsecStr == "" {
+			nsecStr = "0"
 		}
 		nsec, err = acast.ToInt64E(nsecStr)
 		if err != nil {

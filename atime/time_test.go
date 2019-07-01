@@ -49,6 +49,7 @@ func TestStartTime(t *testing.T) {
 
 func TestFormat(t *testing.T) {
 	fmt.Println(FormatTimestamp(DATETIME, "1561969491008"))
+	fmt.Println(FormatTimestamp(DATETIME, "1561969491000"))
 }
 
 //定时器
