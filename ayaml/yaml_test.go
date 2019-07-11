@@ -1,7 +1,6 @@
 package ayaml
 
 import (
-	"io/ioutil"
 	"testing"
 )
 
@@ -18,13 +17,11 @@ func TestYaml(t *testing.T) {
 	}
 
 	var config Config
-	configFile := "yaml_test.yaml"
-	configBytes, err := ioutil.ReadFile(configFile)
+	err := ReadYaml("yaml_test.yaml", &config)
 	if err != nil {
 		t.Log(err)
 		return
 	}
-	Unmarshal(configBytes, &config)
 
 	t.Log(config.Name)
 	t.Log(config.Spouse.Name)
