@@ -269,7 +269,7 @@ func ToFirstLower(s string) string {
 
 //转换成 大驼峰命名（UserId）
 func ToCamelCase(s string) string {
-	if IsNum_EN(s) {
+	if IsNum_Alpha(s) {
 		var rs string
 		s = strings.TrimSpace(s)
 		es := strings.Split(s, "_")
@@ -294,12 +294,12 @@ func ToUnderscoreCase(s string) string {
 
 //转换成 小下划线命名（user_id）
 func TounderscoreCase(s string) string {
-	if IsNum_EN(s) {
+	if IsNum_Alpha(s) {
 		var rs string
 		l := len(s)
 		for i := 0; i < l; i++ {
 			e := s[i : i+1]
-			if IsUpperChar(e) {
+			if IsUpper(e) {
 				e = "_" + strings.ToLower(e)
 			}
 			rs += e

@@ -11,7 +11,7 @@ type isAccount struct {
 	value    interface{}
 	valueStr string
 	msgs     []string
-	length   []int
+	length   []uint
 }
 
 func (c *isAccount) Check() (msg string, ok bool) {

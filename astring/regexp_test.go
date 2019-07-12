@@ -7,60 +7,60 @@ import (
 )
 
 func TestIsNum_EN(t *testing.T) {
-	t.Log(IsNum_EN("jasdf_2934_"))
-	t.Log(IsNum_EN("jasdf_29.34_"))
-	t.Log(HasNum_EN("jasdf-29.34"))
+	t.Log(IsNum_Alpha("jasdf_2934_"))
+	t.Log(IsNum_Alpha("jasdf_29.34_"))
+	t.Log(HasNum_Alpha("jasdf-29.34"))
 }
 
 func TestIsUpperChar(t *testing.T) {
 	a := "a"
 	b := "A"
 	c := "Aa"
-	t.Log(IsUpperChar(a))
-	t.Log(IsUpperChar(b))
-	t.Log(IsUpperChar(c))
+	t.Log(IsUpper(a))
+	t.Log(IsUpper(b))
+	t.Log(IsUpper(c))
 
 	t.Log("----------")
 
-	t.Log(HasUpperChar(a))
-	t.Log(HasUpperChar(b))
-	t.Log(HasUpperChar(c))
+	t.Log(HasUpper(a))
+	t.Log(HasUpper(b))
+	t.Log(HasUpper(c))
 
 	t.Log("----------")
 
-	t.Log(IsLowerChar(a))
-	t.Log(IsLowerChar(b))
-	t.Log(IsLowerChar(c))
+	t.Log(IsLower(a))
+	t.Log(IsLower(b))
+	t.Log(IsLower(c))
 
 	t.Log("----------")
 
-	t.Log(HasLowerChar(a))
-	t.Log(HasLowerChar(b))
-	t.Log(HasLowerChar(c))
+	t.Log(HasLower(a))
+	t.Log(HasLower(b))
+	t.Log(HasLower(c))
 }
 
 func TestIsAllDecimal(t *testing.T) {
-	t.Log(IsAllDecimal("213123_2934"))
-	t.Log(IsAllDecimal("-213123.2934"))
-	t.Log(IsAllDecimal("213123.293400", 8))
-	t.Log(IsAllDecimal("-213123.293400", 6))
-	t.Log(IsAllDecimal("213123.293400", 3, 8))
-	t.Log(IsAllDecimal("-213123.293400", 3, 6))
-	t.Log(IsAllDecimal("-213123", 0))
-	t.Log(IsAllDecimal("-213123", 0, 1))
-	t.Log(IsAllDecimal("-213123.", 0, 1))
-	t.Log(IsAllDecimal("213123"))
+	t.Log(IsDecimal("213123_2934"))
+	t.Log(IsDecimal("-213123.2934"))
+	t.Log(IsDecimal("213123.293400", 8))
+	t.Log(IsDecimal("-213123.293400", 6))
+	t.Log(IsDecimal("213123.293400", 3, 8))
+	t.Log(IsDecimal("-213123.293400", 3, 6))
+	t.Log(IsDecimal("-213123", 0))
+	t.Log(IsDecimal("-213123", 0, 1))
+	t.Log(IsDecimal("-213123.", 0, 1))
+	t.Log(IsDecimal("213123"))
 }
 
-func TestIsAllDateFormat(t *testing.T) {
+func TestIsDateFormat(t *testing.T) {
 	data1 := "2018-2-1"
 	data2 := "1918.01.1"
 	data3 := "2018年12月30日"
 	data4 := "2018/10/1"
-	t.Log(IsAllDateFormat(data1, "-"))
-	t.Log(IsAllDateFormat(data2, "."))
-	t.Log(IsAllDateFormat(data3, "/"))
-	t.Log(IsAllDateFormat(data4, "/"))
+	t.Log(IsDateFormat(data1, "-"))
+	t.Log(IsDateFormat(data2, "."))
+	t.Log(IsDateFormat(data3, "/"))
+	t.Log(IsDateFormat(data4, "/"))
 }
 
 //匹配并替换

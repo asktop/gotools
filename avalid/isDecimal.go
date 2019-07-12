@@ -11,7 +11,7 @@ type isDecimal struct {
 	value    interface{}
 	valueStr string
 	msgs     []string
-	length   []int
+	length   []uint
 }
 
 func (c *isDecimal) Check() (msg string, ok bool) {
@@ -19,14 +19,14 @@ func (c *isDecimal) Check() (msg string, ok bool) {
 		msg = c.msgs[0]
 	}
 	if len(c.length) == 0 {
-		if !astring.IsAllDecimal(c.valueStr) {
+		if !astring.IsDecimal(c.valueStr) {
 			if len(c.msgs) == 0 {
 				msg = fmt.Sprintf("%s必须为数值", c.title)
 			}
 			return msg, false
 		}
 	} else {
-		if !astring.IsAllDecimal(c.valueStr, c.length...) {
+		if !astring.IsDecimal(c.valueStr, c.length...) {
 			if len(c.msgs) == 0 {
 				var lenStr string
 				if len(c.length) == 1 {

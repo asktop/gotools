@@ -18,8 +18,8 @@ type isPwd struct {
 	value    interface{}
 	valueStr string
 	msgs     []string
-	level    int
-	length   []int
+	level    uint
+	length   []uint
 }
 
 func (c *isPwd) Check() (msg string, ok bool) {

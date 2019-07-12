@@ -139,7 +139,7 @@ func (v *Valid) IsInt(msg ...string) *Valid {
 }
 
 //必须为数值
-func (v *Valid) IsDecimal(length []int, msg ...string) *Valid {
+func (v *Valid) IsDecimal(length []uint, msg ...string) *Valid {
 	v.checks = append(v.checks, &isDecimal{
 		title:    v.title,
 		value:    v.value,
@@ -151,8 +151,8 @@ func (v *Valid) IsDecimal(length []int, msg ...string) *Valid {
 }
 
 //必须为手机号
-func (v *Valid) IsPhone(msg ...string) *Valid {
-	v.checks = append(v.checks, &isPhone{
+func (v *Valid) IsMobile(msg ...string) *Valid {
+	v.checks = append(v.checks, &isMobile{
 		title:    v.title,
 		value:    v.value,
 		valueStr: v.valueStr,
@@ -206,7 +206,7 @@ func (v *Valid) IsBankCard(msg ...string) *Valid {
 }
 
 //检查账号（字母开头，数字字母下划线）
-func (v *Valid) IsAccount(length []int, msg ...string) *Valid {
+func (v *Valid) IsAccount(length []uint, msg ...string) *Valid {
 	v.checks = append(v.checks, &isAccount{
 		title:    v.title,
 		value:    v.value,
@@ -225,7 +225,7 @@ func (v *Valid) IsAccount(length []int, msg ...string) *Valid {
 // 	4：包含数字、大小写字母
 // 	5：包含数字、大小写字母、下划线
 // 	6：包含数字、大小写字母、特殊字符
-func (v *Valid) IsPwd(level int, length []int, msg ...string) *Valid {
+func (v *Valid) IsPwd(level uint, length []uint, msg ...string) *Valid {
 	v.checks = append(v.checks, &isPwd{
 		title:    v.title,
 		value:    v.value,

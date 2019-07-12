@@ -165,7 +165,7 @@ func (vs *Valids) Between(min interface{}, max interface{}, msg ...string) *Vali
 }
 
 //必须为整数
-func (vs *Valids) IsInt(length interface{}, msg ...string) *Valids {
+func (vs *Valids) IsInt(msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
@@ -180,7 +180,7 @@ func (vs *Valids) IsInt(length interface{}, msg ...string) *Valids {
 }
 
 //必须为数值
-func (vs *Valids) IsDecimal(length []int, msg ...string) *Valids {
+func (vs *Valids) IsDecimal(length []uint, msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
@@ -196,11 +196,11 @@ func (vs *Valids) IsDecimal(length []int, msg ...string) *Valids {
 }
 
 //必须为手机号
-func (vs *Valids) IsPhone(msg ...string) *Valids {
+func (vs *Valids) IsMobile(msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
-		v.checks = append(v.checks, &isPhone{
+		v.checks = append(v.checks, &isMobile{
 			title:    v.title,
 			value:    v.value,
 			valueStr: v.valueStr,
@@ -271,7 +271,7 @@ func (vs *Valids) IsBankCard(msg ...string) *Valids {
 }
 
 //检查账号（字母开头，数字字母下划线）
-func (vs *Valids) IsAccount(length []int, msg ...string) *Valids {
+func (vs *Valids) IsAccount(length []uint, msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
@@ -294,7 +294,7 @@ func (vs *Valids) IsAccount(length []int, msg ...string) *Valids {
 // 	4：包含数字、大小写字母
 // 	5：包含数字、大小写字母、下划线
 // 	6：包含数字、大小写字母、特殊字符
-func (vs *Valids) IsPwd(level int, length []int, msg ...string) *Valids {
+func (vs *Valids) IsPwd(level uint, length []uint, msg ...string) *Valids {
 	l := len(vs.valids)
 	if l != 0 {
 		v := vs.valids[l-1]
