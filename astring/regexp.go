@@ -129,12 +129,14 @@ func HasChar(data string) bool {
 
 //是全中文汉字
 func IsChinese(data string) bool {
-	return MatchString("^[\u4e00-\u9fa5]+$", data)
+	return MatchString("^\\p{Han}+$", data)
+	//return MatchString("^[\u4e00-\u9fa5]+$", data)
 }
 
 //包含中文汉字
 func HasChinese(data string) bool {
-	return MatchString("[\u4e00-\u9fa5]", data)
+	return MatchString("\\p{Han}", data)
+	//return MatchString("[\u4e00-\u9fa5]", data)
 }
 
 //是数字字母
