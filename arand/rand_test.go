@@ -34,6 +34,12 @@ func TestRandStr(t *testing.T) {
 	}
 }
 
+func TestRandUUID(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		t.Log(RandUUID())
+	}
+}
+
 func TestRandMd5(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		t.Log(RandMd5())
