@@ -22,3 +22,14 @@ func TestBase64(t *testing.T) {
 	ensrc := Base64DecodeString(desrc)
 	t.Log(string(ensrc))
 }
+
+func TestBase64_2(t *testing.T) {
+	hello := "你好，世界！ hello world"
+	t.Log(hello)
+
+	desrc := Base64Encode([]byte(hello))
+	t.Log(string(desrc))
+
+	ensrc := Base64Decode(desrc)
+	t.Log(string(ensrc))
+}
