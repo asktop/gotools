@@ -6,15 +6,15 @@ import (
 )
 
 //md5单向加密 32位
-func Md5(str string) string {
+func Md5(src string) string {
 	hash := md5.New()
-	hash.Write([]byte(str))
+	hash.Write([]byte(src))
 	return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
 //md5单向加密
-func Md5Byte(str string) []byte {
+func Md5Byte(src []byte) []byte {
 	hash := md5.New()
-	hash.Write([]byte(str))
+	hash.Write(src)
 	return hash.Sum(nil)
 }
