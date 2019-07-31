@@ -1,6 +1,11 @@
 package asort
 
-import "sort"
+import (
+	"fmt"
+	"github.com/asktop/gotools/acast"
+	"sort"
+	"strings"
+)
 
 func Ints(a []int) {
 	sort.Sort(IntSlice(a))
@@ -42,6 +47,7 @@ func RStrings(a []string) {
 	})
 }
 
+//对 map[string]interface{} 排序
 func StringMapInterfaces(data map[string]interface{}) StringMapInterfaceSlice {
 	maps := StringMapInterfaceSlice{}
 	for k, v := range data {
@@ -51,6 +57,7 @@ func StringMapInterfaces(data map[string]interface{}) StringMapInterfaceSlice {
 	return maps
 }
 
+//对 map[string]interface{} 倒序排序
 func RStringMapInterfaces(data map[string]interface{}) StringMapInterfaceSlice {
 	s := StringMapInterfaceSlice{}
 	for k, v := range data {
@@ -62,6 +69,7 @@ func RStringMapInterfaces(data map[string]interface{}) StringMapInterfaceSlice {
 	return s
 }
 
+//对 map[string]string 排序
 func StringMapStrings(data map[string]string) StringMapStringSlice {
 	maps := StringMapStringSlice{}
 	for k, v := range data {
@@ -71,6 +79,7 @@ func StringMapStrings(data map[string]string) StringMapStringSlice {
 	return maps
 }
 
+//对 map[string]string 倒序排序
 func RStringMapStrings(data map[string]string) StringMapStringSlice {
 	s := StringMapStringSlice{}
 	for k, v := range data {
@@ -80,4 +89,30 @@ func RStringMapStrings(data map[string]string) StringMapStringSlice {
 		return s[i].Key > s[j].Key
 	})
 	return s
+}
+
+//对 param map 参数排序，并按照 {key}={value} 格式拼接，最后通过 {sep} 拼接
+func SortParamString(params map[string]string, sep string) string {
+	if len(params) == 0 {
+		return ""
+	}
+	newParams := StringMapStrings(params)
+	var paramStrs = make([]string, 0)
+	for _, param := range newParams {
+		paramStrs = append(paramStrs, fmt.Sprintf("%s=%s", param.Key, param.Value))
+	}
+	return strings.Join(paramStrs, sep)
+}
+
+//对 param map 参数排序，并按照 {key}={value} 格式拼接，最后通过 {sep} 拼接
+func SortParamInterface(params map[string]interface{}, sep string) string {
+	if len(params) == 0 {
+		return ""
+	}
+	newParams := StringMapInterfaces(params)
+	var paramStrs = make([]string, 0)
+	for _, param := range newParams {
+		paramStrs = append(paramStrs, fmt.Sprintf("%s=%s", param.Key, acast.ToString(param.Value)))
+	}
+	return strings.Join(paramStrs, sep)
 }
