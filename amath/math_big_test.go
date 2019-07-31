@@ -5,51 +5,66 @@ import (
 	"testing"
 )
 
-func TestBigMath(t *testing.T) {
-	x := new(decimal.Big)
-	x.SetString("123.1453")
-	t.Log(x)
-	_, ok := x.SetString("")
-	t.Log(ok)
-	t.Log(x)
-}
-
-func TestBigRound(t *testing.T) {
-	x := new(decimal.Big)
-	x.SetString("123.1453")
-	t.Log(BigRound(x, 0).String())
-	t.Log(BigRound(x, 2).String())
-	t.Log(BigRound(x, 8).String())
-	x.SetString("-123.1453")
-	t.Log(BigRound(x, 2).String())
-}
-
-func TestBigScale(t *testing.T) {
-	x := new(decimal.Big)
-	x.SetString("123.1453")
-	t.Log(BigScale(x, 0).String())
-	t.Log(BigScale(x, 2).String())
-	t.Log(BigScale(x, 8).String())
-	x.SetString("-123.1453")
-	t.Log(BigScale(x, 2).String())
-}
-
 func TestBigCeil(t *testing.T) {
-	x := new(decimal.Big)
-	x.SetString("123.1453")
-	t.Log(BigCeil(x, 0).String())
-	t.Log(BigCeil(x, 2).String())
-	t.Log(BigCeil(x, 8).String())
-	x.SetString("-123.1453")
-	t.Log(BigCeil(x, 2).String())
+	a1, _ := new(decimal.Big).SetString("123.1453")
+	a2 := new(decimal.Big).Copy(a1)
+	a3 := new(decimal.Big).Copy(a1)
+	t.Log(BigCeil(a1, 0).String())
+	t.Log(BigCeil(a2, 2).String())
+	t.Log(BigCeil(a3, 8).String())
+
+	b1, _ := new(decimal.Big).SetString("-123.1453")
+	b2 := new(decimal.Big).Copy(b1)
+	b3 := new(decimal.Big).Copy(b1)
+	t.Log(BigCeil(b1, 0).String())
+	t.Log(BigCeil(b2, 2).String())
+	t.Log(BigCeil(b3, 8).String())
 }
 
 func TestBigFloor(t *testing.T) {
-	x := new(decimal.Big)
-	x.SetString("123.1453")
-	t.Log(BigFloor(x, 0).String())
-	t.Log(BigFloor(x, 2).String())
-	t.Log(BigFloor(x, 8).String())
-	x.SetString("-123.1453")
-	t.Log(BigFloor(x, 2).String())
+	a1, _ := new(decimal.Big).SetString("123.1453")
+	a2 := new(decimal.Big).Copy(a1)
+	a3 := new(decimal.Big).Copy(a1)
+	t.Log(BigFloor(a1, 0).String())
+	t.Log(BigFloor(a2, 2).String())
+	t.Log(BigFloor(a3, 8).String())
+
+	b1, _ := new(decimal.Big).SetString("-123.1453")
+	b2 := new(decimal.Big).Copy(b1)
+	b3 := new(decimal.Big).Copy(b1)
+	t.Log(BigFloor(b1, 0).String())
+	t.Log(BigFloor(b2, 2).String())
+	t.Log(BigFloor(b3, 8).String())
+}
+
+func TestBigRound(t *testing.T) {
+	a1, _ := new(decimal.Big).SetString("123.1453")
+	a2 := new(decimal.Big).Copy(a1)
+	a3 := new(decimal.Big).Copy(a1)
+	t.Log(BigRound(a1, 0).String())
+	t.Log(BigRound(a2, 2).String())
+	t.Log(BigRound(a3, 8).String())
+
+	b1, _ := new(decimal.Big).SetString("-123.1453")
+	b2 := new(decimal.Big).Copy(b1)
+	b3 := new(decimal.Big).Copy(b1)
+	t.Log(BigRound(b1, 0).String())
+	t.Log(BigRound(b2, 2).String())
+	t.Log(BigRound(b3, 8).String())
+}
+
+func TestBigScale(t *testing.T) {
+	a1, _ := new(decimal.Big).SetString("123.1453")
+	a2 := new(decimal.Big).Copy(a1)
+	a3 := new(decimal.Big).Copy(a1)
+	t.Log(BigScale(a1, 0).String())
+	t.Log(BigScale(a2, 2).String())
+	t.Log(BigScale(a3, 8).String())
+
+	b1, _ := new(decimal.Big).SetString("-123.1453")
+	b2 := new(decimal.Big).Copy(b1)
+	b3 := new(decimal.Big).Copy(b1)
+	t.Log(BigScale(b1, 0).String())
+	t.Log(BigScale(b2, 2).String())
+	t.Log(BigScale(b3, 8).String())
 }
