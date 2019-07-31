@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/asktop/gotools/acast"
 	"github.com/asktop/gotools/ajson"
-	"github.com/asktop/decimal"
+	"github.com/shopspring/decimal"
 	"testing"
 )
 
@@ -27,8 +27,11 @@ func TestToString(t *testing.T) {
 
 	fmt.Println("----- 2 -----")
 
-	a := decimal.New(27000, 2)
-	fmt.Println(a)
+	//a := decimal.New(27000, 2)
+
+	a,_ := decimal.NewFromString("270.145")
+	fmt.Println(a.StringFixed(2))
+
 	fmt.Println(acast.ToString(a))
 	fmt.Println(acast.ToStringForce(a))
 	fmt.Println(ajson.Encode(a))

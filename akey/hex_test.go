@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestBase64(t *testing.T) {
+func TestHex(t *testing.T) {
 	hello := "你好，世界！ hello world"
 	//5L2g5aW977yM5LiW55WM77yBIGhlbGxvIHdvcmxk
 
@@ -16,9 +16,9 @@ func TestBase64(t *testing.T) {
 
 	t.Log(hello)
 
-	desrc := Base64EncodeToString([]byte(hello))
+	desrc := HexEncodeToString([]byte(hello))
 	t.Log(desrc)
 
-	ensrc := Base64DecodeString(desrc)
+	ensrc := HexDecodeString(desrc)
 	t.Log(string(ensrc))
 }
