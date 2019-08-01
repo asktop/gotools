@@ -8,12 +8,12 @@ import (
 )
 
 func TestAes(t *testing.T) {
-	str := []byte("Hello World")      // 待加密的数据
-	key := []byte("ABCDEFGHIJKLMNOP") // 加密的密钥
-	fmt.Println("原文：", string(str))
+	src := []byte("Hello World")      // 待加密的数据
+	key := []byte("ABCDEFGHABCDEFGH12345678") // 加密的密钥
+	fmt.Println("原文：", string(src))
 
 	fmt.Println("------------------ ECB模式 --------------------")
-	encrypted, err := AesEncryptECB(str, key)
+	encrypted, err := AesEncryptECB(src, key)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -26,7 +26,7 @@ func TestAes(t *testing.T) {
 	fmt.Println("解密结果：", string(decrypted))
 
 	fmt.Println("------------------ CBC模式 --------------------")
-	encrypted, err = AesEncryptCBC(str, key)
+	encrypted, err = AesEncryptCBC(src, key)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -39,7 +39,7 @@ func TestAes(t *testing.T) {
 	fmt.Println("解密结果：", string(decrypted))
 
 	fmt.Println("------------------ CFB模式 --------------------")
-	encrypted, err = AesEncryptCFB(str, key)
+	encrypted, err = AesEncryptCFB(src, key)
 	if err != nil {
 		fmt.Println(err)
 	}

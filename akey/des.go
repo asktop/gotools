@@ -1,283 +1,172 @@
 package akey
 
 import (
-	"bytes"
 	"crypto/cipher"
 	"crypto/des"
 	"errors"
 )
 
-const (
-	NOPADDING = iota
-	PKCS5PADDING
-)
-
-// ECB模式DES加密
-func DesECBEncrypt(key []byte, clearText []byte, padding int) ([]byte, error) {
-	text, err := desPadding(clearText, padding)
-	if err != nil {
-		return nil, err
-	}
-
-	cipherText := make([]byte, len(text))
-
+// =================== ECB模式 ======================
+// DES加密, 使用ECB模式，注意key必须为8位长度
+func DesEncryptECB(src []byte, key []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
-
 	blockSize := block.BlockSize()
-	for i, count := 0, len(text)/blockSize; i < count; i++ {
+
+	src = PKCS5Padding(src, blockSize) // PKCS5补位
+	dst := make([]byte, len(src))      // 创建数组
+	for i, count := 0, len(src)/blockSize; i < count; i++ { // 加密
 		begin, end := i*blockSize, i*blockSize+blockSize
-		block.Encrypt(cipherText[begin:end], text[begin:end])
+		block.Encrypt(dst[begin:end], src[begin:end])
 	}
-	return cipherText, nil
+	return dst, nil
 }
 
-// ECB模式DES解密
-func DesECBDecrypt(key []byte, cipherText []byte, padding int) ([]byte, error) {
-	text := make([]byte, len(cipherText))
+// DES解密, 使用ECB模式，注意key必须为8位长度
+func DesDecryptECB(src []byte, key []byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
-
 	blockSize := block.BlockSize()
-	for i, count := 0, len(text)/blockSize; i < count; i++ {
-		begin, end := i*blockSize, i*blockSize+blockSize
-		block.Decrypt(text[begin:end], cipherText[begin:end])
-	}
 
-	clearText, err := desUnPadding(text, padding)
-	if err != nil {
-		return nil, err
+	dst := make([]byte, len(src)) // 创建数组
+	for i, count := 0, len(dst)/blockSize; i < count; i++ { // 解密
+		begin, end := i*blockSize, i*blockSize+blockSize
+		block.Decrypt(dst[begin:end], src[begin:end])
 	}
-	return clearText, nil
+	dst = PKCS5UnPadding(dst) // 去除PKCS5补位
+	return dst, nil
 }
 
-// ECB模式3DES加密，密钥长度可以是16或24位长
-func TripleDesECBEncrypt(key []byte, clearText []byte, padding int) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 {
-		return nil, errors.New("key length error")
-	}
-
-	text, err := desPadding(clearText, padding)
+// 3DES加密, 使用ECB模式，注意key必须为24位长度
+func DesEncryptECBTriple(src []byte, key []byte) ([]byte, error) {
+	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
 	}
-
-	newKey := make([]byte, 0)
-	if len(key) == 16 {
-		newKey = append([]byte{}, key...)
-		newKey = append(newKey, key[:8]...)
-	} else {
-		newKey = append([]byte{}, key...)
-	}
-
-	block, err := des.NewTripleDESCipher(newKey)
-	if err != nil {
-		return nil, err
-	}
-
 	blockSize := block.BlockSize()
-	cipherText := make([]byte, len(text))
-	for i, count := 0, len(text)/blockSize; i < count; i++ {
+
+	src = PKCS5Padding(src, blockSize) // PKCS5补位
+	dst := make([]byte, len(src))      // 创建数组
+	for i, count := 0, len(src)/blockSize; i < count; i++ { // 加密
 		begin, end := i*blockSize, i*blockSize+blockSize
-		block.Encrypt(cipherText[begin:end], text[begin:end])
+		block.Encrypt(dst[begin:end], src[begin:end])
 	}
-	return cipherText, nil
+	return dst, nil
 }
 
-// ECB模式3DES解密，密钥长度可以是16或24位长
-func TripleDesECBDecrypt(key []byte, cipherText []byte, padding int) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 {
-		return nil, errors.New("key length error")
-	}
-
-	newKey := make([]byte, 0)
-	if len(key) == 16 {
-		newKey = append([]byte{}, key...)
-		newKey = append(newKey, key[:8]...)
-	} else {
-		newKey = append([]byte{}, key...)
-	}
-
-	block, err := des.NewTripleDESCipher(newKey)
+// 3DES解密, 使用ECB模式，注意key必须为24位长度
+func DesDecryptECBTriple(src []byte, key []byte) ([]byte, error) {
+	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
 	}
-
 	blockSize := block.BlockSize()
-	text := make([]byte, len(cipherText))
-	for i, count := 0, len(text)/blockSize; i < count; i++ {
-		begin, end := i*blockSize, i*blockSize+blockSize
-		block.Decrypt(text[begin:end], cipherText[begin:end])
-	}
 
-	clearText, err := desUnPadding(text, padding)
-	if err != nil {
-		return nil, err
+	dst := make([]byte, len(src)) // 创建数组
+	for i, count := 0, len(dst)/blockSize; i < count; i++ { // 解密
+		begin, end := i*blockSize, i*blockSize+blockSize
+		block.Decrypt(dst[begin:end], src[begin:end])
 	}
-	return clearText, nil
+	dst = PKCS5UnPadding(dst) // 去除PKCS5补位
+	return dst, nil
 }
 
-// CBC模式DES加密
-func DesCBCEncrypt(key []byte, clearText []byte, iv []byte, padding int) ([]byte, error) {
+// =================== CBC模式 ======================
+// DES加密, 使用CBC模式，注意key必须为8位长度，iv初始化向量为非必需参数（长度为8位）
+func DesEncryptCBC(src []byte, key []byte, iv ...[]byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
-
-	if len(iv) != block.BlockSize() {
-		return nil, errors.New("iv length invalid")
+	ivValue := ([]byte)(nil) // 获取初始化向量
+	if len(iv) > 0 {
+		ivValue = iv[0]
+	} else {
+		ivValue = key
 	}
 
-	text, err := desPadding(clearText, padding)
-	if err != nil {
-		return nil, err
-	}
-	cipherText := make([]byte, len(text))
-
-	encrypter := cipher.NewCBCEncrypter(block, iv)
-	encrypter.CryptBlocks(cipherText, text)
-
-	return cipherText, nil
+	src = PKCS5Padding(src, block.BlockSize())          // PKCS5补位
+	dst := make([]byte, len(src))                       // 创建数组
+	blockMode := cipher.NewCBCEncrypter(block, ivValue) // 加密模式
+	blockMode.CryptBlocks(dst, src)                     // 加密
+	return dst, nil
 }
 
-// CBC模式DES解密
-func DesCBCDecrypt(key []byte, cipherText []byte, iv []byte, padding int) ([]byte, error) {
+// DES解密, 使用CBC模式，注意key必须为8位长度，iv初始化向量为非必需参数（长度为8位）
+func DesDecryptCBC(src []byte, key []byte, iv ...[]byte) ([]byte, error) {
 	block, err := des.NewCipher(key)
 	if err != nil {
 		return nil, err
 	}
-
-	if len(iv) != block.BlockSize() {
-		return nil, errors.New("iv length invalid")
+	blockSize := block.BlockSize() // 获取秘钥块的长度
+	if len(src) < blockSize {
+		return nil, errors.New("src is too short, less than block size")
 	}
-
-	text := make([]byte, len(cipherText))
-	decrypter := cipher.NewCBCDecrypter(block, iv)
-	decrypter.CryptBlocks(text, cipherText)
-
-	clearText, err := desUnPadding(text, padding)
-	if err != nil {
-		return nil, err
-	}
-
-	return clearText, nil
-}
-
-// CBC模式3DES加密
-func TripleDesCBCEncrypt(key []byte, clearText []byte, iv []byte, padding int) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 {
-		return nil, errors.New("key length invalid")
-	}
-
-	newKey := make([]byte, 0)
-	if len(key) == 16 {
-		newKey = append([]byte{}, key...)
-		newKey = append(newKey, key[:8]...)
+	ivValue := ([]byte)(nil) // 获取初始化向量
+	if len(iv) > 0 {
+		ivValue = iv[0]
 	} else {
-		newKey = append([]byte{}, key...)
+		ivValue = key
+	}
+	if len(src)%blockSize != 0 {
+		return nil, errors.New("src is not a multiple of the block size")
 	}
 
-	block, err := des.NewTripleDESCipher(newKey)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(iv) != block.BlockSize() {
-		return nil, errors.New("iv length invalid")
-	}
-
-	text, err := desPadding(clearText, padding)
-	if err != nil {
-		return nil, err
-	}
-
-	cipherText := make([]byte, len(text))
-	encrypter := cipher.NewCBCEncrypter(block, iv)
-	encrypter.CryptBlocks(cipherText, text)
-
-	return cipherText, nil
+	dst := make([]byte, len(src))                       // 创建数组
+	blockMode := cipher.NewCBCDecrypter(block, ivValue) // 加密模式
+	blockMode.CryptBlocks(dst, src)                     // 解密
+	dst = PKCS5UnPadding(dst)                           // 去除PKCS5补位
+	return dst, nil
 }
 
-// CBC模式3DES解密
-func TripleDesCBCDecrypt(key []byte, cipherText []byte, iv []byte, padding int) ([]byte, error) {
-	if len(key) != 16 && len(key) != 24 {
-		return nil, errors.New("key length invalid")
+// 3DES加密, 使用CBC模式，注意key必须为24位长度，iv初始化向量为非必需参数（长度为8位）
+func DesEncryptCBCTriple(src []byte, key []byte, iv ...[]byte) ([]byte, error) {
+	block, err := des.NewTripleDESCipher(key)
+	if err != nil {
+		return nil, err
 	}
-
-	newKey := make([]byte, 0)
-	if len(key) == 16 {
-		newKey = append([]byte{}, key...)
-		newKey = append(newKey, key[:8]...)
+	blockSize := block.BlockSize()
+	ivValue := ([]byte)(nil) // 获取初始化向量
+	if len(iv) > 0 {
+		ivValue = iv[0]
 	} else {
-		newKey = append([]byte{}, key...)
+		ivValue = key[:blockSize]
 	}
 
-	block, err := des.NewTripleDESCipher(newKey)
+	src = PKCS5Padding(src, block.BlockSize())          // PKCS5补位
+	dst := make([]byte, len(src))                       // 创建数组
+	blockMode := cipher.NewCBCEncrypter(block, ivValue) // 加密模式
+	blockMode.CryptBlocks(dst, src)                     // 加密
+	return dst, nil
+}
+
+// 3DES解密, 使用CBC模式，注意key必须为24位长度，iv初始化向量为非必需参数（长度为8位）
+func DesDecryptCBCTriple(src []byte, key []byte, iv ...[]byte) ([]byte, error) {
+	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
 	}
-
-	if len(iv) != block.BlockSize() {
-		return nil, errors.New("iv length invalid")
+	blockSize := block.BlockSize() // 获取秘钥块的长度
+	if len(src) < blockSize {
+		return nil, errors.New("src is too short, less than block size")
+	}
+	ivValue := ([]byte)(nil) // 获取初始化向量
+	if len(iv) > 0 {
+		ivValue = iv[0]
+	} else {
+		ivValue = key[:blockSize]
+	}
+	if len(src)%blockSize != 0 {
+		return nil, errors.New("src is not a multiple of the block size")
 	}
 
-	text := make([]byte, len(cipherText))
-	decrypter := cipher.NewCBCDecrypter(block, iv)
-	decrypter.CryptBlocks(text, cipherText)
-
-	clearText, err := desUnPadding(text, padding)
-	if err != nil {
-		return nil, err
-	}
-
-	return clearText, nil
-}
-
-// PKCS5补位
-func desPKCS5Padding(text []byte, blockSize int) []byte {
-	padding := blockSize - len(text)%blockSize
-	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(text, padtext...)
-}
-
-// 去除PKCS5补位
-func desPKCS5Unpadding(text []byte) []byte {
-	length := len(text)
-	padtext := int(text[length-1])
-	return text[:(length - padtext)]
-}
-
-// 补位方法
-func desPadding(text []byte, padding int) ([]byte, error) {
-	switch padding {
-	case NOPADDING:
-		if len(text)%8 != 0 {
-			return nil, errors.New("text length invalid")
-		}
-	case PKCS5PADDING:
-		return desPKCS5Padding(text, 8), nil
-	default:
-		return nil, errors.New("padding type error")
-	}
-
-	return text, nil
-}
-
-// 去除补位方法
-func desUnPadding(text []byte, padding int) ([]byte, error) {
-	switch padding {
-	case NOPADDING:
-		if len(text)%8 != 0 {
-			return nil, errors.New("text length invalid")
-		}
-	case PKCS5PADDING:
-		return desPKCS5Unpadding(text), nil
-	default:
-		return nil, errors.New("padding type error.")
-	}
-	return text, nil
+	dst := make([]byte, len(src))                       // 创建数组
+	blockMode := cipher.NewCBCDecrypter(block, ivValue) // 加密模式
+	blockMode.CryptBlocks(dst, src)                     // 解密
+	dst = PKCS5UnPadding(dst)                           // 去除PKCS5补位
+	return dst, nil
 }
