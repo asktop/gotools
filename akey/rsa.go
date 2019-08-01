@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/pem"
 	"errors"
+	"io/ioutil"
 )
 
 // Rsa加密
@@ -24,13 +25,26 @@ import (
 
 // Rsa加密，密钥格式 -----BEGIN PUBLIC KEY-----
 func RsaEncrypt(src string, publicKey string) (string, error) {
+	return rsaEncrypt(src, []byte(publicKey))
+}
+
+// Rsa加密，密钥格式 -----BEGIN PUBLIC KEY-----
+func RsaEncryptPath(src string, publicKeyPath string) (string, error) {
+	publicKey, err := ioutil.ReadFile(publicKeyPath)
+	if err != nil {
+		return "", err
+	}
+	return rsaEncrypt(src, publicKey)
+}
+
+func rsaEncrypt(src string, publicKey []byte) (string, error) {
 	if len(src) == 0 {
 		return "", errors.New("src can not be empty")
 	}
 	srcByte := []byte(src)
 
 	// 解密pem格式的公钥
-	block, _ := pem.Decode([]byte(publicKey))
+	block, _ := pem.Decode(publicKey)
 	if block == nil {
 		return "", errors.New("public key error")
 	}
@@ -54,6 +68,19 @@ func RsaEncrypt(src string, publicKey string) (string, error) {
 
 // Rsa解密，密钥格式 -----BEGIN PRIVATE KEY-----
 func RsaDecrypt(src string, privateKey string) (string, error) {
+	return rsaDecrypt(src, []byte(privateKey))
+}
+
+// Rsa解密，密钥格式 -----BEGIN PRIVATE KEY-----
+func RsaDecryptPath(src string, privateKeyPath string) (string, error) {
+	privateKey, err := ioutil.ReadFile(privateKeyPath)
+	if err != nil {
+		return "", err
+	}
+	return rsaDecrypt(src, privateKey)
+}
+
+func rsaDecrypt(src string, privateKey []byte) (string, error) {
 	if len(src) == 0 {
 		return "", errors.New("src can not be empty")
 	}
@@ -61,7 +88,7 @@ func RsaDecrypt(src string, privateKey string) (string, error) {
 	srcByte, _ := base64.StdEncoding.DecodeString(src)
 
 	// 解密pem格式的私钥
-	block, _ := pem.Decode([]byte(privateKey))
+	block, _ := pem.Decode(privateKey)
 	if block == nil {
 		return "", errors.New("private key error")
 	}
@@ -81,37 +108,21 @@ func RsaDecrypt(src string, privateKey string) (string, error) {
 	return dst, nil
 }
 
-// Rsa加密，密钥格式 -----BEGIN RSA PUBLIC KEY-----
-func RsaEncryptPKCS1(src string, publicKey string) (string, error) {
-	if len(src) == 0 {
-		return "", errors.New("src can not be empty")
-	}
-	srcByte := []byte(src)
-
-	// 解密pem格式的公钥
-	block, _ := pem.Decode([]byte(publicKey))
-	if block == nil {
-		return "", errors.New("public key error")
-	}
-	// 解析公钥
-	key, err := x509.ParsePKCS1PublicKey(block.Bytes)
-	if err != nil {
-		return "", err
-	}
-
-	// rsa加密
-	dstByte, err := rsa.EncryptPKCS1v15(rand.Reader, key, srcByte)
-	if err != nil {
-		return "", err
-	}
-
-	// 对rsa加密结果进行base64加密
-	dst := base64.StdEncoding.EncodeToString(dstByte)
-	return dst, nil
+// Rsa解密，密钥格式 -----BEGIN RSA PRIVATE KEY-----
+func RsaDecryptPKCS1(src string, privateKey string) (string, error) {
+	return rsaDecryptPKCS1(src, []byte(privateKey))
 }
 
 // Rsa解密，密钥格式 -----BEGIN RSA PRIVATE KEY-----
-func RsaDecryptPKCS1(src string, privateKey string) (string, error) {
+func RsaDecryptPKCS1Path(src string, privateKeyPath string) (string, error) {
+	privateKey, err := ioutil.ReadFile(privateKeyPath)
+	if err != nil {
+		return "", err
+	}
+	return rsaDecryptPKCS1(src, []byte(privateKey))
+}
+
+func rsaDecryptPKCS1(src string, privateKey []byte) (string, error) {
 	if len(src) == 0 {
 		return "", errors.New("src can not be empty")
 	}
@@ -119,7 +130,7 @@ func RsaDecryptPKCS1(src string, privateKey string) (string, error) {
 	srcByte, _ := base64.StdEncoding.DecodeString(src)
 
 	// 解密pem格式的私钥
-	block, _ := pem.Decode([]byte(privateKey))
+	block, _ := pem.Decode(privateKey)
 	if block == nil {
 		return "", errors.New("private key error")
 	}
