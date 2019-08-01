@@ -87,7 +87,8 @@ func RandStr(length int, sources ...string) string {
 
 //随机UUID字符串，32位 dba4756aa25f49fc969f30b3ef234d68
 func RandUUID() string {
-	return strings.ReplaceAll(auuid.New().String(), "-", "")
+	return strings.Replace(auuid.New().String(), "-", "", -1)
+	//return strings.ReplaceAll(auuid.New().String(), "-", "")
 }
 
 //随机md5字符串，size默认16
