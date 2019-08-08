@@ -6,6 +6,12 @@ import (
 )
 
 func TestRStrings(t *testing.T) {
+	a := []string{"b", "a", "d", "c"}
+	RStrings(a)
+	fmt.Println(a)
+}
+
+func TestSortParams(t *testing.T) {
 	params := map[string]interface{}{}
 	params["c"] = "c"
 	params["a"] = "a"

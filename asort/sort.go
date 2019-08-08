@@ -12,19 +12,23 @@ func Ints(a []int) {
 }
 
 func RInts(a []int) {
-	sort.Slice(IntSlice(a), func(i, j int) bool {
-		return a[i] > a[j]
-	})
+	sort.Sort(sort.Reverse(IntSlice(a)))
+	// 等价于
+	//sort.Slice(IntSlice(a), func(i, j int) bool {
+	//	return a[i] > a[j]
+	//})
 }
 
-func Int64s(a []int) {
+func Int64s(a []int64) {
 	sort.Sort(Int64Slice(a))
 }
 
-func RInt64s(a []int) {
-	sort.Slice(Int64Slice(a), func(i, j int) bool {
-		return a[i] > a[j]
-	})
+func RInt64s(a []int64) {
+	sort.Sort(sort.Reverse(Int64Slice(a)))
+	// 等价于
+	//sort.Slice(Int64Slice(a), func(i, j int) bool {
+	//	return a[i] > a[j]
+	//})
 }
 
 func Float64s(a []float64) {
@@ -32,9 +36,11 @@ func Float64s(a []float64) {
 }
 
 func RFloat64s(a []float64) {
-	sort.Slice(Float64Slice(a), func(i, j int) bool {
-		return a[i] > a[j]
-	})
+	sort.Sort(sort.Reverse(Float64Slice(a)))
+	// 等价于
+	//sort.Slice(Float64Slice(a), func(i, j int) bool {
+	//	return a[i] > a[j]
+	//})
 }
 
 func Strings(a []string) {
@@ -42,9 +48,11 @@ func Strings(a []string) {
 }
 
 func RStrings(a []string) {
-	sort.Slice(StringSlice(a), func(i, j int) bool {
-		return a[i] > a[j]
-	})
+	sort.Sort(sort.Reverse(StringSlice(a)))
+	// 等价于
+	//sort.Slice(StringSlice(a), func(i, j int) bool {
+	//	return a[i] > a[j]
+	//})
 }
 
 //对 map[string]interface{} 排序
