@@ -178,8 +178,8 @@ func GetAllPaths(dirPath string, exts ...string) (dirPaths []string, filePaths [
 }
 
 //获取文件路径中的文件名
-func Name(path string) string {
-	path = strings.ReplaceAll(path, `\`, `/`)
-	index := strings.LastIndex(path, "/")
-	return path[index+1:]
+func Name(filePath string) string {
+	filePath = strings.ReplaceAll(filePath, `\`, `/`)
+	_, fileName := path.Split(filePath)
+	return fileName
 }
