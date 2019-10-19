@@ -5,6 +5,8 @@ import (
 	"github.com/asktop/gotools/astring"
 )
 
+var accountTip = "必须以字母开头，由数字字母下划线组成"
+
 //检查账号（字母开头，数字字母下划线）
 type isAccount struct {
 	title    string
@@ -21,7 +23,7 @@ func (c *isAccount) Check() (msg string, ok bool) {
 	if len(c.length) == 0 {
 		if !astring.IsAccount(c.valueStr) {
 			if len(c.msgs) == 0 {
-				msg = fmt.Sprintf("%s不符合要求", c.title)
+				msg = fmt.Sprintf("%s%s", c.title, accountTip)
 			}
 			return msg, false
 		}
@@ -34,7 +36,7 @@ func (c *isAccount) Check() (msg string, ok bool) {
 				} else {
 					lenStr = fmt.Sprintf("%d 至 %d", c.length[0], c.length[1])
 				}
-				msg = fmt.Sprintf("%s不符合要求，且长度必须为 %s", c.title, lenStr)
+				msg = fmt.Sprintf("%s%s，且长度必须为 %s", c.title, accountTip, lenStr)
 			}
 			return msg, false
 		}
