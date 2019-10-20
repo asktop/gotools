@@ -51,6 +51,17 @@ func (v *Valid) Required(msg ...string) *Valid {
 	return v
 }
 
+//不能有空格
+func (v *Valid) HasNoBlank(msg ...string) *Valid {
+	v.checks = append(v.checks, &hasNoBlank{
+		title:    v.title,
+		value:    v.value,
+		valueStr: v.valueStr,
+		msgs:     msg,
+	})
+	return v
+}
+
 //字符串长度范围
 func (v *Valid) Length(min interface{}, max interface{}, msg ...string) *Valid {
 	v.checks = append(v.checks, &length{

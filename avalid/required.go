@@ -1,6 +1,9 @@
 package avalid
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 //必需
 type required struct {
@@ -17,7 +20,7 @@ func (c *required) Check() (msg string, ok bool) {
 		msg = fmt.Sprintf("%s不能为空", c.title)
 	}
 	if c.value != nil {
-		if c.value != "" {
+		if strings.Trim(c.valueStr, " ") != "" {
 			return "", true
 		}
 	}

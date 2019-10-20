@@ -64,6 +64,21 @@ func (vs *Valids) Required(msg ...string) *Valids {
 	return vs
 }
 
+//不能有空格
+func (vs *Valids) HasNoBlank(msg ...string) *Valids {
+	l := len(vs.valids)
+	if l != 0 {
+		v := vs.valids[l-1]
+		v.checks = append(v.checks, &hasNoBlank{
+			title:    v.title,
+			value:    v.value,
+			valueStr: v.valueStr,
+			msgs:     msg,
+		})
+	}
+	return vs
+}
+
 //字符串长度范围
 func (vs *Valids) Length(min interface{}, max interface{}, msg ...string) *Valids {
 	l := len(vs.valids)
