@@ -52,7 +52,7 @@ func UniqueNo(numLength int, prefix ...string) string {
 		atomic.StoreInt64(&lastNo.number, 1)
 	} else {
 		atomic.AddInt64(&lastNo.number, 1)
-		sort = lastNo.number
+		sort = atomic.LoadInt64(&lastNo.number)
 	}
 	lastNo.mu.Unlock()
 
