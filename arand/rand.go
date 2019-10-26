@@ -10,7 +10,7 @@ import (
 )
 
 func Rand() *rand.Rand {
-	return rand.New(rand.NewSource(atime.NowNano() + rand.Int63n(1e10)))
+	return rand.New(rand.NewSource(atime.NowNano()*1e10 + rand.Int63n(1e10)))
 }
 
 func Intn(n int) int {
