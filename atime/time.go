@@ -176,6 +176,26 @@ func FormatDateTime(t ...time.Time) string {
 	return Format(DATETIME, t...)
 }
 
+//反格式化 时间字符串转换成时间戳
+func UnFormatUnix(format string, timeStr string) int64 {
+	t, err := time.ParseInLocation(format, timeStr, time.Local)
+	if err != nil {
+		fmt.Println("github.com/asktop/gotools/atime UnFormatUnix", "format:", format, "timeStr:", timeStr, "err:", err)
+		return 0
+	}
+	return t.Unix()
+}
+
+//反格式化 时间字符串转换成时间戳
+func UnFormatUnixNano(format string, timeStr string) int64 {
+	t, err := time.ParseInLocation(format, timeStr, time.Local)
+	if err != nil {
+		fmt.Println("github.com/asktop/gotools/atime UnFormatUnixNano", "format:", format, "timeStr:", timeStr, "err:", err)
+		return 0
+	}
+	return t.UnixNano()
+}
+
 func startTime(timestamp ...interface{}) time.Time {
 	fn := Now()
 	if len(timestamp) > 0 {
