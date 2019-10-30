@@ -1,6 +1,7 @@
 package atime
 
 import (
+	"errors"
 	"fmt"
 	"github.com/asktop/gotools/acast"
 	"strings"
@@ -98,6 +99,9 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	if err != nil {
 		return fn, err
 	}
+	if tsStr == "" {
+		return fn, errors.New("")
+	}
 	tsLen := len(tsStr)
 	if tsLen <= 10 {
 		sec, err = acast.ToInt64E(tsStr)
@@ -137,7 +141,9 @@ func FormatNow(format string) string {
 func FormatTimestamp(format string, timestamp interface{}) string {
 	fn, err := ParseTimestamp(timestamp)
 	if err != nil {
-		fmt.Println("github.com/asktop/gotools/atime ParseTimestamp", "timestamp:", timestamp, "err:", err)
+		if err.Error() != "" {
+			fmt.Println("github.com/asktop/gotools/atime ParseTimestamp", "timestamp:", timestamp, "err:", err)
+		}
 		return ""
 	}
 	return fn.Format(format)
