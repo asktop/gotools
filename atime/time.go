@@ -12,6 +12,7 @@ const (
 	DATETIME = "2006-01-02 15:04:05"
 	DATE     = "2006-01-02"
 	TIME     = "15:04:05"
+	MONTH    = "2006-01"
 	Day      = time.Duration(time.Hour * 24)
 )
 
@@ -127,7 +128,7 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	return time.Unix(sec, nsec), nil
 }
 
-//格式化时间戳 格式指定
+//将 时间戳 转换成 指定格式的时间字符串
 func FormatTimestamp(format string, timestamp interface{}) string {
 	fn, err := ParseTimestamp(timestamp)
 	if err != nil {
@@ -137,56 +138,27 @@ func FormatTimestamp(format string, timestamp interface{}) string {
 	return fn.Format(format)
 }
 
-//格式化时间戳 格式："2006-01-02"
-func FormatDateT(timestamp interface{}) string {
-	return FormatTimestamp(DATE, timestamp)
-}
-
-//格式化时间戳 格式："15:04:05"
-func FormatTimeT(timestamp interface{}) string {
-	return FormatTimestamp(TIME, timestamp)
-}
-
-//格式化时间戳 格式："2006-01-02 15:04:05"
-func FormatDateTimeT(timestamp interface{}) string {
+//将 时间戳 转换成 指定格式的时间字符串 格式："2006-01-02 15:04:05"
+func FormatDateTime(timestamp interface{}) string {
 	return FormatTimestamp(DATETIME, timestamp)
 }
 
-//格式化时间 格式指定
-func Format(format string, t ...time.Time) string {
-	fn := Now()
-	if len(t) > 0 {
-		fn = t[0]
-	}
-	return fn.Format(format)
+//将 时间戳 转换成 指定格式的时间字符串 格式："2006-01-02"
+func FormatDate(timestamp interface{}) string {
+	return FormatTimestamp(DATE, timestamp)
 }
 
-//格式化时间 格式："2006-01-02"
-func FormatDate(t ...time.Time) string {
-	return Format(DATE, t...)
+//将 时间戳 转换成 指定格式的时间字符串 格式："15:04:05"
+func FormatTime(timestamp interface{}) string {
+	return FormatTimestamp(TIME, timestamp)
 }
 
-//格式化时间 格式："15:04:05"
-func FormatTime(t ...time.Time) string {
-	return Format(TIME, t...)
+//将 时间戳 转换成 指定格式的时间字符串 格式："2006-01"
+func FormatMonth(timestamp interface{}) string {
+	return FormatTimestamp(MONTH, timestamp)
 }
 
-//格式化时间 格式："2006-01-02 15:04:05"
-func FormatDateTime(t ...time.Time) string {
-	return Format(DATETIME, t...)
-}
-
-//反格式化 时间字符串转换成时间戳
-func UnFormatUnix(format string, timeStr string) int64 {
-	t, err := time.ParseInLocation(format, timeStr, time.Local)
-	if err != nil {
-		fmt.Println("github.com/asktop/gotools/atime UnFormatUnix", "format:", format, "timeStr:", timeStr, "err:", err)
-		return 0
-	}
-	return t.Unix()
-}
-
-//反格式化 时间字符串转换成时间戳
+//将 指定格式的时间字符串 转换成 纳秒级时间戳
 func UnFormatUnixNano(format string, timeStr string) int64 {
 	t, err := time.ParseInLocation(format, timeStr, time.Local)
 	if err != nil {
@@ -194,6 +166,36 @@ func UnFormatUnixNano(format string, timeStr string) int64 {
 		return 0
 	}
 	return t.UnixNano()
+}
+
+//将 指定格式的时间字符串 转换成 秒级时间戳
+func UnFormat(format string, timeStr string) int64 {
+	t, err := time.ParseInLocation(format, timeStr, time.Local)
+	if err != nil {
+		fmt.Println("github.com/asktop/gotools/atime UnFormat", "format:", format, "timeStr:", timeStr, "err:", err)
+		return 0
+	}
+	return t.Unix()
+}
+
+//将 指定格式的时间字符串 转换成 秒级时间戳
+func UnFormatDateTime(timeStr string) int64 {
+	return UnFormat(DATETIME, timeStr)
+}
+
+//将 指定格式的时间字符串 转换成 秒级时间戳
+func UnFormatDate(timeStr string) int64 {
+	return UnFormat(DATE, timeStr)
+}
+
+//将 指定格式的时间字符串 转换成 秒级时间戳
+func UnFormatTime(timeStr string) int64 {
+	return UnFormat(TIME, timeStr)
+}
+
+//将 指定格式的时间字符串 转换成 秒级时间戳
+func UnFormatMonth(timeStr string) int64 {
+	return UnFormat(MONTH, timeStr)
 }
 
 func startTime(timestamp ...interface{}) time.Time {
