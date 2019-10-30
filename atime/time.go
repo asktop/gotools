@@ -128,6 +128,11 @@ func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	return time.Unix(sec, nsec), nil
 }
 
+//将 当前时间戳 转换成 指定格式的时间字符串
+func FormatNow(format string) string {
+	return Now().Format(format)
+}
+
 //将 时间戳 转换成 指定格式的时间字符串
 func FormatTimestamp(format string, timestamp interface{}) string {
 	fn, err := ParseTimestamp(timestamp)
