@@ -17,6 +17,9 @@ type between struct {
 }
 
 func (c *between) Check() (msg string, ok bool) {
+	if c.valueStr == "" {
+		return "", true
+	}
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}

@@ -14,12 +14,15 @@ type isIDCard struct {
 }
 
 func (c *isIDCard) Check() (msg string, ok bool) {
+	if c.valueStr == "" {
+		return "", true
+	}
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}
 	if !astring.IsIDCard(c.valueStr) {
 		if len(c.msgs) == 0 {
-			msg = fmt.Sprintf("%s 身份证号码格式不正确", c.title)
+			msg = fmt.Sprintf("%s不是正确的身份证号码格式", c.title)
 		}
 		return msg, false
 	}

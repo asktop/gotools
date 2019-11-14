@@ -15,6 +15,9 @@ type inSlice struct {
 }
 
 func (c *inSlice) Check() (msg string, ok bool) {
+	if c.valueStr == "" {
+		return "", true
+	}
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}
@@ -22,7 +25,7 @@ func (c *inSlice) Check() (msg string, ok bool) {
 		if len(c.msgs) == 0 {
 			msg = fmt.Sprintf("%s不在规定范围内", c.title)
 		}
-		return msg, true
+		return msg, false
 	}
 	return "", true
 }

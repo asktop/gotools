@@ -2,8 +2,8 @@ package avalid
 
 import (
 	"fmt"
-	"github.com/asktop/gotools/acast"
 	"github.com/asktop/decimal"
+	"github.com/asktop/gotools/acast"
 )
 
 //数值比较
@@ -18,6 +18,9 @@ type cmp struct {
 }
 
 func (c *cmp) Check() (msg string, ok bool) {
+	if c.valueStr == "" {
+		return "", true
+	}
 	if len(c.msgs) > 0 {
 		msg = c.msgs[0]
 	}
