@@ -4,7 +4,7 @@ import "testing"
 
 func TestApiRateLimit(t *testing.T) {
 	apiLimit := NewAPIRateLimit(300)
-	apiUniqueKey := "Request.Method" + "Request.URL" + "IP or UserId"
+	apiUniqueKey := "Request.Method" + "Request.URL.Path" + "Input.IP or UserId or Token"
 	if !apiLimit.Check(apiUniqueKey) {
 		//频率受限，返回
 		return
