@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type apiRateLimit struct {
+type APIRateLimit struct {
 	open           bool //是否开启频率验证
 	limitPerMinute int  //每分钟访问频次
 	mu             sync.RWMutex
@@ -13,18 +13,18 @@ type apiRateLimit struct {
 }
 
 //API接口访问频次限制
-func NewAPIRateLimit(limitPerMinute int) *apiRateLimit {
+func NewAPIRateLimit(limitPerMinute int) *APIRateLimit {
 	open := true
 	if limitPerMinute <= 0 {
 		open = false
 	}
-	object := &apiRateLimit{open: open, limitPerMinute: limitPerMinute, mu: sync.RWMutex{}, timeListMap: make(map[string][]int64)}
+	object := &APIRateLimit{open: open, limitPerMinute: limitPerMinute, mu: sync.RWMutex{}, timeListMap: make(map[string][]int64)}
 	object.cleanTask()
 	return object
 }
 
 //判断接口访问频次是否超频
-func (o *apiRateLimit) Check(apiUniqueKey string) bool {
+func (o *APIRateLimit) Check(apiUniqueKey string) bool {
 	if !o.open {
 		return true
 	}
@@ -71,7 +71,7 @@ func (o *apiRateLimit) Check(apiUniqueKey string) bool {
 }
 
 //定时清除内存中超时的接口访问频次
-func (o *apiRateLimit) cleanTask() {
+func (o *APIRateLimit) cleanTask() {
 	if o.open {
 		go func() {
 			ticker := time.NewTicker(time.Minute * 10)
