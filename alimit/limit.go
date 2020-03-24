@@ -52,10 +52,10 @@ func (o *APILimit) Check(apiUniqueKey string, apiLimitPerMinute ...int) (checked
 	//获取1分钟前的毫秒值
 	checkTime := currentTime - 1000*60
 	o.mu.RLock()
-	if timelist, find := o.apiLimitList[apiUniqueKey]; !find {
+	if limitList, find := o.apiLimitList[apiUniqueKey]; !find {
 		o.mu.RUnlock()
 		o.mu.Lock()
-		if timelist, find = o.apiLimitList[apiUniqueKey]; !find {
+		if limitList, find = o.apiLimitList[apiUniqueKey]; !find {
 			o.apiLimitList[apiUniqueKey] = []int64{currentTime}
 			checked = true
 		}
@@ -63,25 +63,24 @@ func (o *APILimit) Check(apiUniqueKey string, apiLimitPerMinute ...int) (checked
 	} else {
 		o.mu.RUnlock()
 		o.mu.Lock()
-		if timelist, find = o.apiLimitList[apiUniqueKey]; find {
+		if limitList, find = o.apiLimitList[apiUniqueKey]; find {
 			//判断顶部时间单元是否超时，不超时则保留
-			index := len(timelist)
-			for k, v := range timelist {
+			index := len(limitList)
+			for k, v := range limitList {
 				if v > checkTime {
 					index = k
-					goto INDEX_END
+					break
 				}
 			}
-		INDEX_END:
-			timelist = timelist[index:]
+			limitList = limitList[index:]
 			//判断时间单元是否超频，超频则返回false；未超频添加当前时间，返回true
-			if len(timelist) >= limitPerMinute {
+			if len(limitList) >= limitPerMinute {
 				checked = false
 			} else {
-				timelist = append(timelist, currentTime)
+				limitList = append(limitList, currentTime)
 				checked = true
 			}
-			o.apiLimitList[apiUniqueKey] = timelist
+			o.apiLimitList[apiUniqueKey] = limitList
 		}
 		o.mu.Unlock()
 	}
@@ -101,7 +100,6 @@ func (o *APILimit) cleanTask() {
 					//获取1分钟前的毫秒值
 					checkTime := currentTime - 1000*60
 					o.mu.Lock()
-					defer o.mu.Unlock()
 					for k, v := range o.apiLimitList {
 						//判断时间单元个数为0，则删除
 						if len(v) == 0 {
@@ -114,6 +112,7 @@ func (o *APILimit) cleanTask() {
 							}
 						}
 					}
+					o.mu.Unlock()
 				}
 			}
 		}()
