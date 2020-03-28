@@ -1,13 +1,21 @@
 package alimit
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+	"time"
+)
 
-func TestApiRateLimit(t *testing.T) {
-	apiLimit := NewAPILimit(300)
+func TestNewLimit(t *testing.T) {
+	limit := NewLimit(2)
 	apiUniqueKey := "Request.Method" + "Request.URL.Path" + "Input.IP or UserId or Token"
-	if !apiLimit.Check(apiUniqueKey) {
-		//频率受限，返回
-		return
+	for i := 1; i <= 100; i++ {
+		ok, times := limit.Check(apiUniqueKey, 30, 60)
+		if !ok {
+			fmt.Println(apiUniqueKey, i, ":", times, "频率受限")
+		} else {
+			fmt.Println(apiUniqueKey, i, ":", times)
+		}
+		time.Sleep(time.Second)
 	}
-	//进行其他业务操作
 }

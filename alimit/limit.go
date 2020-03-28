@@ -1,120 +1,123 @@
 package alimit
 
 import (
+	"container/list"
 	"sync"
 	"time"
 )
 
-type APILimit struct {
-	open           bool //是否开启频率验证
-	limitPerMinute int  //每分钟访问频次
+const (
+	Level_Close Level = 0 //关闭校验
+	Level_Weak  Level = 1 //弱校验（当限速后，新请求不再加入请求队列）
+	Level_High  Level = 2 //强校验（当限速后，新请求依旧加入请求队列）
+)
 
-	mu           sync.RWMutex
-	apiLimitList map[string][]int64
+type Level int
+
+type Limit struct {
+	level  Level //是否开启频率验证
+	mu     sync.RWMutex
+	apiMap map[string]*apiWrap
+}
+
+type apiWrap struct {
+	mu       sync.RWMutex
+	limit    int        //限速频率
+	seconds  int64      //限速单位（多少秒）
+	timeList *list.List //时间戳队列
 }
 
 //API接口访问频次限制
-// @param limitPerMinute 默认接口访问频次限制，小于等于0时关闭限制
-func NewAPILimit(limitPerMinute int) *APILimit {
-	open := true
-	if limitPerMinute <= 0 {
-		open = false
+func NewLimit(level Level) *Limit {
+	if level > 2 || level < 0 {
+		level = 0
 	}
-	object := &APILimit{open: open, limitPerMinute: limitPerMinute, mu: sync.RWMutex{}, apiLimitList: make(map[string][]int64)}
-	object.cleanTask()
-	return object
+	limit := &Limit{level: level, mu: sync.RWMutex{}, apiMap: make(map[string]*apiWrap)}
+	limit.cleanTask()
+	return limit
 }
 
 //判断接口访问频次是否超频
-// @param apiUniqueKey 当前接口访问唯一标识
-// @param apiLimitPerMinute 当前接口访问频次限制，小于等于0时关闭限制
-func (o *APILimit) Check(apiUniqueKey string, apiLimitPerMinute ...int) (checked bool) {
+// @param apiUniqueKey 	当前接口访问唯一标识
+// @param limit    		限速频率（小于等于0时关闭该接口验证）
+// @param seconds 		限速单位（多少秒）
+func (o *Limit) Check(apiUniqueKey string, limit int, seconds int64) (checked bool, times int) {
 	//默认验证通过
 	checked = true
 
-	//全局关闭验证，验证通过
-	if !o.open {
-		return checked
-	}
-
-	limitPerMinute := o.limitPerMinute //接口验证频率
-	if len(apiLimitPerMinute) > 0 {
-		if apiLimitPerMinute[0] <= 0 {
-			//接口关闭验证，验证通过
-			return checked
-		} else {
-			limitPerMinute = apiLimitPerMinute[0]
-		}
+	//关闭验证，验证通过
+	if o.level == 0 || limit <= 0 || seconds <= 0 || apiUniqueKey == "" {
+		return checked, times
 	}
 
 	//获取当前系统时间戳（毫秒值）
-	currentTime := time.Now().UnixNano() / 1e6
-	//获取1分钟前的毫秒值
-	checkTime := currentTime - 1000*60
-	o.mu.RLock()
-	if limitList, find := o.apiLimitList[apiUniqueKey]; !find {
-		o.mu.RUnlock()
-		o.mu.Lock()
-		if limitList, find = o.apiLimitList[apiUniqueKey]; !find {
-			o.apiLimitList[apiUniqueKey] = []int64{currentTime}
-			checked = true
-		}
+	now := time.Now().UnixNano() / 1e6
+	//获取校验起始时间戳（毫秒值）
+	start := now - 1000*seconds
+
+	o.mu.Lock()
+	if api, ok := o.apiMap[apiUniqueKey]; !ok {
+		apiTemp := &apiWrap{limit: limit, seconds: seconds, timeList: list.New()}
+		apiTemp.timeList.PushBack(now)
+		o.apiMap[apiUniqueKey] = apiTemp
+		times = 1
 		o.mu.Unlock()
 	} else {
-		o.mu.RUnlock()
-		o.mu.Lock()
-		if limitList, find = o.apiLimitList[apiUniqueKey]; find {
-			//判断顶部时间单元是否超时，不超时则保留
-			index := len(limitList)
-			for k, v := range limitList {
-				if v > checkTime {
-					index = k
-					break
-				}
-			}
-			limitList = limitList[index:]
-			//判断时间单元是否超频，超频则返回false；未超频添加当前时间，返回true
-			if len(limitList) >= limitPerMinute {
-				checked = false
-			} else {
-				limitList = append(limitList, currentTime)
-				checked = true
-			}
-			o.apiLimitList[apiUniqueKey] = limitList
-		}
 		o.mu.Unlock()
+		api.mu.Lock()
+		for e := api.timeList.Front(); e != nil; e = e.Next() {
+			etime := e.Value.(int64)
+			if etime <= start {
+				api.timeList.Remove(e)
+			} else {
+				break
+			}
+		}
+		times = api.timeList.Len() + 1
+		if times > limit {
+			o.mu.RLock()
+			if o.level == 2 {
+				api.timeList.PushBack(now)
+			}
+			o.mu.RUnlock()
+			checked = false
+		} else {
+			api.timeList.PushBack(now)
+		}
+		api.mu.Unlock()
 	}
-	return checked
+	return checked, times
 }
 
 //定时清除内存中超时的接口访问频次
-func (o *APILimit) cleanTask() {
-	if o.open {
-		go func() {
-			ticker := time.NewTicker(time.Minute * 10)
-			for {
-				select {
-				case <-ticker.C:
-					//获取当前系统时间戳（毫秒值）
-					currentTime := time.Now().UnixNano() / 1e6
-					//获取1分钟前的毫秒值
-					checkTime := currentTime - 1000*60
-					o.mu.Lock()
-					for k, v := range o.apiLimitList {
+func (o *Limit) cleanTask() {
+	go func() {
+		ticker := time.NewTicker(time.Hour)
+		for {
+			select {
+			case <-ticker.C:
+				o.mu.Lock()
+				if o.level != 0 {
+					for k, api := range o.apiMap {
+						api.mu.Lock()
 						//判断时间单元个数为0，则删除
-						if len(v) == 0 {
-							delete(o.apiLimitList, k)
+						if api.timeList.Len() == 0 {
+							delete(o.apiMap, k)
 						} else {
+							e := api.timeList.Back()
+							etime := e.Value.(int64)
+							//获取校验起始时间戳（毫秒值）
+							start := time.Now().UnixNano()/1e6 - 1000*api.seconds
 							//判断最后插入的单元时间验证时间，则删除
-							tempTime := v[len(v)-1]
-							if tempTime < checkTime {
-								delete(o.apiLimitList, k)
+							if etime <= start {
+								delete(o.apiMap, k)
 							}
 						}
+						api.mu.Unlock()
 					}
-					o.mu.Unlock()
 				}
+				o.mu.Unlock()
 			}
-		}()
-	}
+		}
+	}()
 }
