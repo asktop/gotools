@@ -15,8 +15,8 @@ const (
 type Level int
 
 type Limit struct {
-	level  Level //是否开启频率验证
 	mu     sync.RWMutex
+	level  Level //校验级别
 	apiMap map[string]*apiWrap
 }
 
@@ -32,9 +32,19 @@ func NewLimit(level Level) *Limit {
 	if level > 2 || level < 0 {
 		level = 0
 	}
-	limit := &Limit{level: level, mu: sync.RWMutex{}, apiMap: make(map[string]*apiWrap)}
+	limit := &Limit{mu: sync.RWMutex{}, level: level, apiMap: make(map[string]*apiWrap)}
 	limit.cleanTask()
 	return limit
+}
+
+//设置校验级别
+func (o *Limit) SetLevel(level Level) {
+	if level > 2 || level < 0 {
+		level = 0
+	}
+	o.mu.Lock()
+	o.level = level
+	o.mu.Unlock()
 }
 
 //判断接口访问频次是否超频
@@ -46,7 +56,10 @@ func (o *Limit) Check(apiUniqueKey string, limit int, seconds int64) (checked bo
 	checked = true
 
 	//关闭验证，验证通过
-	if o.level == 0 || limit <= 0 || seconds <= 0 || apiUniqueKey == "" {
+	o.mu.RLock()
+	level := o.level
+	o.mu.RUnlock()
+	if level == 0 || limit <= 0 || seconds <= 0 || apiUniqueKey == "" {
 		return checked, times
 	}
 
@@ -57,7 +70,7 @@ func (o *Limit) Check(apiUniqueKey string, limit int, seconds int64) (checked bo
 
 	o.mu.Lock()
 	if api, ok := o.apiMap[apiUniqueKey]; !ok {
-		apiTemp := &apiWrap{limit: limit, seconds: seconds, timeList: list.New()}
+		apiTemp := &apiWrap{mu: sync.RWMutex{}, limit: limit, seconds: seconds, timeList: list.New()}
 		apiTemp.timeList.PushBack(now)
 		o.apiMap[apiUniqueKey] = apiTemp
 		times = 1
