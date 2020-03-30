@@ -47,6 +47,18 @@ func (o *Limit) SetLevel(level Level) {
 	o.mu.Unlock()
 }
 
+//是否开启了校验
+func (o *Limit) IsOpen() bool {
+	o.mu.RLock()
+	level := o.level
+	o.mu.RUnlock()
+	if level == 1 || level == 2 {
+		return true
+	} else {
+		return false
+	}
+}
+
 //判断接口访问频次是否超频
 // @param apiUniqueKey 	当前接口访问唯一标识
 // @param limit    		限速频率（小于等于0时关闭该接口验证）
