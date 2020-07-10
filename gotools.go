@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
+	_ "github.com/asktop/gotools/acaptcha"
 	_ "github.com/asktop/gotools/acast"
 	_ "github.com/asktop/gotools/acron"
 	_ "github.com/asktop/gotools/afile"
 	_ "github.com/asktop/gotools/agzip"
 	_ "github.com/asktop/gotools/ajson"
 	_ "github.com/asktop/gotools/akey"
+	_ "github.com/asktop/gotools/alimit"
 	_ "github.com/asktop/gotools/alist"
 	_ "github.com/asktop/gotools/amap"
 	_ "github.com/asktop/gotools/amath"
