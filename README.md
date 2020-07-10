@@ -8,6 +8,7 @@
 ## 2. 模块
 | 安装 | 模块 | 说明 |
 | --- | --- | --- |
+| go get github.com/asktop/gotools/acaptcha | acaptcha | * 验证码 |
 | go get github.com/asktop/gotools/acast    | acast    | * 数据类型转换：接口转基本类型，map和struct互转等 |
 | go get github.com/asktop/gotools/acron    | acron    | cron表达式、定时任务工具 |
 | go get github.com/asktop/gotools/afile    | afile    | 文件管理 |
