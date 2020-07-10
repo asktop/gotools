@@ -1,12 +1,10 @@
 package atime
 
 import (
-	"errors"
-	"fmt"
-	"github.com/asktop/gotools/acast"
-	"strings"
-	"sync"
-	"time"
+    "fmt"
+    "github.com/asktop/gotools/acast"
+    "sync"
+    "time"
 )
 
 const (
@@ -60,76 +58,49 @@ func NowNano() int64 {
 	return Now().UnixNano()
 }
 
+func toInt64(timestamp interface{}) int64 {
+	return acast.ToInt64(timestamp)
+}
+
 //秒级时间戳 转换为 毫秒级时间戳
-func UnixToMilli(timestamp int64) int64 {
-	return timestamp * 1e3
+func UnixToMilli(timestamp interface{}) int64 {
+	return toInt64(timestamp) * 1e3
 }
 
 //秒级时间戳 转换为 纳秒级时间戳
-func UnixToNano(timestamp int64) int64 {
-	return timestamp * 1e9
+func UnixToNano(timestamp interface{}) int64 {
+	return toInt64(timestamp) * 1e9
 }
 
 //毫秒级时间戳 转换为 秒级时间戳
-func MilliToUnix(timestamp int64) int64 {
-	return timestamp / 1e3
+func MilliToUnix(timestamp interface{}) int64 {
+	return toInt64(timestamp) / 1e3
 }
 
 //毫秒级时间戳 转换为 纳秒时间戳
-func MilliToNano(timestamp int64) int64 {
-	return timestamp * 1e6
+func MilliToNano(timestamp interface{}) int64 {
+	return toInt64(timestamp) * 1e6
 }
 
 //纳秒级时间戳 转换为 秒级时间戳
-func NanoToUnix(timestamp int64) int64 {
-	return timestamp / 1e9
+func NanoToUnix(timestamp interface{}) int64 {
+	return toInt64(timestamp) / 1e9
 }
 
 //纳秒级时间戳 转换为 毫秒级时间戳
-func NanoToMilli(timestamp int64) int64 {
-	return timestamp / 1e6
+func NanoToMilli(timestamp interface{}) int64 {
+	return toInt64(timestamp) / 1e6
 }
 
 //将 时间戳 转换成 本地时区时间
 func ParseTimestamp(timestamp interface{}) (time.Time, error) {
 	var err error
-	var sec, nsec int64
 	fn := Now()
-	tsStr, err := acast.ToStringE(timestamp)
+    sec, err := acast.ToInt64E(timestamp)
 	if err != nil {
 		return fn, err
 	}
-	if tsStr == "" {
-		return fn, errors.New("")
-	}
-	tsLen := len(tsStr)
-	if tsLen <= 10 {
-		sec, err = acast.ToInt64E(tsStr)
-		if err != nil {
-			return fn, err
-		}
-	} else if tsLen <= 19 {
-		if tsLen < 19 {
-			tsStr += strings.Repeat("0", 19-tsLen)
-		}
-		secStr := tsStr[0:10]
-		nsecStr := tsStr[10:]
-		sec, err = acast.ToInt64E(secStr)
-		if err != nil {
-			return fn, err
-		}
-		nsecStr = strings.TrimLeft(nsecStr, "0")
-		if nsecStr == "" {
-			nsecStr = "0"
-		}
-		nsec, err = acast.ToInt64E(nsecStr)
-		if err != nil {
-			return fn, err
-		}
-	} else {
-		return fn, err
-	}
-	return time.Unix(sec, nsec), nil
+	return time.Unix(sec, 0), nil
 }
 
 //将 当前时间戳 转换成 指定格式的时间字符串
