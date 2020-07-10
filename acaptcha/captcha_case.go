@@ -1,4 +1,4 @@
-package captcha
+package acaptcha
 
 //
 ////获取验证码
