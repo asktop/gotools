@@ -163,6 +163,33 @@ func IntToStr(num int, length int, force ...bool) string {
 	}
 }
 
+// int 转换成指定长度的 string
+// @param force 强制转换，当num长度大于length时，删除前面超过的部分
+func Int64ToStr(num int64, length int, force ...bool) string {
+	if length <= 0 {
+		return strconv.FormatInt(num, 10)
+	} else {
+		if num < 0 {
+			numStr := strconv.FormatInt(-num, 10)
+			if len(force) > 0 && force[0] || len(numStr) < length {
+				numStr = strings.Repeat("0", length) + numStr
+				return "-" + numStr[len(numStr)-length:]
+			} else {
+				return "-" + numStr
+			}
+		} else {
+			numStr := strconv.FormatInt(num, 10)
+			if len(force) > 0 && force[0] || len(numStr) < length {
+				numStr = strings.Repeat("0", length) + numStr
+				return numStr[len(numStr)-length:]
+			} else {
+				return numStr
+			}
+		}
+	}
+}
+
+
 //将多个对象拼接成字符串
 func Join(args ...interface{}) string {
 	var rs string
