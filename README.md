@@ -17,6 +17,7 @@
 | go get github.com/asktop/gotools/akey     | akey     | * base64/md5等加密、解密 |
 | go get github.com/asktop/gotools/alimit   | alimit   | * API接口访问频次限制 |
 | go get github.com/asktop/gotools/alist    | alist    | * 并发安全list |
+| go get github.com/asktop/gotools/alog     | alog     | * 日志工具 |
 | go get github.com/asktop/gotools/amap     | amap     | * 并发安全map、有序map |
 | go get github.com/asktop/gotools/amath    | amath    | decimal数值处理 |
 | go get github.com/asktop/gotools/amsg     | amsg     | error扩展 |
