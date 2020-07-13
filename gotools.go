@@ -10,6 +10,7 @@ import (
     _ "github.com/asktop/gotools/aemail"
     _ "github.com/asktop/gotools/afile"
     _ "github.com/asktop/gotools/agzip"
+    _ "github.com/asktop/gotools/aimage"
     _ "github.com/asktop/gotools/ajson"
     _ "github.com/asktop/gotools/akey"
     _ "github.com/asktop/gotools/alimit"

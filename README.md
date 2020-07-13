@@ -16,6 +16,7 @@
 | go get github.com/asktop/gotools/aemail   | aemail   | * email邮箱工具 |
 | go get github.com/asktop/gotools/afile    | afile    | 文件管理 |
 | go get github.com/asktop/gotools/agzip    | agzip    | gzip压缩、解压 |
+| go get github.com/asktop/gotools/aimage   | aimage   | 图片压缩裁剪工具 |
 | go get github.com/asktop/gotools/ajson    | ajson    | json编解码 |
 | go get github.com/asktop/gotools/akey     | akey     | * base64/md5等加密、解密 |
 | go get github.com/asktop/gotools/alimit   | alimit   | * API接口访问频次限制 |
