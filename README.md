@@ -25,6 +25,7 @@
 | go get github.com/asktop/gotools/amath    | amath    | decimal数值处理 |
 | go get github.com/asktop/gotools/amsg     | amsg     | error扩展 |
 | go get github.com/asktop/gotools/aotp     | aotp     | * OTP动态口令（基于时间） |
+| go get github.com/asktop/gotools/apage    | apage    | * 分页工具 |
 | go get github.com/asktop/gotools/aphp     | aphp     | php编解码 |
 | go get github.com/asktop/gotools/arand    | arand    | * 随机数、随机字符串、随机MD5等 |
 | go get github.com/asktop/gotools/areflect | areflect | 反射扩展，获取方法名等 |
