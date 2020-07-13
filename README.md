@@ -24,6 +24,7 @@
 | go get github.com/asktop/gotools/aotp     | aotp     | * OTP动态口令（基于时间） |
 | go get github.com/asktop/gotools/aphp     | aphp     | php编解码 |
 | go get github.com/asktop/gotools/arand    | arand    | * 随机数、随机字符串、随机MD5等 |
+| go get github.com/asktop/gotools/aredis   | aredis   | * redis工具 |
 | go get github.com/asktop/gotools/areflect | areflect | 反射扩展，获取方法名等 |
 | go get github.com/asktop/gotools/ascan    | ascan    | 数值scan |
 | go get github.com/asktop/gotools/aset     | aset     | * 并发安全set |
