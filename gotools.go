@@ -4,6 +4,7 @@ import (
     "fmt"
     _ "github.com/asktop/gotools/acaptcha"
     _ "github.com/asktop/gotools/acast"
+    _ "github.com/asktop/gotools/aclient"
     _ "github.com/asktop/gotools/acron"
     _ "github.com/asktop/gotools/adb"
     _ "github.com/asktop/gotools/afile"

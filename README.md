@@ -10,6 +10,7 @@
 | --- | --- | --- |
 | go get github.com/asktop/gotools/acaptcha | acaptcha | * 验证码 |
 | go get github.com/asktop/gotools/acast    | acast    | * 数据类型转换：接口转基本类型，map和struct互转等 |
+| go get github.com/asktop/gotools/aclient  | aclient  | * 客户端工具 |
 | go get github.com/asktop/gotools/acron    | acron    | cron表达式、定时任务工具 |
 | go get github.com/asktop/gotools/adb      | adb      | * mysql数据库工具 |
 | go get github.com/asktop/gotools/afile    | afile    | 文件管理 |
