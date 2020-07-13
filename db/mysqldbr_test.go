@@ -1,4 +1,4 @@
-package adb
+package db
 
 import (
     "fmt"
@@ -275,11 +275,11 @@ type DemoUser struct {
 func TestCache(t *testing.T) {
     TInitDbr()
     //此处循环调用，不能再此处测试
-    err := aredis.StartRedis(aredis.Config{Host: "127.0.0.1", Password: "kf123456", Select: 0})
+    err := cache.StartRedis(cache.Config{Host: "127.0.0.1", Password: "kf123456", Select: 0})
     if err != nil {
         panic(err)
     }
-    redisconn := aredis.NewRedis(true)
+    redisconn := cache.NewRedis(true)
     defer redisconn.Close()
     stmt := Session().Select("user_id", "mobile", "username").From("user").Where(dbr.Eq("user_id", []int64{1, 2, 3})).Cache(redisconn, 60)
     sql, err := stmt.GetSQL()

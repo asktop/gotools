@@ -1,10 +1,10 @@
-package aredis
+package cache
 
 import (
     "encoding/json"
     "errors"
     big "github.com/asktop/decimal"
-    "github.com/asktop/gotools/alog"
+    "github.com/asktop/gotools/log"
     "github.com/gomodule/redigo/redis"
     "github.com/shopspring/decimal"
     "net"
@@ -53,7 +53,7 @@ func StartRedis(config Config) error {
         config.IdleTimeout = 180
     }
     idleTimeout := time.Duration(config.IdleTimeout) * time.Second //时间单位：秒
-    alog.Info("--- 连接 redis ---", "address:", address, "password:", password, "db:", db)
+    log.Info("--- 连接 redis ---", "address:", address, "password:", password, "db:", db)
     //连接redis并创建连接池
     redisPool = &redis.Pool{
         Dial: func() (redis.Conn, error) {
@@ -94,7 +94,7 @@ func StartRedis(config Config) error {
     defer conn.Close()
     _, err := conn.Do("PING")
     if err != nil {
-        alog.Error("--- 连接 redis 出错 ---", "err:", err)
+        log.Error("--- 连接 redis 出错 ---", "err:", err)
         return err
     }
     return nil

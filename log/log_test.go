@@ -1,4 +1,4 @@
-package alog
+package log
 
 import (
     "errors"

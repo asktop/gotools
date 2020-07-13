@@ -1,4 +1,4 @@
-package aredis
+package cache
 
 import (
     "fmt"

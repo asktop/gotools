@@ -1,8 +1,8 @@
-package adb
+package db
 
 import (
     "github.com/asktop/dbr"
-    "github.com/asktop/gotools/alog"
+    "github.com/asktop/gotools/log"
     _ "github.com/go-sql-driver/mysql"
     "time"
 )
@@ -13,18 +13,18 @@ var (
 )
 
 func StartMysqlDbr(config Config, readConfig ...Config) error {
-    defer SetDbrShowLog(config.SqlLogLevel, alog.Info)
+    defer SetDbrShowLog(config.SqlLogLevel, log.Info)
 
     //写数据库连接
     dbConfig := config.GetConfig()
-    alog.Info("--- 连接 mysql 主库（写库） ---", "config:", dbConfig)
+    log.Info("--- 连接 mysql 主库（写库） ---", "config:", dbConfig)
     var err error
     conn, err = dbr.Open("mysql", dbConfig, nil)
     if err == nil {
         err = checkConn(conn)
     }
     if err != nil {
-        alog.Error("--- 连接 mysql 主库（写库）出错 ---", "err:", err)
+        log.Error("--- 连接 mysql 主库（写库）出错 ---", "err:", err)
         return err
     }
     maxIdleConns := config.MaxIdleConns
@@ -40,13 +40,13 @@ func StartMysqlDbr(config Config, readConfig ...Config) error {
         rConfig = readConfig[0]
     }
     dbConfig = rConfig.GetConfig()
-    alog.Info("--- 连接 mysql 从库（读库） ---", "config:", dbConfig)
+    log.Info("--- 连接 mysql 从库（读库） ---", "config:", dbConfig)
     connRead, err = dbr.Open("mysql", dbConfig, nil)
     if err == nil {
         err = checkConn(connRead)
     }
     if err != nil {
-        alog.Error("--- 连接 mysql 从库（读库）出错 ---", "err:", err)
+        log.Error("--- 连接 mysql 从库（读库）出错 ---", "err:", err)
         connRead = conn
         return nil
     }

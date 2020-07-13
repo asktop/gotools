@@ -2,7 +2,7 @@ package mongo
 
 import (
     "fmt"
-    "github.com/asktop/gotools/alog"
+    "github.com/asktop/gotools/log"
     "gopkg.in/mgo.v2"
 )
 
@@ -43,11 +43,11 @@ func (c *Config) GetConfig() string {
 func StartMongoDbMgo(config Config) error {
     //获取配置
     addr := config.GetConfig()
-    alog.Info("--- 连接 mongodb ---", "addr:", addr)
+    log.Info("--- 连接 mongodb ---", "addr:", addr)
     //创建连接池
     session, err := mgo.Dial(addr)
     if err != nil {
-        alog.Error("--- 连接 mongodb 出错 ---", "err:", err)
+        log.Error("--- 连接 mongodb 出错 ---", "err:", err)
         return err
     }
     //session设置的模式分别为:

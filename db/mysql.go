@@ -1,8 +1,8 @@
-package adb
+package db
 
 import (
     "database/sql"
-    "github.com/asktop/gotools/alog"
+    "github.com/asktop/gotools/log"
     _ "github.com/go-sql-driver/mysql"
     "time"
 )
@@ -16,11 +16,11 @@ var (
 func StartMysql(config Config, readConfig ...Config) error {
     //写数据库连接
     dbConfig := config.GetConfig()
-    alog.Info("--- 连接 mysql 主库（写库） ---", "config:", dbConfig)
+    log.Info("--- 连接 mysql 主库（写库） ---", "config:", dbConfig)
     var err error
     db, err = sql.Open("mysql", dbConfig)
     if err != nil {
-        alog.Error("--- 连接 mysql 主库（写库）出错 ---", "err:", err)
+        log.Error("--- 连接 mysql 主库（写库）出错 ---", "err:", err)
         return err
     }
     maxIdleConns := config.MaxIdleConns
@@ -36,10 +36,10 @@ func StartMysql(config Config, readConfig ...Config) error {
         rConfig = readConfig[0]
     }
     dbConfig = rConfig.GetConfig()
-    alog.Info("--- 连接 mysql 从库（读库） ---", "config:", dbConfig)
+    log.Info("--- 连接 mysql 从库（读库） ---", "config:", dbConfig)
     dbRead, err = sql.Open("mysql", dbConfig)
     if err != nil {
-        alog.Error("--- 连接 mysql 从库（读库）出错 ---", "err:", err)
+        log.Error("--- 连接 mysql 从库（读库）出错 ---", "err:", err)
         dbRead = db
         return nil
     }
