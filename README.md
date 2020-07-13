@@ -13,6 +13,7 @@
 | go get github.com/asktop/gotools/aclient  | aclient  | * 客户端工具 |
 | go get github.com/asktop/gotools/acron    | acron    | cron表达式、定时任务工具 |
 | go get github.com/asktop/gotools/adb      | adb      | * mysql数据库工具 |
+| go get github.com/asktop/gotools/aemail   | aemail   | * email邮箱工具 |
 | go get github.com/asktop/gotools/afile    | afile    | 文件管理 |
 | go get github.com/asktop/gotools/agzip    | agzip    | gzip压缩、解压 |
 | go get github.com/asktop/gotools/ajson    | ajson    | json编解码 |

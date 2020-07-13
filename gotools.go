@@ -7,6 +7,7 @@ import (
     _ "github.com/asktop/gotools/aclient"
     _ "github.com/asktop/gotools/acron"
     _ "github.com/asktop/gotools/adb"
+    _ "github.com/asktop/gotools/aemail"
     _ "github.com/asktop/gotools/afile"
     _ "github.com/asktop/gotools/agzip"
     _ "github.com/asktop/gotools/ajson"
