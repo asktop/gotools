@@ -46,3 +46,4 @@
 | go get github.com/asktop/gotools/avalid   | avalid   | * 表单验证工具 |
 | go get github.com/asktop/gotools/ayaml    | ayaml    | yaml编解码 |
 | go get github.com/asktop/gotools/azlib    | azlib    | zlib压缩、解压 |
+| go get github.com/asktop/gotools/mongo    | mongo    | mongo数据库工具 |

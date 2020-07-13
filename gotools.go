@@ -40,6 +40,7 @@ import (
     _ "github.com/asktop/gotools/avalid"
     _ "github.com/asktop/gotools/ayaml"
     _ "github.com/asktop/gotools/azlib"
+    _ "github.com/asktop/gotools/mongo"
 )
 
 func main() {
