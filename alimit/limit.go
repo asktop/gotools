@@ -150,13 +150,10 @@ func (o *Limit) cleanTask() {
 }
 
 //设置默认
-func SetDefaultLimit(level Level) {
-    if level > 2 || level < 0 {
-        level = 0
-    }
-    defaultLimit.level = level
+func DefaultLimit(level Level) {
+    defaultLimit = NewLimit(level)
 }
 
-func CheckDefaultLimit(apiUniqueKey string, limit int, seconds int64) (checked bool, times int) {
+func CheckLimit(apiUniqueKey string, limit int, seconds int64) (checked bool, times int) {
     return defaultLimit.Check(apiUniqueKey, limit, seconds)
 }

@@ -111,11 +111,11 @@ func (j *RsaJwt) GetInfoObj(token string, info interface{}) error {
     }
 }
 
-func SetDefaultRsaJwt(privateKeyByte []byte, publicKeyByte []byte, expiresAt int) {
+func DefaultRsaJwt(privateKeyByte []byte, publicKeyByte []byte, expiresAt int) {
     defaultRsaJwt, _ = NewRsaJwt(privateKeyByte, publicKeyByte, expiresAt)
 }
 
-func SetDefaultRsaJwtPath(privateKeyPath string, publicKeyPath string, expiresAt int) {
+func DefaultRsaJwtPath(privateKeyPath string, publicKeyPath string, expiresAt int) {
     defaultRsaJwt, _ = NewRsaJwtPath(privateKeyPath, publicKeyPath, expiresAt)
 }
 

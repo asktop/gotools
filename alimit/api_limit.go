@@ -5,7 +5,7 @@ import (
     "time"
 )
 
-var defaultAPILimit = NewAPILimit(300)
+var defaultAPILimit *APILimit
 
 type APILimit struct {
     open           bool //是否开启频率验证
@@ -122,15 +122,10 @@ func (o *APILimit) cleanTask() {
 }
 
 //设置默认
-func SetDefaultAPILimit(limitPerMinute int) {
-    open := true
-    if limitPerMinute <= 0 {
-        open = false
-    }
-    defaultAPILimit.open = open
-    defaultAPILimit.limitPerMinute = limitPerMinute
+func DefaultAPILimit(limitPerMinute int) {
+    defaultAPILimit = NewAPILimit(limitPerMinute)
 }
 
-func CheckDefaultAPILimit(apiUniqueKey string, apiLimitPerMinute ...int) (checked bool) {
+func CheckAPILimit(apiUniqueKey string, apiLimitPerMinute ...int) (checked bool) {
     return defaultAPILimit.Check(apiUniqueKey, apiLimitPerMinute...)
 }

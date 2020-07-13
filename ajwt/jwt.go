@@ -77,7 +77,7 @@ func (j *Jwt) GetInfoObj(token string, info interface{}) error {
     }
 }
 
-func SetDefaultJwt(secretkey string, expiresAt int) {
+func DefaultJwt(secretkey string, expiresAt int) {
     defaultJwt = NewJwt(secretkey, expiresAt)
 }
 
