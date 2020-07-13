@@ -12,6 +12,7 @@ import (
     _ "github.com/asktop/gotools/agzip"
     _ "github.com/asktop/gotools/aimage"
     _ "github.com/asktop/gotools/ajson"
+    _ "github.com/asktop/gotools/ajwt"
     _ "github.com/asktop/gotools/akey"
     _ "github.com/asktop/gotools/alimit"
     _ "github.com/asktop/gotools/alist"
