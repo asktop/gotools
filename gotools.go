@@ -24,6 +24,7 @@ import (
     _ "github.com/asktop/gotools/areflect"
     _ "github.com/asktop/gotools/ascan"
     _ "github.com/asktop/gotools/aset"
+    _ "github.com/asktop/gotools/asign"
     _ "github.com/asktop/gotools/aslice"
     _ "github.com/asktop/gotools/asort"
     _ "github.com/asktop/gotools/astring"

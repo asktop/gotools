@@ -30,6 +30,7 @@
 | go get github.com/asktop/gotools/areflect | areflect | 反射扩展，获取方法名等 |
 | go get github.com/asktop/gotools/ascan    | ascan    | 数值scan |
 | go get github.com/asktop/gotools/aset     | aset     | * 并发安全set |
+| go get github.com/asktop/gotools/asign    | asign    | API接口签名验证 |
 | go get github.com/asktop/gotools/aslice   | aslice   | * slice切片处理 |
 | go get github.com/asktop/gotools/asort    | asort    | slice/map排序 |
 | go get github.com/asktop/gotools/astring  | astring  | * 字符串处理、正则验证 |
