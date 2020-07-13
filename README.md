@@ -17,7 +17,7 @@
 | go get github.com/asktop/gotools/agzip    | agzip    | gzip压缩、解压 |
 | go get github.com/asktop/gotools/aimage   | aimage   | 图片压缩裁剪工具 |
 | go get github.com/asktop/gotools/ajson    | ajson    | json编解码 |
-| go get github.com/asktop/gotools/ajwt     | ajwt     | ajwt编解码 |
+| go get github.com/asktop/gotools/ajwt     | ajwt     | jwt编解码 |
 | go get github.com/asktop/gotools/akey     | akey     | * base64/md5等加密、解密 |
 | go get github.com/asktop/gotools/alimit   | alimit   | * API接口访问频次限制 |
 | go get github.com/asktop/gotools/alist    | alist    | * 并发安全list |
@@ -32,6 +32,7 @@
 | go get github.com/asktop/gotools/aset     | aset     | * 并发安全set |
 | go get github.com/asktop/gotools/asign    | asign    | API接口签名验证 |
 | go get github.com/asktop/gotools/aslice   | aslice   | * slice切片处理 |
+| go get github.com/asktop/gotools/asms     | asms     | * sms短信发送工具 |
 | go get github.com/asktop/gotools/asort    | asort    | slice/map排序 |
 | go get github.com/asktop/gotools/astring  | astring  | * 字符串处理、正则验证 |
 | go get github.com/asktop/gotools/async    | async    | sync锁扩展 |

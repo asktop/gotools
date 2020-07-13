@@ -26,6 +26,7 @@ import (
     _ "github.com/asktop/gotools/aset"
     _ "github.com/asktop/gotools/asign"
     _ "github.com/asktop/gotools/aslice"
+    _ "github.com/asktop/gotools/asms"
     _ "github.com/asktop/gotools/asort"
     _ "github.com/asktop/gotools/astring"
     _ "github.com/asktop/gotools/async"
