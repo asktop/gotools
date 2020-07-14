@@ -1,0 +1,49 @@
+//安装protobuf
+//1、下载安装protoc.exe
+//网站：https://github.com/protocolbuffers/protobuf/releases
+//安装：下载 protoc-3.9.0-win64.zip，解压；将文件bin中的 protoc.exe，拷贝到 $GOPATH/bin 下，
+//测试：protoc --version
+//2、下载安装protoc-gen-go.exe
+//go get -u github.com/golang/protobuf/proto
+//go get -u github.com/golang/protobuf/protoc-gen-go （会在$GOPATH/bin 下生成protoc-gen-go.exe）
+
+//编译proto命令：protoc --go_out=plugins=grpc:. base\net\protobuf\demo.proto
+
+//指定proto版本
+syntax = "proto3";
+
+//指定编译go文件的包名
+package pb;
+
+//定义Demo服务
+service Demo {
+    //定义服务中的方法
+    rpc GetUsers(GetUsersIn) returns (GetUsersOut){}
+}
+
+//定义请求参数
+message GetUsersIn {
+    //用户名
+    string  name = 1;
+}
+
+//定义响应参数
+message GetUsersOut {
+    //状态（0：失败；1：成功）
+    int64  status = 1;
+    //错误类型
+    int64  code = 2;
+    //错误信息
+    string msg = 3;
+    //用户列表：key:用户id；value:用户名
+    map<int64, string> user_map = 4;
+    //用户列表
+    repeated User users = 5;
+}
+
+message User {
+    //用户id
+    int64  id = 1;
+    //用户名
+    string name = 2;
+}
