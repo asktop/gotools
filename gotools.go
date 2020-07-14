@@ -35,6 +35,7 @@ import (
     _ "github.com/asktop/gotools/atest"
     _ "github.com/asktop/gotools/atime"
     _ "github.com/asktop/gotools/aunique"
+    _ "github.com/asktop/gotools/aupload"
     _ "github.com/asktop/gotools/aurl"
     _ "github.com/asktop/gotools/auuid"
     _ "github.com/asktop/gotools/avalid"

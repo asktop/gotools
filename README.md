@@ -41,6 +41,7 @@
 | go get github.com/asktop/gotools/atest    | atest    | 单元测试、断言 |
 | go get github.com/asktop/gotools/atime    | atime    | * 时间工具、时间偏移、时间固定 |
 | go get github.com/asktop/gotools/aunique  | aunique  | * 唯一编码生成 |
+| go get github.com/asktop/gotools/aupload  | aupload  | * 文件上传工具 |
 | go get github.com/asktop/gotools/aurl     | aurl     | url编解码 |
 | go get github.com/asktop/gotools/auuid    | auuid    | uuid生成 |
 | go get github.com/asktop/gotools/avalid   | avalid   | * 表单验证工具 |
