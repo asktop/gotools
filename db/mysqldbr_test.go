@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/asktop/dbr"
     big "github.com/asktop/decimal"
-    "github.com/asktop/gotools/aredis"
+    "github.com/asktop/gotools/cache"
     "github.com/asktop/gotools/atime"
     "github.com/shopspring/decimal"
     "testing"
