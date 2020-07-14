@@ -21,6 +21,7 @@ import (
     _ "github.com/asktop/gotools/aotp"
     _ "github.com/asktop/gotools/apage"
     _ "github.com/asktop/gotools/aphp"
+    _ "github.com/asktop/gotools/aqrcode"
     _ "github.com/asktop/gotools/arand"
     _ "github.com/asktop/gotools/areflect"
     _ "github.com/asktop/gotools/ascan"
