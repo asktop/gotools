@@ -10,8 +10,6 @@ import (
     "fmt"
     "github.com/asktop/gotools/asort"
     "github.com/asktop/gotools/atime"
-    "github.com/asktop/gotools/log"
-    "reflect"
     "strconv"
     "strings"
 )
@@ -90,7 +88,6 @@ func CheckSignature(appSecret string, appSignature string, appTimestamp string, 
                         params[k] = v.(json.Number).String()
                     default:
                         _ = t
-                        log.Error("签名验证获取POST请求参数时存在未知类型， param:"+k+", paramType:", reflect.TypeOf(t).String())
                         return errors.New("POST param[" + k + "] is unknown type")
                     }
                 }
@@ -107,7 +104,6 @@ func CheckSignature(appSecret string, appSignature string, appTimestamp string, 
 
         //验证签名
         if appSignature != signature {
-            log.Error("SIGNATURE验证不通过，请核对签名信息：", signatureMessage)
             return errors.New("SIGNATURE验证不通过，请核对签名信息：" + signatureMessage)
         }
     }
