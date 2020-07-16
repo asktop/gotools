@@ -2,6 +2,7 @@ package ajwt
 
 import (
     "fmt"
+    "github.com/asktop/gotools/atime"
     "testing"
     "time"
 )
@@ -37,20 +38,25 @@ U1VLQKHKtk4RFA0/iwIDAQAB
 
 func TestNewToken(t *testing.T) {
     //生成token
-    token, _, err := Encrypt(map[string]interface{}{"user_id": 123}, 60*60*24, "asktop")
+    var exp int64
+    //exp = atime.Now().Unix()
+    exp = atime.Now().Add(time.Second * 60 * 60 * 24).Unix()
+    token, err := Encrypt(map[string]interface{}{"user_id": 123}, exp, "asktop")
     if err != nil {
         fmt.Println(err)
+        return
     } else {
         fmt.Println(token)
     }
 
-    //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjAwODg4MjEsInVzZXJpZCI6MTIzfQ.N5HT1gpwA2tXip9V9-47iwd9fWwHAY5waUZVKleMIkQ
+    //token := `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjAwODg4MjEsInVzZXJpZCI6MTIzfQ.N5HT1gpwA2tXip9V9-47iwd9fWwHAY5waUZVKleMIkQ`
 
     fmt.Println("--------------------")
     time.Sleep(time.Second)
 
     //解析token
     info2, err := Decrypt(token, "asktop")
+    fmt.Println(IsExpired(err))
     if err != nil {
         fmt.Println(err)
     } else {
@@ -66,6 +72,7 @@ func TestNewToken(t *testing.T) {
     }
     info := Info{}
     err = DecryptObj(token, &info, "asktop")
+    fmt.Println(IsExpired(err))
     if err != nil {
         fmt.Println(err)
     } else {
@@ -77,7 +84,10 @@ func TestNewToken(t *testing.T) {
 
 func TestNewRsaToken(t *testing.T) {
     //生成token
-    token, _, err := RsaEncrypt(map[string]interface{}{"user_id": 123}, 60*60*24, privateKey)
+    var exp int64
+    //exp = atime.Now().Unix()
+    //exp = atime.Now().Add(time.Second * 60 * 60 * 24).Unix()
+    token, err := RsaEncrypt(map[string]interface{}{"user_id": 123}, exp, privateKey)
     if err != nil {
         fmt.Println(err)
         return
@@ -92,6 +102,7 @@ func TestNewRsaToken(t *testing.T) {
 
     //解析token
     info2, err := RsaDecrypt(token, publicKey)
+    fmt.Println(IsExpired(err))
     if err != nil {
         fmt.Println(err)
     } else {
@@ -107,6 +118,7 @@ func TestNewRsaToken(t *testing.T) {
     }
     info := Info{}
     err = RsaDecryptObj(token, &info, publicKey)
+    fmt.Println(IsExpired(err))
     if err != nil {
         fmt.Println(err)
     } else {

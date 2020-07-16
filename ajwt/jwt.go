@@ -2,10 +2,16 @@ package ajwt
 
 import (
     "github.com/asktop/gotools/acast"
-    "github.com/asktop/gotools/atime"
     "github.com/dgrijalva/jwt-go"
-    "time"
 )
+
+func IsExpired(err error) bool {
+    if err == nil {
+        return false
+    } else {
+        return err.Error() == "Token is expired"
+    }
+}
 
 //JWT : Json Web Token
 //规则：36位base64( header的json串 )+"."+base64( claims的json串 )+"."+43位加密算法秘钥加密生成的signature签名( 36位base64( header的json串 )+"."+base64( claims的json串 ) )
@@ -29,14 +35,14 @@ import (
 //}
 
 //Jwt加密生成token
+//exp 签名过期时间戳，为0不过期
 //secretKey 签名加密秘钥
-//expiresAt 签名过期时长
-func Encrypt(info map[string]interface{}, expiresAt int, secretKey string) (token string, exp int64, err error) {
+func Encrypt(info map[string]interface{}, exp int64, secretKey string) (token string, err error) {
     //赋值
     mapClaims := make(jwt.MapClaims)
     if exp >= 0 {
-        exp = atime.Now().Add(time.Second * time.Duration(expiresAt)).Unix() //超时时间
-        mapClaims["exp"] = exp                                               //超时时间
+        //超时时间
+        mapClaims["exp"] = exp
     }
     for k, v := range info {
         mapClaims[k] = v
