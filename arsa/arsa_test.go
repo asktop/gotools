@@ -1,8 +1,8 @@
-package akey
+package arsa
 
 import (
-	"fmt"
-	"testing"
+    "fmt"
+    "testing"
 )
 
 var publicKey = `
@@ -52,81 +52,43 @@ qg30OyKNN4YXasJQ15UCQQCEiagWymvwqqwAqvSLEIFGjfjkq1aLiVonhGMEWAkh
 `
 
 func TestRsa(t *testing.T) {
-	src := "Hello World"
-	fmt.Println(src)
+    src := "Hello World"
+    fmt.Println(src)
 
-	s1, err := RsaEncrypt(src, publicKey)
-	//s1, err := arsa.PublicEncrypt(src, publicKey)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s1)
+    s1, err := PublicEncrypt(src, publicKey)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(s1)
 
-	//Vhf9lJPiGrJdSxKvLgEzXbsQ/Fe2P/qPc4UReVZ/QJDSpd2utaFFssTVK9GuLcXW/n5/oFeO1+NEB8cBrZDaxQ1VcNgeHHE/S+8hkyVJILQRcc4LZbCqRPcseSVtL9uJpSeHsizSsqEO1NtiWZ3AhdlEY0pbuilaW6ul6rbrhx8=
+    //RTt63X5Y2+hwLR0SkPJmfH8W/6il9QPkO9qT/fhpMfn5kaXAvL6PHNs3uCihDMld91wxCj/QTg8bYI8nCIvCZN38n1PdO43uTqvgpSsZeeMQtkxvzt3z6eRjrTY/UYlFHnk4z9l+v+8EcNXghu979MIUw5FKEqMm6mXDiiSi1G4=
 
-	s2, err := RsaDecrypt(s1, privateKey)
-	//s2, err := arsa.PriKeyDecrypt(s1, privateKey)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s2)
+    s2, err := PriKeyDecrypt(s1, privateKey)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(s2)
 }
 
-func TestRsaPath(t *testing.T) {
-	src := "Hello World"
-	fmt.Println(src)
+func TestRsa2(t *testing.T) {
+    src := "Hello World"
+    fmt.Println(src)
 
-	s1, err := RsaEncryptPath(src, `rsa_public_key.pub`)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s1)
+    s1, err := PriKeyEncrypt(src, privateKey)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(s1)
 
-	s2, err := RsaDecryptPath(s1, `rsa_private_key.pem`)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s2)
-}
+    //ENakfZX/k2ZJtAGTXjMRFcr56BTDMrRqtVApoMMEg49/c6gc51Rc8nG8b1r03S+gOrEEVy2sm3vicuqlD+nRrAY568yONbFQeonS8sxtcxIdCxgyFC+oVYFpC3H5pZANCMNjwBnto9iMRIpHylhi+FKbuBw3WldAVu7dzHSnqxI=
 
-func TestRsaPKCS1(t *testing.T) {
-	src := "Hello World"
-	fmt.Println(src)
-
-	s1, err := RsaEncrypt(src, publicKey)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s1)
-
-	s2, err := RsaDecryptPKCS1(s1, privateKeyPKCS1)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s2)
-}
-
-func TestRsaPKCS1Path(t *testing.T) {
-	src := "Hello World"
-	fmt.Println(src)
-
-	s1, err := RsaEncryptPath(src, `rsa_public_key.pub`)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s1)
-
-	s2, err := RsaDecryptPKCS1Path(s1, `rsa_private_key_pkcs1.pem`)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(s2)
+    s2, err := PublicDecrypt(s1, publicKey)
+    if err != nil {
+        fmt.Println(err)
+        return
+    }
+    fmt.Println(s2)
 }

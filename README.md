@@ -30,6 +30,7 @@
 | go get github.com/asktop/gotools/aqrcode  | aqrcode  | qrcode二维码生成 |
 | go get github.com/asktop/gotools/arand    | arand    | * 随机数、随机字符串、随机MD5等 |
 | go get github.com/asktop/gotools/areflect | areflect | 反射扩展，获取方法名等 |
+| go get github.com/asktop/gotools/arsa     | arsa     | * rsa工具 |
 | go get github.com/asktop/gotools/ascan    | ascan    | 数值scan |
 | go get github.com/asktop/gotools/aset     | aset     | * 并发安全set |
 | go get github.com/asktop/gotools/asign    | asign    | API接口签名验证 |

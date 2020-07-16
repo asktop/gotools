@@ -24,6 +24,7 @@ import (
     _ "github.com/asktop/gotools/aqrcode"
     _ "github.com/asktop/gotools/arand"
     _ "github.com/asktop/gotools/areflect"
+    _ "github.com/asktop/gotools/arsa"
     _ "github.com/asktop/gotools/ascan"
     _ "github.com/asktop/gotools/aset"
     _ "github.com/asktop/gotools/asign"
