@@ -28,38 +28,32 @@ import (
 //	ExpiresAt int64  `json:"exp,omitempty"` //过期时间
 //}
 
-var defaultJwt = NewJwt("asktop", 60*60*24)
-
-type Jwt struct {
-    secretKey string //签名加密秘钥
-    expiresAt int    //签名过期时间
-}
-
-func NewJwt(secretkey string, expiresAt int) *Jwt {
-    return &Jwt{secretKey: secretkey, expiresAt: expiresAt}
-}
-
-//将 info 信息生成 token 字符串
-func (j *Jwt) NewToken(info map[string]interface{}) (token string, expiresAt int64, err error) {
-    expiresAt = atime.Now().Add(time.Second * time.Duration(j.expiresAt)).Unix() //超时时间
-    //创建 hs256 类型的 token 对象
-    tk := jwt.New(jwt.SigningMethodHS256)
-    //赋值，并设置超时时间
+//Jwt加密生成token
+//secretKey 签名加密秘钥
+//expiresAt 签名过期时长
+func Encrypt(info map[string]interface{}, expiresAt int, secretKey string) (token string, exp int64, err error) {
+    //赋值
     mapClaims := make(jwt.MapClaims)
-    mapClaims["exp"] = expiresAt //超时时间
+    if exp >= 0 {
+        exp = atime.Now().Add(time.Second * time.Duration(expiresAt)).Unix() //超时时间
+        mapClaims["exp"] = exp                                               //超时时间
+    }
     for k, v := range info {
         mapClaims[k] = v
     }
+    //创建 hs256 类型的 token 对象
+    tk := jwt.New(jwt.SigningMethodHS256)
     tk.Claims = mapClaims
-    token, err = tk.SignedString([]byte(j.secretKey))
+    token, err = tk.SignedString([]byte(secretKey))
     return
 }
 
-//解析token字符串，获取info
-func (j *Jwt) GetInfo(token string) (info map[string]interface{}, err error) {
+//Jwt解密token
+//secretKey 签名加密秘钥
+func Decrypt(token string, secretKey string) (info map[string]interface{}, err error) {
     //将token字符串解析成token对象，会自动校验有效性，超时会报错
     tk, err := jwt.Parse(token, func(*jwt.Token) (interface{}, error) {
-        return []byte(j.secretKey), nil
+        return []byte(secretKey), nil
     })
     if err != nil {
         return
@@ -67,31 +61,13 @@ func (j *Jwt) GetInfo(token string) (info map[string]interface{}, err error) {
     return tk.Claims.(jwt.MapClaims), nil
 }
 
-//解析token字符串，获取info
-func (j *Jwt) GetInfoObj(token string, info interface{}) error {
-    data, err := j.GetInfo(token)
+//Jwt解密token
+//secretKey 签名加密秘钥
+func DecryptObj(token string, info interface{}, secretKey string) error {
+    data, err := Decrypt(token, secretKey)
     if err != nil {
         return err
     } else {
         return acast.MapToStruct(data, info)
     }
-}
-
-func DefaultJwt(secretkey string, expiresAt int) {
-    defaultJwt = NewJwt(secretkey, expiresAt)
-}
-
-//将 info 信息生成 token 字符串
-func NewToken(info map[string]interface{}) (token string, expiresAt int64, err error) {
-    return defaultJwt.NewToken(info)
-}
-
-//解析token字符串，获取info
-func GetInfo(token string) (info map[string]interface{}, err error) {
-    return defaultJwt.GetInfo(token)
-}
-
-//解析token字符串，获取info
-func GetInfoObj(token string, info interface{}) error {
-    return defaultJwt.GetInfoObj(token, info)
 }
