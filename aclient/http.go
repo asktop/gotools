@@ -23,21 +23,10 @@ type Client struct {
 func NewClient(certPath ...string) *Client {
     c := new(Client)
 
+    var tlsConfig *tls.Config
     if len(certPath) > 0 {
+        // 加载双向认证证书
         c.certPath = certPath[0]
-    }
-
-    var client http.Client
-    if c.certPath == "" {
-        //创建HttpClient并发起请求
-        client = http.Client{
-            Transport: &http.Transport{
-                DisableKeepAlives:   true, //true:不同HTTP请求之间TCP连接的重用将被阻止（http1.1默认为长连接，此处改为短连接）
-                MaxIdleConnsPerHost: 512,  //控制每个主机下的最大闲置连接数目
-            },
-            Timeout: time.Second * 60, //Client请求的时间限制,该超时限制包括连接时间、重定向和读取response body时间;Timeout为零值表示不设置超时
-        }
-    } else {
         //获取客户端证书
         crts := x509.NewCertPool()
         crt, err := ioutil.ReadFile(c.certPath)
@@ -46,15 +35,25 @@ func NewClient(certPath ...string) *Client {
         }
         crts.AppendCertsFromPEM(crt)
 
-        //创建HttpClient并发起请求
-        client = http.Client{
-            Transport: &http.Transport{
-                DisableKeepAlives:   true,                       //true:不同HTTP请求之间TCP连接的重用将被阻止（http1.1默认为长连接，此处改为短连接）
-                MaxIdleConnsPerHost: 512,                        //控制每个主机下的最大闲置连接数目
-                TLSClientConfig:     &tls.Config{RootCAs: crts}, //添加证书
-            },
-            Timeout: time.Second * 60, //Client请求的时间限制,该超时限制包括连接时间、重定向和读取response body时间;Timeout为零值表示不设置超时
+        tlsConfig = &tls.Config{
+            InsecureSkipVerify: true,
+            RootCAs:            crts,
         }
+    } else {
+        // 不加载双向认证证书
+        tlsConfig = &tls.Config{
+            InsecureSkipVerify: true,
+        }
+    }
+    //创建HttpClient并发起请求
+    client := http.Client{
+        Transport: &http.Transport{
+            DisableKeepAlives:   true, //true:不同HTTP请求之间TCP连接的重用将被阻止（http1.1默认为长连接，此处改为短连接）
+            MaxIdleConnsPerHost: 512,  //控制每个主机下的最大闲置连接数目
+            TLSClientConfig:     tlsConfig,
+            TLSHandshakeTimeout: time.Second * 60,
+        },
+        Timeout: time.Second * 60, //Client请求的时间限制,该超时限制包括连接时间、重定向和读取response body时间;Timeout为零值表示不设置超时
     }
     c.client = client
     return c

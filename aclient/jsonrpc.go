@@ -46,7 +46,7 @@ func NewJsonRpcClient(url string, server string, tlsCert ...TLSCert) *JsonRpcCli
 			DisableKeepAlives:   true, //true:不同HTTP请求之间TCP连接的重用将被阻止（http1.1默认为长连接，此处改为短连接）
 			MaxIdleConnsPerHost: 512,  //控制每个主机下的最大闲置连接数目
 			TLSClientConfig:     tlsConfig,
-			TLSHandshakeTimeout: 10 * time.Second,
+			TLSHandshakeTimeout: time.Second * 10,
 		},
 		Timeout: time.Minute * 10, //Client请求的时间限制,该超时限制包括连接时间、重定向和读取response body时间;Timeout为零值表示不设置超时
 	}
