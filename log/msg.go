@@ -23,7 +23,7 @@ func (m *Msg) Info(title string, args ...interface{}) {
         logs.Info("", logargs...)
     }
     if logDriver == "zap" {
-        Zap.Info(appendBlank(logargs)...)
+        Zap.Info(AppendBlank(logargs)...)
     }
 }
 
@@ -37,7 +37,7 @@ func (m *Msg) Warn(title string, args ...interface{}) {
         logs.Warn("", logargs...)
     }
     if logDriver == "zap" {
-        Zap.Warn(appendBlank(logargs)...)
+        Zap.Warn(AppendBlank(logargs)...)
     }
 }
 
@@ -51,7 +51,7 @@ func (m *Msg) Error(title string, args ...interface{}) {
         logs.Error("", logargs...)
     }
     if logDriver == "zap" {
-        Zap.Error(appendBlank(logargs)...)
+        Zap.Error(AppendBlank(logargs)...)
     }
 }
 
