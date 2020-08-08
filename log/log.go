@@ -44,7 +44,7 @@ func Debug(args ...interface{}) {
         logs.Debug("", args...)
     }
     if logDriver == "zap" {
-        Zap.Debug(appendBlank(args)...)
+        Zap.Debug(AppendBlank(args)...)
     }
 }
 
@@ -68,7 +68,7 @@ func Info(args ...interface{}) {
         logs.Info("", args...)
     }
     if logDriver == "zap" {
-        Zap.Info(appendBlank(args)...)
+        Zap.Info(AppendBlank(args)...)
     }
 }
 
@@ -92,7 +92,7 @@ func Warn(args ...interface{}) {
         logs.Warn("", args...)
     }
     if logDriver == "zap" {
-        Zap.Warn(appendBlank(args)...)
+        Zap.Warn(AppendBlank(args)...)
     }
 }
 
@@ -116,7 +116,7 @@ func Error(args ...interface{}) {
         logs.Error("", args...)
     }
     if logDriver == "zap" {
-        Zap.Error(appendBlank(args)...)
+        Zap.Error(AppendBlank(args)...)
     }
 }
 
@@ -140,7 +140,7 @@ func Fatal(args ...interface{}) {
         logs.Error("", args...)
     }
     if logDriver == "zap" {
-        Zap.Fatal(appendBlank(args)...)
+        Zap.Fatal(AppendBlank(args)...)
     }
     os.Exit(1)
 }
@@ -158,7 +158,7 @@ func Fatalf(format string, args ...interface{}) {
     os.Exit(1)
 }
 
-func appendBlank(args []interface{}) []interface{} {
+func AppendBlank(args []interface{}) []interface{} {
     argsTemp := []interface{}{}
     for i, arg := range args {
         if i < len(args)-1 {
