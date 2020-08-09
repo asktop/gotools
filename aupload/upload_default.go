@@ -7,6 +7,10 @@ import (
 
 var defaultClient, _ = NewClient(nil, DriverLocal, Config{})
 
+//创建一个默认全局文件上传位置客户端（本地或cos等）
+//getUploadPath 获取服务器本地文件上传根目录绝对路径的方法
+//driver 文件上传位置
+//config 文件上传位置相关配置
 func DefaultClient(getUploadPath func(path ...string) string, driver driver, config Config) error {
     client, err := NewClient(getUploadPath, driver, config)
     if err != nil {

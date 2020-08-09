@@ -21,7 +21,7 @@ func TestUploadFromPath(t *testing.T) {
         fmt.Println(fInfo.OldName)
         fmt.Println(fInfo.NewName)
         fmt.Println(fInfo.Url)
-        fmt.Println(fInfo.RelUrl)
+        fmt.Println(fInfo.Path)
     }
 }
 

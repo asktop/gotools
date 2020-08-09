@@ -16,6 +16,7 @@ const (
     //DriverMinio driver = "minio"
 )
 
+//文件上传位置
 type driver string
 
 type Client struct {
@@ -33,12 +34,15 @@ type Config struct {
 }
 
 type FileInfo struct {
-    OldName string `json:"old_name"`
-    NewName string `json:"new_name"`
-    Url     string `json:"url"`     //绝对url
-    RelUrl  string `json:"rel_url"` //相对url
+    Url     string `json:"url"`      //文件访问url
+    Path    string `json:"path"`     //文件在存储库的位置
+    OldName string `json:"old_name"` //旧文件名（不包括扩展名）
 }
 
+//创建一个文件上传位置客户端（本地或cos等）
+//getUploadPath 获取服务器本地文件上传根目录绝对路径的方法
+//driver 文件上传位置
+//config 文件上传位置相关配置
 func NewClient(getUploadPath func(path ...string) string, driver driver, config Config) (*Client, error) {
     if getUploadPath == nil {
         getUploadPath = defaultGetUploadPath
@@ -75,23 +79,23 @@ func (c *Client) UploadFromByte(file []byte, filePathName string) (fileInfo File
         return
     }
     if filepath.Ext(filePathName) == "" {
-        filePathName += filepath.Ext(fileInfo.OldName)
+        err = errors.New("filePathName 扩展名不能为空")
+        return
     }
-    fileInfo.NewName = afile.Name(filePathName)
-    filePath := filepath.Dir(filePathName)
+    fileInfo.Path = filePathName
+    filePath, fileName := filepath.Split(filePathName)
+    fileInfo.OldName = afile.NameNoExt(fileName)
 
     fileInfo.Url, err = c.localClient.UploadFromByte(file, filePathName)
-    fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.localClient.GetSite())
     switch c.driver {
     //case DriverMinio:
-    //    localFilePathName := filepath.Join(conf.GetUploadPath(filePath), fileInfo.NewName)
+    //    localFilePathName := filepath.Join(conf.GetUploadPath(filePath), fileName)
     //    fileInfo.Url, err = c.minioClient.UploadFromPath(localFilePathName, filePathName)
-    //    fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.minioClient.GetSite())
     case DriverCos:
-        localFilePathName := filepath.Join(conf.GetUploadPath(filePath), fileInfo.NewName)
+        localFilePathName := filepath.Join(conf.GetUploadPath(filePath), fileName)
         fileInfo.Url, err = c.cosClient.UploadFromPath(localFilePathName, filePathName)
-        fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.cosClient.GetSite())
     default:
+
     }
     return
 }
@@ -111,22 +115,20 @@ func (c *Client) UploadFromFile(file *os.File, filePathName string, checkSize ..
             return
         }
     }
-    fileInfo.OldName = fInfo.Name()
+    oldName := fInfo.Name()
+    fileInfo.OldName = afile.NameNoExt(oldName)
     if filepath.Ext(filePathName) == "" {
-        filePathName += filepath.Ext(fileInfo.OldName)
+        filePathName += filepath.Ext(oldName)
     }
-    fileInfo.NewName = afile.Name(filePathName)
+    fileInfo.Path = filePathName
 
     switch c.driver {
     //case DriverMinio:
-    //    fileInfo.Url, err = c.minioClient.UploadFromFile(file, filePathName)
-    //    fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.minioClient.GetSite())
+    //   fileInfo.Url, err = c.minioClient.UploadFromFile(file, filePathName)
     case DriverCos:
         fileInfo.Url, err = c.cosClient.UploadFromFile(file, filePathName)
-        fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.cosClient.GetSite())
     default:
         fileInfo.Url, err = c.localClient.UploadFromFile(file, filePathName)
-        fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.localClient.GetSite())
     }
     return
 }
@@ -145,22 +147,20 @@ func (c *Client) UploadFromFileHeader(header *multipart.FileHeader, filePathName
             return
         }
     }
-    fileInfo.OldName = header.Filename
+    oldName := header.Filename
+    fileInfo.OldName = afile.NameNoExt(oldName)
     if filepath.Ext(filePathName) == "" {
-        filePathName += filepath.Ext(fileInfo.OldName)
+        filePathName += filepath.Ext(oldName)
     }
-    fileInfo.NewName = afile.Name(filePathName)
+    fileInfo.Path = filePathName
 
     switch c.driver {
     //case DriverMinio:
     //    fileInfo.Url, err = c.minioClient.UploadFromFileHeader(header, filePathName)
-    //    fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.minioClient.GetSite())
     case DriverCos:
         fileInfo.Url, err = c.cosClient.UploadFromFileHeader(header, filePathName)
-        fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.cosClient.GetSite())
     default:
         fileInfo.Url, err = c.localClient.UploadFromFileHeader(header, filePathName)
-        fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.localClient.GetSite())
     }
     return
 }
@@ -186,22 +186,21 @@ func (c *Client) UploadFromPath(Path string, filePathName string, checkSize ...i
             return
         }
     }
-    fileInfo.OldName = fInfo.Name()
+    oldName := fInfo.Name()
+    fileInfo.OldName = afile.NameNoExt(oldName)
     if filepath.Ext(filePathName) == "" {
-        filePathName += filepath.Ext(fileInfo.OldName)
+        filePathName += filepath.Ext(oldName)
     }
-    fileInfo.NewName = afile.Name(filePathName)
+    fileInfo.Path = filePathName
 
     switch c.driver {
     //case DriverMinio:
     //    fileInfo.Url, err = c.minioClient.UploadFromFile(file, filePathName)
-    //    fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.minioClient.GetSite())
     case DriverCos:
         fileInfo.Url, err = c.cosClient.UploadFromFile(file, filePathName)
-        fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.cosClient.GetSite())
+        fileInfo.Path = strings.TrimPrefix(fileInfo.Url, c.cosClient.GetSite())
     default:
         fileInfo.Url, err = c.localClient.UploadFromFile(file, filePathName)
-        fileInfo.RelUrl = strings.TrimPrefix(fileInfo.Url, c.localClient.GetSite())
     }
     return
 }
