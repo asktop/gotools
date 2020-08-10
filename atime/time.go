@@ -101,6 +101,7 @@ func ParseUnixNanoTimestamp(timestamp interface{}) (time.Time, error) {
         return fn, err
     }
     nsec := sec % 1e9
+    sec = sec / 1e9
     return time.Unix(sec, nsec), nil
 }
 
@@ -113,6 +114,7 @@ func ParseMilliTimestamp(timestamp interface{}) (time.Time, error) {
         return fn, err
     }
     nsec := (sec % 1e3) * 1e6
+    sec = sec / 1e3
     return time.Unix(sec, nsec), nil
 }
 
