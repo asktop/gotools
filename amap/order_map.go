@@ -85,16 +85,16 @@ func (o *OrderMap) SetOrGet(key string, value interface{}) interface{} {
 
 //包含
 func (o *OrderMap) Contains(key string) bool {
-	o.mu.Lock()
+	o.mu.RLock()
 	_, ok := o.data[key]
-	o.mu.Unlock()
+	o.mu.RUnlock()
 	return ok
 }
 
 //下标
 func (o *OrderMap) Index(key string) int {
-	o.mu.Lock()
-	defer o.mu.Unlock()
+	o.mu.RLock()
+	defer o.mu.RUnlock()
 	if _, ok := o.data[key]; ok {
 		return aslice.IndexString(o.keys, key)
 	} else {
@@ -104,16 +104,16 @@ func (o *OrderMap) Index(key string) int {
 
 //取值并判断是否存在key
 func (o *OrderMap) Search(key string) (interface{}, bool) {
-	o.mu.Lock()
+	o.mu.RLock()
 	value, ok := o.data[key]
-	o.mu.Unlock()
+	o.mu.RUnlock()
 	return value, ok
 }
 
 //获取 bool 类型并判断是否存在key
 func (o *OrderMap) SearchBool(key string) (bool, bool) {
-	o.mu.Lock()
-	defer o.mu.Unlock()
+	o.mu.RLock()
+	defer o.mu.RUnlock()
 	if value, ok := o.data[key]; ok {
 		return acast.ToBool(value), ok
 	} else {
@@ -123,8 +123,8 @@ func (o *OrderMap) SearchBool(key string) (bool, bool) {
 
 //获取 int 类型并判断是否存在key
 func (o *OrderMap) SearchInt(key string) (int, bool) {
-	o.mu.Lock()
-	defer o.mu.Unlock()
+	o.mu.RLock()
+	defer o.mu.RUnlock()
 	if value, ok := o.data[key]; ok {
 		return acast.ToInt(value), ok
 	} else {
@@ -134,8 +134,8 @@ func (o *OrderMap) SearchInt(key string) (int, bool) {
 
 //获取 int64 类型并判断是否存在key
 func (o *OrderMap) SearchInt64(key string) (int64, bool) {
-	o.mu.Lock()
-	defer o.mu.Unlock()
+	o.mu.RLock()
+	defer o.mu.RUnlock()
 	if value, ok := o.data[key]; ok {
 		return acast.ToInt64(value), ok
 	} else {
@@ -145,8 +145,8 @@ func (o *OrderMap) SearchInt64(key string) (int64, bool) {
 
 //获取 string 类型并判断是否存在key
 func (o *OrderMap) SearchString(key string) (string, bool) {
-	o.mu.Lock()
-	defer o.mu.Unlock()
+	o.mu.RLock()
+	defer o.mu.RUnlock()
 	if value, ok := o.data[key]; ok {
 		return acast.ToString(value), ok
 	} else {
@@ -156,41 +156,41 @@ func (o *OrderMap) SearchString(key string) (string, bool) {
 
 //取值
 func (o *OrderMap) Get(key string) interface{} {
-	o.mu.Lock()
+	o.mu.RLock()
 	val := o.data[key]
-	o.mu.Unlock()
+	o.mu.RUnlock()
 	return val
 }
 
 //获取 bool 类型
 func (o *OrderMap) GetBool(key string) bool {
-	o.mu.Lock()
+	o.mu.RLock()
 	val := acast.ToBool(o.data[key])
-	o.mu.Unlock()
+	o.mu.RUnlock()
 	return val
 }
 
 //获取 int 类型
 func (o *OrderMap) GetInt(key string) int {
-	o.mu.Lock()
+	o.mu.RLock()
 	val := acast.ToInt(o.data[key])
-	o.mu.Unlock()
+	o.mu.RUnlock()
 	return val
 }
 
 //获取 int64 类型
 func (o *OrderMap) GetInt64(key string) int64 {
-	o.mu.Lock()
+	o.mu.RLock()
 	val := acast.ToInt64(o.data[key])
-	o.mu.Unlock()
+	o.mu.RUnlock()
 	return val
 }
 
 //获取 string 类型
 func (o *OrderMap) GetString(key string) string {
-	o.mu.Lock()
+	o.mu.RLock()
 	val := acast.ToString(o.data[key])
-	o.mu.Unlock()
+	o.mu.RUnlock()
 	return val
 }
 
@@ -239,7 +239,7 @@ func (o *OrderMap) Values() []interface{} {
 
 //删除
 func (o *OrderMap) Remove(keys ...string) *OrderMap {
-	o.mu.RLock()
+	o.mu.Lock()
 	for _, key := range keys {
 		// check key is in use
 		_, ok := o.data[key]
@@ -256,15 +256,15 @@ func (o *OrderMap) Remove(keys ...string) *OrderMap {
 		// remove from data
 		delete(o.data, key)
 	}
-	o.mu.RUnlock()
+	o.mu.Unlock()
 	return o
 }
 
 func (o *OrderMap) Clear() *OrderMap {
-	o.mu.RLock()
+	o.mu.Lock()
 	o.keys = []string{}
 	o.data = make(map[string]interface{})
-	o.mu.RUnlock()
+	o.mu.Unlock()
 	return o
 }
 
