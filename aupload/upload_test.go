@@ -19,7 +19,6 @@ func TestUploadFromPath(t *testing.T) {
         fmt.Println(err)
     } else {
         fmt.Println(fInfo.OldName)
-        fmt.Println(fInfo.NewName)
         fmt.Println(fInfo.Url)
         fmt.Println(fInfo.Path)
     }
