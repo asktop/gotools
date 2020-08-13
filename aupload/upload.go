@@ -1,7 +1,6 @@
 package aupload
 
 import (
-    "asktop/conf"
     "errors"
     "github.com/asktop/gotools/afile"
     "mime/multipart"
@@ -89,10 +88,10 @@ func (c *Client) UploadFromByte(file []byte, filePathName string) (fileInfo File
     fileInfo.Url, err = c.localClient.UploadFromByte(file, filePathName)
     switch c.driver {
     //case DriverMinio:
-    //    localFilePathName := filepath.Join(conf.GetUploadPath(filePath), fileName)
+    //    localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
     //    fileInfo.Url, err = c.minioClient.UploadFromPath(localFilePathName, filePathName)
     case DriverCos:
-        localFilePathName := filepath.Join(conf.GetUploadPath(filePath), fileName)
+        localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
         fileInfo.Url, err = c.cosClient.UploadFromPath(localFilePathName, filePathName)
     default:
 
