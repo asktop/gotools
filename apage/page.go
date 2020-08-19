@@ -21,14 +21,14 @@ const (
 )
 
 type Page struct {
-    Page       uint64 `json:"page"`              //当前页码
-    Limit      uint64 `json:"limit"`             //每页条数
-    Total      int64  `json:"total"`             //总条数
-    TotalPage  int64                             //总页数
-    Data       []map[string]string `json:"data"` //分页展示数据
-    DataSource []map[string]string               //分页原始数据
-    execFields []string                          //自定义处理的所有字段
-    execValues map[string]interface{}            //自定义处理的所有字段的处理值
+    Page       uint64              `json:"page"`       //当前页码
+    Limit      uint64              `json:"limit"`      //每页条数
+    Total      int64               `json:"total"`      //总条数
+    TotalPage  int64               `json:"total_page"` //总页数
+    Data       []map[string]string `json:"data"`       //分页展示数据
+    DataSource []map[string]string                     //分页原始数据
+    execFields []string                                //自定义处理的所有字段
+    execValues map[string]interface{}                  //自定义处理的所有字段的处理值
 }
 
 func NewPage(stmt *dbr.SelectStmt, page uint64, limit uint64, defLimit ...uint64) (p *Page, err error) {
@@ -265,6 +265,16 @@ func (p *Page) LoadDataSource(value interface{}) error {
     return errors.New("Page.LoadData : no field DataSource or DataSource isn't slice")
 }
 
+func (p *Page) GetPageRes() PageRes {
+    pres := PageRes{
+        Page:      p.Page,
+        Limit:     p.Limit,
+        Total:     p.Total,
+        TotalPage: p.TotalPage,
+    }
+    return pres
+}
+
 func (p *Page) GetPageLimit() (page, limit uint64, totol int64) {
     return p.Page, p.Limit, p.Total
 }
@@ -285,10 +295,13 @@ type PageRes struct {
     Limit uint64 `json:"limit"`
     //总条数
     Total int64 `json:"total"`
+    //总页数
+    TotalPage int64 `json:"total_page"`
 }
 
 func (p *PageRes) SetPageLimit(page, limit uint64, total int64) {
     p.Page = page
     p.Limit = limit
     p.Total = total
+    p.TotalPage = acast.ToInt64(math.Ceil(float64(p.Total) / float64(p.Limit)))
 }
