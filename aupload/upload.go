@@ -206,6 +206,9 @@ func (c *Client) UploadFromPath(Path string, filePathName string, checkSize ...i
 
 //删除文件
 func (c *Client) DeleteFile(url_filePathName string) (err error) {
+    if url_filePathName == "" {
+        return nil
+    }
     switch c.driver {
     //case DriverMinio:
     //    err = c.minioClient.DeleteFile(url_filePathName)
