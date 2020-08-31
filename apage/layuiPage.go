@@ -3,6 +3,7 @@ package apage
 import (
     "github.com/asktop/dbr"
     "github.com/asktop/gotools/atime"
+    "strings"
 )
 
 type LayuiPage struct {
@@ -105,4 +106,26 @@ func (p *LayuiPage) Exec() {
     p.pageData.Exec()
     p.Data = p.pageData.Data
     p.DataSource = p.pageData.DataSource
+}
+
+//截取layDate时间范围，分成开始和结束时间戳
+func SplitLayDateRange(layDateRange string) (startTime int64, endTime int64, ok bool) {
+    layDates := strings.Split(layDateRange, " - ")
+    if len(layDates) != 2 {
+        return
+    }
+    startTimeStr := layDates[0]
+    endTimeStr := layDates[1]
+    switch len(startTimeStr) {
+    case 19:
+        return atime.UnFormatDateTime(startTimeStr), atime.UnFormatDateTime(endTimeStr), true
+    case 10:
+        return atime.UnFormatDate(startTimeStr), atime.UnFormatDate(endTimeStr), true
+    case 8:
+        return atime.UnFormatTime(startTimeStr), atime.UnFormatTime(endTimeStr), true
+    case 7:
+        return atime.UnFormatMonth(startTimeStr), atime.UnFormatMonth(endTimeStr), true
+    default:
+        return
+    }
 }
