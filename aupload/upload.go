@@ -21,7 +21,7 @@ type Client struct {
 }
 
 type Config struct {
-    Cos CosConfig
+    Cos CosConfig `json:"cos"`
 }
 
 type FileInfo struct {

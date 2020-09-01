@@ -21,8 +21,8 @@ type LocalClient struct {
 }
 
 type LocalConfig struct {
-    Site          string                      //网址
-    Bucket        string                      //文件基本路由，默认：upload
+    Site          string `json:"site"`        //网址
+    Bucket        string `json:"bucket"`      //文件基本路由，默认：upload
     GetUploadPath func(path ...string) string //获取本地文件上传本地绝对路径
 }
 
