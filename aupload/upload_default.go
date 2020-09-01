@@ -5,14 +5,14 @@ import (
     "os"
 )
 
-var defaultClient, _ = NewClient(nil, DriverLocal, Config{})
+var defaultClient, _ = NewClient(DriverLocal, LocalConfig{}, Config{})
 
-//创建一个默认全局文件上传位置客户端（本地或cos等）
-//getUploadPath 获取服务器本地文件上传根目录绝对路径的方法
-//driver 文件上传位置
+//设置默认全局文件上传位置客户端（本地或cos等）
+//defaultDriver 默认文件上传位置
+//localConfig 本地文件上传配置
 //config 文件上传位置相关配置
-func DefaultClient(getUploadPath func(path ...string) string, driver driver, config Config) error {
-    client, err := NewClient(getUploadPath, driver, config)
+func SetDefaultClient(defaultDriver driver, localConfig LocalConfig, config Config) error {
+    client, err := NewClient(defaultDriver, localConfig, config)
     if err != nil {
         return err
     } else {
@@ -21,9 +21,9 @@ func DefaultClient(getUploadPath func(path ...string) string, driver driver, con
     }
 }
 
-//上传单个文件
-func UploadFromByte(file []byte, filePathName string) (fileInfo FileInfo, err error) {
-    return defaultClient.UploadFromByte(file, filePathName)
+//获取默认客户端的本地服务
+func GetDefaultLocalClient() *LocalClient {
+    return defaultClient.LocalClient
 }
 
 //上传单个文件

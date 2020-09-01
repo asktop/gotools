@@ -1,6 +1,7 @@
 package aupload
 
 import (
+    "errors"
     "github.com/asktop/gotools/afile"
     "github.com/asktop/gotools/astring"
     "io"
@@ -16,22 +17,23 @@ type LocalClient struct {
     site          string
     bucket        string
     baseUrl       string
-    getUploadPath func(path ...string) string
+    GetUploadPath func(path ...string) string
 }
 
 type LocalConfig struct {
-    Site   string //网址
-    Bucket string //文件基本路由，默认：upload
+    Site          string                      //网址
+    Bucket        string                      //文件基本路由，默认：upload
+    GetUploadPath func(path ...string) string //获取本地文件上传本地绝对路径
 }
 
-func NewLocalClient(config LocalConfig, getUploadPath func(path ...string) string) *LocalClient {
+func NewLocalClient(config LocalConfig) *LocalClient {
     if config.Bucket == "" {
         config.Bucket = "upload"
     }
-    if getUploadPath == nil {
-        getUploadPath = defaultGetUploadPath
+    if config.GetUploadPath == nil {
+        config.GetUploadPath = defaultGetUploadPath
     }
-    return &LocalClient{site: config.Site, bucket: config.Bucket, baseUrl: astring.JoinURL(config.Site, config.Bucket), getUploadPath: getUploadPath}
+    return &LocalClient{site: config.Site, bucket: config.Bucket, baseUrl: astring.JoinURL(config.Site, config.Bucket), GetUploadPath: config.GetUploadPath}
 }
 
 func (c *LocalClient) GetSite() string {
@@ -51,93 +53,161 @@ func (c *LocalClient) GetAllUrl(uris ...string) string {
 }
 
 //保存到本地
-func (c *LocalClient) UploadFromByte(file []byte, filePathName string) (url string, err error) {
-    filePathName = strings.TrimPrefix(filePathName, "/")
-    filePath, fileName := path.Split(filePathName)
+func (c *LocalClient) UploadFromByte(file []byte, filePathName string) (fileInfo FileInfo, err error) {
+    if file == nil {
+        return fileInfo, errors.New("file 不能为空")
+    }
+    filePathName = strings.Trim(strings.TrimSpace(filePathName), "/")
+    if filepath.Ext(filePathName) == "" {
+        return fileInfo, errors.New("filePathName 扩展名不能为空")
+    }
+    fileInfo.Path = filePathName
+
+    filePath, fileName := filepath.Split(filePathName)
+    fileInfo.OldName = afile.NameNoExt(fileName)
 
     //获取存储路径并创建文件夹
-    localFilePathName := filepath.Join(c.getUploadPath(filePath), fileName)
+    localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
     //获取文件存储流
     err = ioutil.WriteFile(localFilePathName, file, 0777)
     if err != nil {
-        return "", err
+        return fileInfo, err
     }
-    url = c.GetAllUrl(filePathName)
-    return url, nil
+    fileInfo.Url = c.GetAllUrl(filePathName)
+    return fileInfo, nil
 }
 
 //保存到本地
-func (c *LocalClient) UploadFromFile(file *os.File, filePathName string) (url string, err error) {
-    filePathName = strings.TrimPrefix(filePathName, "/")
+func (c *LocalClient) UploadFromFile(file *os.File, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
+    if file == nil {
+        return fileInfo, errors.New("file 不能为空")
+    }
+    fInfo, _ := file.Stat()
+    if len(checkSize) > 0 {
+        if fInfo.Size() > checkSize[0] {
+            return fileInfo, errors.New("文件过大")
+        }
+    }
+    oldName := fInfo.Name()
+    fileInfo.OldName = afile.NameNoExt(oldName)
+
+    filePathName = strings.Trim(strings.TrimSpace(filePathName), "/")
+    if filepath.Ext(filePathName) == "" {
+        filePathName += filepath.Ext(oldName)
+    }
+    fileInfo.Path = filePathName
+
     filePath, fileName := path.Split(filePathName)
 
     //获取存储路径并创建文件夹
-    localFilePathName := filepath.Join(c.getUploadPath(filePath), fileName)
+    localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
     //获取文件存储流
     f, err := os.OpenFile(localFilePathName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
     if err != nil {
-        return "", err
+        return fileInfo, err
     }
     defer f.Close()
     io.Copy(f, file)
-    url = c.GetAllUrl(filePathName)
-    return url, nil
+    fileInfo.Url = c.GetAllUrl(filePathName)
+    return fileInfo, nil
 }
 
 //保存到本地
-func (c *LocalClient) UploadFromFileHeader(header *multipart.FileHeader, filePathName string) (url string, err error) {
-    filePathName = strings.TrimPrefix(filePathName, "/")
+func (c *LocalClient) UploadFromFileHeader(header *multipart.FileHeader, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
+    if header == nil {
+        return fileInfo, errors.New("header 不能为空")
+    }
+    if len(checkSize) > 0 {
+        if header.Size > checkSize[0] {
+            return fileInfo, errors.New("文件过大")
+        }
+    }
+    oldName := header.Filename
+    fileInfo.OldName = afile.NameNoExt(oldName)
+
+    filePathName = strings.Trim(strings.TrimSpace(filePathName), "/")
+    if filepath.Ext(filePathName) == "" {
+        filePathName += filepath.Ext(oldName)
+    }
+    fileInfo.Path = filePathName
+
     filePath, fileName := path.Split(filePathName)
 
     //获取存储路径并创建文件夹
-    localFilePathName := filepath.Join(c.getUploadPath(filePath), fileName)
+    localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
     //获取文件存储流
     f, err := os.OpenFile(localFilePathName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
     if err != nil {
-        return "", err
+        return fileInfo, err
     }
     defer f.Close()
     //获取文件读取流
     file, err := header.Open()
     if err != nil {
-        return "", err
+        return fileInfo, err
     }
     defer file.Close()
     io.Copy(f, file)
-    url = c.GetAllUrl(filePathName)
-    return url, nil
+    fileInfo.Url = c.GetAllUrl(filePathName)
+    return fileInfo, nil
 }
 
 //保存到本地
-func (c *LocalClient) UploadFromPath(Path string, filePathName string) (url string, err error) {
-    filePathName = strings.TrimPrefix(filePathName, "/")
+func (c *LocalClient) UploadFromPath(Path string, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
+    Path = strings.Trim(strings.TrimSpace(Path), "/")
+    if Path == "" {
+        return fileInfo, errors.New("Path 不能为空")
+    }
+    file, err := os.Open(Path)
+    if err != nil {
+        return fileInfo, err
+    }
+    defer file.Close()
+    fInfo, _ := file.Stat()
+    if len(checkSize) > 0 {
+        if fInfo.Size() > checkSize[0] {
+            return fileInfo, errors.New("文件过大")
+        }
+    }
+    oldName := fInfo.Name()
+    fileInfo.OldName = afile.NameNoExt(oldName)
+
+    filePathName = strings.Trim(strings.TrimSpace(filePathName), "/")
+    if filepath.Ext(filePathName) == "" {
+        filePathName += filepath.Ext(oldName)
+    }
+    fileInfo.Path = filePathName
+
     filePath, fileName := path.Split(filePathName)
 
     //获取存储路径并创建文件夹
-    localFilePathName := filepath.Join(c.getUploadPath(filePath), fileName)
+    localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
     //获取文件存储流
     f, err := os.OpenFile(localFilePathName, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
     if err != nil {
-        return "", err
+        return fileInfo, err
     }
     defer f.Close()
     //获取文件读取流
-    file, err := os.Open(Path)
+    newfile, err := os.Open(Path)
     if err != nil {
-        return "", err
+        return fileInfo, err
     }
-    defer file.Close()
-    io.Copy(f, file)
-    url = c.GetAllUrl(filePathName)
-    return url, nil
+    defer newfile.Close()
+    io.Copy(f, newfile)
+    fileInfo.Url = c.GetAllUrl(filePathName)
+    return fileInfo, nil
 }
 
 //从本地删除
 func (c *LocalClient) DeleteFile(url_filePathName string) (err error) {
+    if url_filePathName == "" {
+        return nil
+    }
     filePathName := strings.TrimPrefix(url_filePathName, c.GetBaseUrl())
     filePathName = strings.TrimPrefix(filePathName, "/")
 
     //获取存储路径
-    localFilePathName := c.getUploadPath(filePathName)
+    localFilePathName := c.GetUploadPath(filePathName)
     return afile.Delete(localFilePathName)
 }

@@ -3,12 +3,14 @@ package aupload
 import (
     "context"
     "errors"
+    "github.com/asktop/gotools/afile"
     "github.com/asktop/gotools/astring"
     "github.com/tencentyun/cos-go-sdk-v5"
     "mime/multipart"
     "net/http"
     "net/url"
     "os"
+    "path/filepath"
     "strings"
 )
 
@@ -82,54 +84,111 @@ func (c *CosClient) GetAllUrl(uris ...string) string {
 // 通过 文件 上传文件到cos
 // @param file 文件
 // @param filePathName cos文件存储路径
-func (c *CosClient) UploadFromFile(file *os.File, filePathName string) (url string, err error) {
-    filePathName = strings.TrimPrefix(filePathName, "/")
+func (c *CosClient) UploadFromFile(file *os.File, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
+    if file == nil {
+        return fileInfo, errors.New("file 不能为空")
+    }
+    fInfo, _ := file.Stat()
+    if len(checkSize) > 0 {
+        if fInfo.Size() > checkSize[0] {
+            return fileInfo, errors.New("文件过大")
+        }
+    }
+    oldName := fInfo.Name()
+    fileInfo.OldName = afile.NameNoExt(oldName)
+
+    filePathName = strings.Trim(strings.TrimSpace(filePathName), "/")
+    if filepath.Ext(filePathName) == "" {
+        filePathName += filepath.Ext(oldName)
+    }
+    fileInfo.Path = filePathName
 
     _, err = c.GetClient().Object.Put(context.Background(), filePathName, file, nil)
     if err != nil {
-        return url, err
+        return fileInfo, err
     }
-    url = c.GetAllUrl(filePathName)
-    return
+    fileInfo.Url = c.GetAllUrl(filePathName)
+    return fileInfo, nil
 }
 
 // 通过 文件FileHeader 上传文件到cos
 // @param header 文件FileHeader
 // @param filePathName cos文件存储路径
-func (c *CosClient) UploadFromFileHeader(header *multipart.FileHeader, filePathName string) (url string, err error) {
-    filePathName = strings.TrimPrefix(filePathName, "/")
+func (c *CosClient) UploadFromFileHeader(header *multipart.FileHeader, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
+    if header == nil {
+        return fileInfo, errors.New("header 不能为空")
+    }
+    if len(checkSize) > 0 {
+        if header.Size > checkSize[0] {
+            return fileInfo, errors.New("文件过大")
+        }
+    }
+    oldName := header.Filename
+    fileInfo.OldName = afile.NameNoExt(oldName)
+
+    filePathName = strings.Trim(strings.TrimSpace(filePathName), "/")
+    if filepath.Ext(filePathName) == "" {
+        filePathName += filepath.Ext(oldName)
+    }
+    fileInfo.Path = filePathName
 
     file, err := header.Open()
     if err != nil {
-        return url, err
+        return fileInfo, err
     }
     defer file.Close()
     _, err = c.GetClient().Object.Put(context.Background(), filePathName, file, nil)
     if err != nil {
-        return url, err
+        return fileInfo, err
     }
-    url = c.GetAllUrl(filePathName)
-    return
+    fileInfo.Url = c.GetAllUrl(filePathName)
+    return fileInfo, nil
 }
 
 // 通过 文件绝对路径 上传文件到cos
 // @param Path 文件绝对路径
 // @param filePathName cos文件存储路径
-func (c *CosClient) UploadFromPath(Path string, filePathName string) (url string, err error) {
-    filePathName = strings.TrimPrefix(filePathName, "/")
+func (c *CosClient) UploadFromPath(Path string, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
+    Path = strings.Trim(strings.TrimSpace(Path), "/")
+    if Path == "" {
+        return fileInfo, errors.New("Path 不能为空")
+    }
+    file, err := os.Open(Path)
+    if err != nil {
+        return fileInfo, err
+    }
+    defer file.Close()
+    fInfo, _ := file.Stat()
+    if len(checkSize) > 0 {
+        if fInfo.Size() > checkSize[0] {
+            return fileInfo, errors.New("文件过大")
+        }
+    }
+    oldName := fInfo.Name()
+    fileInfo.OldName = afile.NameNoExt(oldName)
+
+    filePathName = strings.Trim(strings.TrimSpace(filePathName), "/")
+    if filepath.Ext(filePathName) == "" {
+        filePathName += filepath.Ext(oldName)
+    }
+    fileInfo.Path = filePathName
 
     _, err = c.GetClient().Object.PutFromFile(context.Background(), filePathName, Path, nil)
     if err != nil {
-        return url, err
+        return fileInfo, err
     }
-    url = c.GetAllUrl(filePathName)
-    return
+    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Path = strings.TrimPrefix(fileInfo.Url, c.GetSite())
+    return fileInfo, nil
 }
 
 // 通过 url或文件存储路径 删除文件
 // @param url 文件存储url
 // @param filePathName 文件存储路径
 func (c *CosClient) DeleteFile(url_filePathName string) (err error) {
+    if url_filePathName == "" {
+        return nil
+    }
     filePathName := strings.TrimPrefix(url_filePathName, c.GetBaseUrl())
     filePathName = strings.TrimPrefix(filePathName, "/")
 
