@@ -177,7 +177,9 @@ func (p *Page) Exec() *Page {
                 }
             case SELECT:
                 if execVal, ok := exec.(map[string]string); ok {
-                    value = execVal[value]
+                    if _, ok2 := execVal[value]; ok2 {
+                        value = execVal[value]
+                    }
                 }
             case FORMATUNIXNANOTIMESTAMP:
                 //纳秒级时间格式化
