@@ -220,6 +220,9 @@ func (p *Page) Exec() *Page {
 
 /* ========== 自定义赋值 ========== */
 func (p *Page) SetPageLimit(page, limit uint64, total int64) {
+    if p.execValues == nil {
+        p.execValues = map[string]interface{}{}
+    }
     p.Page = page
     p.Limit = limit
     p.Total = total
@@ -227,7 +230,9 @@ func (p *Page) SetPageLimit(page, limit uint64, total int64) {
 }
 
 func (p *Page) SetData(data []map[string]string) {
-    p.execValues = map[string]interface{}{}
+    if p.execValues == nil {
+        p.execValues = map[string]interface{}{}
+    }
     p.Data = data
 }
 

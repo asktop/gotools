@@ -110,6 +110,7 @@ func (p *LayuiPage) Exec() {
 func (p *LayuiPage) SetPageLimit(page, limit uint64, total int64) {
     if p.pageData == nil {
         p.pageData = new(Page)
+        p.pageData.execValues = map[string]interface{}{}
     }
     p.pageData.SetPageLimit(page, limit, total)
     p.Page = p.pageData.Page
@@ -121,6 +122,7 @@ func (p *LayuiPage) SetPageLimit(page, limit uint64, total int64) {
 func (p *LayuiPage) SetData(data []map[string]string) {
     if p.pageData == nil {
         p.pageData = new(Page)
+        p.pageData.execValues = map[string]interface{}{}
     }
     p.pageData.SetData(data)
     p.Data = p.pageData.Data
