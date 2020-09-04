@@ -16,8 +16,6 @@ type LayuiPage struct {
     Code       int64               `json:"code"`
     Msg        string              `json:"msg"`
     pageData   *Page
-    execFields []string               //自定义处理的所有字段
-    execValues map[string]interface{} //自定义处理的所有字段的处理值
 }
 
 //layui
@@ -108,6 +106,35 @@ func (p *LayuiPage) Exec() {
     p.DataSource = p.pageData.DataSource
 }
 
+/* ========== 自定义赋值 ========== */
+func (p *LayuiPage) SetPageLimit(page, limit uint64, total int64) {
+    if p.pageData == nil {
+        p.pageData = new(Page)
+    }
+    p.pageData.SetPageLimit(page, limit, total)
+    p.Page = p.pageData.Page
+    p.Limit = p.pageData.Limit
+    p.Count = p.pageData.Total
+    p.PageCount = p.pageData.TotalPage
+}
+
+func (p *LayuiPage) SetData(data []map[string]string) {
+    if p.pageData == nil {
+        p.pageData = new(Page)
+    }
+    p.pageData.Data = data
+    p.Data = p.pageData.Data
+}
+
+func (p *LayuiPage) SetErr(err error) *LayuiPage {
+    if err != nil {
+        p.Code = 1
+        p.Msg = err.Error()
+    }
+    return p
+}
+
+/* ========== 工具 ========== */
 //截取layDate时间范围，分成开始和结束时间戳
 func SplitLayDateRange(layDateRange string) (startTime int64, endTime int64, ok bool) {
     layDates := strings.Split(layDateRange, " - ")

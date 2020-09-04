@@ -218,6 +218,20 @@ func (p *Page) Exec() *Page {
     return p
 }
 
+/* ========== 自定义赋值 ========== */
+func (p *Page) SetPageLimit(page, limit uint64, total int64) {
+    p.Page = page
+    p.Limit = limit
+    p.Total = total
+    p.TotalPage = acast.ToInt64(math.Ceil(float64(p.Total) / float64(p.Limit)))
+}
+
+func (p *Page) SetData(data []map[string]string) {
+    p.execValues = map[string]interface{}{}
+    p.Data = data
+}
+
+/* ========== 加载数据到结构体 ========== */
 //将Paginator数据封装到结构中
 func (p *Page) LoadData(value interface{}) error {
     //封装数据
@@ -267,6 +281,7 @@ func (p *Page) LoadDataSource(value interface{}) error {
     return errors.New("Page.LoadData : no field DataSource or DataSource isn't slice")
 }
 
+/* ========== 分页信息 ========== */
 func (p *Page) GetPageRes() PageRes {
     pres := PageRes{
         Page:      p.Page,
