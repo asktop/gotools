@@ -122,7 +122,7 @@ func (p *LayuiPage) SetData(data []map[string]string) {
     if p.pageData == nil {
         p.pageData = new(Page)
     }
-    p.pageData.Data = data
+    p.pageData.SetData(data)
     p.Data = p.pageData.Data
 }
 
