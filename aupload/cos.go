@@ -235,3 +235,25 @@ func (c *CosClient) CopyFile(source_url_filePathName string, filePathName string
         return fileInfo, err
     }
 }
+
+//获取文件列表
+func (c *CosClient) GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
+    dir := filepath.Join(c.GetBucket(), fileDir)
+    opt := &cos.BucketGetOptions{
+        Prefix: dir,
+    }
+    v, _, err := c.GetClient().Bucket.Get(context.Background(), opt)
+    if err != nil {
+        return fileInfos, err
+    }
+    for _, f := range v.Contents {
+        if !strings.HasSuffix(f.Key, "/") {
+            fileInfo := FileInfo{}
+            fileInfo.Path = astring.JoinURL(c.GetBucket(), f.Key)
+            fileInfo.Uri = fileInfo.Path
+            fileInfo.Url = astring.JoinURL(c.GetSite(), fileInfo.Uri)
+            fileInfos = append(fileInfos, fileInfo)
+        }
+    }
+    return fileInfos, nil
+}

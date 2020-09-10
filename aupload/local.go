@@ -258,3 +258,21 @@ func (c *LocalClient) CopyFile(source_url_filePathName string, filePathName stri
         return fileInfo, err
     }
 }
+
+//获取文件列表
+func (c *LocalClient) GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
+    dir := c.GetUploadPath(fileDir)
+    _, filePaths, err := afile.GetAllPaths(dir)
+    if err != nil {
+        return fileInfos, err
+    }
+    udir := c.GetUploadPath()
+    for _, f := range filePaths {
+        fileInfo := FileInfo{}
+        fileInfo.Path = strings.TrimPrefix(f, udir)
+        fileInfo.Uri = astring.JoinURL(c.GetBucket(), fileInfo.Path)
+        fileInfo.Url = astring.JoinURL(c.GetSite(), fileInfo.Uri)
+        fileInfos = append(fileInfos, fileInfo)
+    }
+    return fileInfos, nil
+}
