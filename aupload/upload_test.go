@@ -8,7 +8,7 @@ import (
 )
 
 func TestUploadFromPath(t *testing.T) {
-    client, err := NewClient(nil, DriverLocal, Config{Local: LocalConfig{Site: "http://127.0.0.1:8881", Bucket: "upload"}})
+    client, err := NewClient(DriverLocal, LocalConfig{Site: "http://127.0.0.1:8881", Bucket: "upload"}, Config{})
     if err != nil {
         fmt.Println(err)
         return
@@ -25,7 +25,7 @@ func TestUploadFromPath(t *testing.T) {
 }
 
 func TestDeleteFile(t *testing.T) {
-    client, err := NewClient(nil, DriverLocal, Config{Local: LocalConfig{Site: "http://127.0.0.1:8881", Bucket: "upload"}})
+    client, err := NewClient(DriverLocal, LocalConfig{Site: "http://127.0.0.1:8881", Bucket: "upload"}, Config{})
     if err != nil {
         fmt.Println(err)
         return

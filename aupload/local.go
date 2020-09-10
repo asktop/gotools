@@ -16,7 +16,6 @@ import (
 type LocalClient struct {
     site          string
     bucket        string
-    baseUrl       string
     GetUploadPath func(path ...string) string
 }
 
@@ -33,7 +32,7 @@ func NewLocalClient(config LocalConfig) *LocalClient {
     if config.GetUploadPath == nil {
         config.GetUploadPath = defaultGetUploadPath
     }
-    return &LocalClient{site: config.Site, bucket: config.Bucket, baseUrl: astring.JoinURL(config.Site, config.Bucket), GetUploadPath: config.GetUploadPath}
+    return &LocalClient{site: config.Site, bucket: config.Bucket, GetUploadPath: config.GetUploadPath}
 }
 
 func (c *LocalClient) GetSite() string {
@@ -44,12 +43,20 @@ func (c *LocalClient) GetBucket() string {
     return c.bucket
 }
 
-func (c *LocalClient) GetBaseUrl() string {
-    return c.baseUrl
+func (c *LocalClient) GetUrl(uris ...string) string {
+    if c.GetSite() != "" {
+        return astring.JoinURL(c.GetSite(), c.GetBucket(), astring.JoinURL(uris...))
+    } else {
+        return c.GetUri(uris...)
+    }
 }
 
-func (c *LocalClient) GetAllUrl(uris ...string) string {
-    return astring.JoinURL(c.GetBaseUrl(), astring.JoinURL(uris...))
+func (c *LocalClient) GetUri(uris ...string) string {
+    return astring.JoinURL(c.GetBucket(), astring.JoinURL(uris...))
+}
+
+func (c *LocalClient) GetFilePath(uris ...string) string {
+    return strings.TrimPrefix(astring.JoinURL(uris...), "/")
 }
 
 //保存到本地
@@ -61,9 +68,9 @@ func (c *LocalClient) UploadFromByte(file []byte, filePathName string) (fileInfo
     if filepath.Ext(filePathName) == "" {
         return fileInfo, errors.New("filePathName 扩展名不能为空")
     }
-    fileInfo.Path = filePathName
+    fileInfo.Path = c.GetFilePath(filePathName)
 
-    filePath, fileName := filepath.Split(filePathName)
+    filePath, fileName := filepath.Split(fileInfo.Path)
     fileInfo.OldName = afile.NameNoExt(fileName)
 
     //获取存储路径并创建文件夹
@@ -73,7 +80,8 @@ func (c *LocalClient) UploadFromByte(file []byte, filePathName string) (fileInfo
     if err != nil {
         return fileInfo, err
     }
-    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Url = c.GetUrl(filePathName)
+    fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
 
@@ -95,9 +103,9 @@ func (c *LocalClient) UploadFromFile(file *os.File, filePathName string, checkSi
     if filepath.Ext(filePathName) == "" {
         filePathName += filepath.Ext(oldName)
     }
-    fileInfo.Path = filePathName
+    fileInfo.Path = c.GetFilePath(filePathName)
 
-    filePath, fileName := path.Split(filePathName)
+    filePath, fileName := path.Split(fileInfo.Path)
 
     //获取存储路径并创建文件夹
     localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
@@ -108,7 +116,8 @@ func (c *LocalClient) UploadFromFile(file *os.File, filePathName string, checkSi
     }
     defer f.Close()
     io.Copy(f, file)
-    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Url = c.GetUrl(filePathName)
+    fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
 
@@ -129,9 +138,9 @@ func (c *LocalClient) UploadFromFileHeader(header *multipart.FileHeader, filePat
     if filepath.Ext(filePathName) == "" {
         filePathName += filepath.Ext(oldName)
     }
-    fileInfo.Path = filePathName
+    fileInfo.Path = c.GetFilePath(filePathName)
 
-    filePath, fileName := path.Split(filePathName)
+    filePath, fileName := path.Split(fileInfo.Path)
 
     //获取存储路径并创建文件夹
     localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
@@ -148,7 +157,8 @@ func (c *LocalClient) UploadFromFileHeader(header *multipart.FileHeader, filePat
     }
     defer file.Close()
     io.Copy(f, file)
-    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Url = c.GetUrl(filePathName)
+    fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
 
@@ -176,9 +186,9 @@ func (c *LocalClient) UploadFromPath(Path string, filePathName string, checkSize
     if filepath.Ext(filePathName) == "" {
         filePathName += filepath.Ext(oldName)
     }
-    fileInfo.Path = filePathName
+    fileInfo.Path = c.GetFilePath(filePathName)
 
-    filePath, fileName := path.Split(filePathName)
+    filePath, fileName := path.Split(fileInfo.Path)
 
     //获取存储路径并创建文件夹
     localFilePathName := filepath.Join(c.GetUploadPath(filePath), fileName)
@@ -195,7 +205,8 @@ func (c *LocalClient) UploadFromPath(Path string, filePathName string, checkSize
     }
     defer newfile.Close()
     io.Copy(f, newfile)
-    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Url = c.GetUrl(filePathName)
+    fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
 
@@ -204,7 +215,9 @@ func (c *LocalClient) DeleteFile(url_filePathName string) (err error) {
     if url_filePathName == "" {
         return nil
     }
-    filePathName := strings.TrimPrefix(url_filePathName, c.GetBaseUrl())
+    filePathName := strings.TrimPrefix(url_filePathName, c.GetSite())
+    filePathName = strings.TrimPrefix(filePathName, "/")
+    filePathName = strings.TrimPrefix(filePathName, c.GetBucket())
     filePathName = strings.TrimPrefix(filePathName, "/")
 
     //获取存储路径

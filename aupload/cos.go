@@ -15,50 +15,42 @@ import (
 )
 
 type CosClient struct {
-    client  *cos.Client
-    site    string
-    bucket  string
-    baseUrl string
+    client *cos.Client
+    site   string
+    bucket string
 }
 
 type CosConfig struct {
-    BucketUrl string `json:"bucket_url"`
+    SiteUrl   string `json:"site_url"`
+    Bucket    string `json:"bucket"` //文件基本路由，默认：upload
     SecretId  string `json:"secret_id"`
     SecretKey string `json:"secret_key"`
 }
 
 func NewCosClient(config CosConfig) (*CosClient, error) {
-    bucketUrl := config.BucketUrl
-    secretID := config.SecretId
-    secretKey := config.SecretKey
-
-    if bucketUrl == "" {
+    if config.SiteUrl == "" {
         return nil, errors.New("cos:" + "bucket_url 不能为空")
     }
-    if secretID == "" {
+    if config.Bucket == "" {
+        config.Bucket = "upload"
+    }
+    if config.SecretId == "" {
         return nil, errors.New("cos:" + "secret_id 不能为空")
     }
-    if secretKey == "" {
+    if config.SecretKey == "" {
         return nil, errors.New("cos:" + "secret_key 不能为空")
     }
 
-    bucketUrl = strings.TrimRight(bucketUrl, "/")
-    var site, bucket string
-    index := strings.LastIndex(bucketUrl, "/")
-    if index > 0 && index != len(bucketUrl)-1 {
-        site = bucketUrl[:index]
-        bucket = bucketUrl[index+1:]
-    }
-    u, _ := url.Parse(bucketUrl)
+    u, _ := url.Parse(config.SiteUrl)
     b := &cos.BaseURL{BucketURL: u}
     client := cos.NewClient(b, &http.Client{
         Transport: &cos.AuthorizationTransport{
-            SecretID:  secretID,
-            SecretKey: secretKey,
+            SecretID:  config.SecretId,
+            SecretKey: config.SecretKey,
         },
     })
 
-    return &CosClient{client: client, site: site, bucket: bucket, baseUrl: bucketUrl}, nil
+    return &CosClient{client: client, site: config.SiteUrl, bucket: config.Bucket}, nil
 }
 
 func (c *CosClient) GetClient() *cos.Client {
@@ -73,12 +65,20 @@ func (c *CosClient) GetBucket() string {
     return c.bucket
 }
 
-func (c *CosClient) GetBaseUrl() string {
-    return c.baseUrl
+func (c *CosClient) GetUrl(uris ...string) string {
+    if c.GetSite() != "" {
+        return astring.JoinURL(c.GetSite(), c.GetBucket(), astring.JoinURL(uris...))
+    } else {
+        return c.GetUri(uris...)
+    }
 }
 
-func (c *CosClient) GetAllUrl(uris ...string) string {
-    return astring.JoinURL(c.GetBaseUrl(), astring.JoinURL(uris...))
+func (c *CosClient) GetUri(uris ...string) string {
+    return astring.JoinURL(c.GetBucket(), astring.JoinURL(uris...))
+}
+
+func (c *CosClient) GetFilePath(uris ...string) string {
+    return strings.TrimPrefix(c.GetUri(uris...), "/")
 }
 
 // 通过 文件 上传文件到cos
@@ -101,13 +101,14 @@ func (c *CosClient) UploadFromFile(file *os.File, filePathName string, checkSize
     if filepath.Ext(filePathName) == "" {
         filePathName += filepath.Ext(oldName)
     }
-    fileInfo.Path = filePathName
+    fileInfo.Path = c.GetFilePath(filePathName)
 
-    _, err = c.GetClient().Object.Put(context.Background(), filePathName, file, nil)
+    _, err = c.GetClient().Object.Put(context.Background(), fileInfo.Path, file, nil)
     if err != nil {
         return fileInfo, err
     }
-    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Url = c.GetUrl(filePathName)
+    fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
 
@@ -130,18 +131,19 @@ func (c *CosClient) UploadFromFileHeader(header *multipart.FileHeader, filePathN
     if filepath.Ext(filePathName) == "" {
         filePathName += filepath.Ext(oldName)
     }
-    fileInfo.Path = filePathName
+    fileInfo.Path = c.GetFilePath(filePathName)
 
     file, err := header.Open()
     if err != nil {
         return fileInfo, err
     }
     defer file.Close()
-    _, err = c.GetClient().Object.Put(context.Background(), filePathName, file, nil)
+    _, err = c.GetClient().Object.Put(context.Background(), fileInfo.Path, file, nil)
     if err != nil {
         return fileInfo, err
     }
-    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Url = c.GetUrl(filePathName)
+    fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
 
@@ -171,14 +173,15 @@ func (c *CosClient) UploadFromPath(Path string, filePathName string, checkSize .
     if filepath.Ext(filePathName) == "" {
         filePathName += filepath.Ext(oldName)
     }
-    fileInfo.Path = filePathName
+    fileInfo.Path = c.GetFilePath(filePathName)
 
-    _, err = c.GetClient().Object.PutFromFile(context.Background(), filePathName, Path, nil)
+    _, err = c.GetClient().Object.PutFromFile(context.Background(), fileInfo.Path, Path, nil)
     if err != nil {
         return fileInfo, err
     }
-    fileInfo.Url = c.GetAllUrl(filePathName)
+    fileInfo.Url = c.GetUrl(filePathName)
     fileInfo.Path = strings.TrimPrefix(fileInfo.Url, c.GetSite())
+    fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
 
@@ -189,7 +192,7 @@ func (c *CosClient) DeleteFile(url_filePathName string) (err error) {
     if url_filePathName == "" {
         return nil
     }
-    filePathName := strings.TrimPrefix(url_filePathName, c.GetBaseUrl())
+    filePathName := strings.TrimPrefix(url_filePathName, c.GetSite())
     filePathName = strings.TrimPrefix(filePathName, "/")
 
     _, err = c.GetClient().Object.Delete(context.Background(), filePathName)

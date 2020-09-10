@@ -26,7 +26,8 @@ type Config struct {
 
 type FileInfo struct {
     Url     string `json:"url"`      //文件访问url（网址若为空，则为uri）
-    Path    string `json:"path"`     //文件在存储库的位置（不包括upload）
+    Uri     string `json:"uri"`      //文件访问uri
+    Path    string `json:"path"`     //文件在存储库的位置
     OldName string `json:"old_name"` //旧文件名（不包括扩展名）
 }
 
