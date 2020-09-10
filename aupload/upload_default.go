@@ -50,3 +50,8 @@ func DeleteFile(url_filePathName string) (err error) {
 func CopyFile(source_url_filePathName string, filePathName string) (fileInfo FileInfo, err error) {
     return defaultClient.CopyFile(source_url_filePathName, filePathName)
 }
+
+//获取文件列表
+func GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
+    return defaultClient.GetFiles(fileDir)
+}

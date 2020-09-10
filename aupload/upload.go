@@ -101,3 +101,13 @@ func (c *Client) CopyFile(source_url_filePathName string, filePathName string) (
         return c.LocalClient.CopyFile(source_url_filePathName, filePathName)
     }
 }
+
+//获取文件列表
+func (c *Client) GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
+    switch c.defaultDriver {
+    case DriverCos:
+        return c.CosClient.GetFiles(fileDir)
+    default:
+        return c.LocalClient.GetFiles(fileDir)
+    }
+}
