@@ -228,6 +228,7 @@ func (c *CosClient) CopyFile(source_url_filePathName string, filePathName string
         defaultClient.LocalClient.DeleteFile(tempFilePath)
         return fileInfo, err
     } else {
+        tempFilePath = strings.TrimPrefix(source_url_filePathName, "/")
         tempFilePath = strings.TrimPrefix(source_url_filePathName, defaultClient.LocalClient.GetBucket())
         tempFilePath = strings.TrimPrefix(tempFilePath, "/")
         fileInfo, err = c.UploadFromPath(defaultClient.LocalClient.GetUploadPath(tempFilePath), filePathName)

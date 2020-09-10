@@ -251,7 +251,8 @@ func (c *LocalClient) CopyFile(source_url_filePathName string, filePathName stri
         c.DeleteFile(tempFilePath)
         return fileInfo, err
     } else {
-        tempFilePath = strings.TrimPrefix(source_url_filePathName, c.GetBucket())
+        tempFilePath = strings.TrimPrefix(source_url_filePathName, "/")
+        tempFilePath = strings.TrimPrefix(tempFilePath, c.GetBucket())
         tempFilePath = strings.TrimPrefix(tempFilePath, "/")
         fileInfo, err = c.UploadFromPath(c.GetUploadPath(tempFilePath), filePathName)
         return fileInfo, err
