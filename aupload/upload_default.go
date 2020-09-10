@@ -21,9 +21,9 @@ func SetDefaultClient(defaultDriver driver, localConfig LocalConfig, config Conf
     }
 }
 
-//获取默认客户端的本地服务
-func GetDefaultLocalClient() *LocalClient {
-    return defaultClient.LocalClient
+//获取默认客户端
+func GetDefaultClient() *Client {
+    return defaultClient
 }
 
 //上传单个文件

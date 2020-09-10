@@ -17,7 +17,7 @@ type Client struct {
     GetUploadPath func(path ...string) string //获取该路径的本地缓存或保存的绝对路径
     LocalClient   *LocalClient
     defaultDriver driver //保存方式
-    cosClient     *CosClient
+    CosClient     *CosClient
 }
 
 type Config struct {
@@ -44,7 +44,7 @@ func NewClient(defaultDriver driver, localConfig LocalConfig, config Config) (*C
     switch defaultDriver {
     case DriverCos:
         cosClient, err := NewCosClient(config.Cos)
-        client.cosClient = cosClient
+        client.CosClient = cosClient
         return client, err
     default:
         return client, nil
@@ -55,7 +55,7 @@ func NewClient(defaultDriver driver, localConfig LocalConfig, config Config) (*C
 func (c *Client) UploadFromFile(file *os.File, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
     switch c.defaultDriver {
     case DriverCos:
-        return c.cosClient.UploadFromFile(file, filePathName, checkSize ...)
+        return c.CosClient.UploadFromFile(file, filePathName, checkSize ...)
     default:
         return c.LocalClient.UploadFromFile(file, filePathName, checkSize ...)
     }
@@ -65,7 +65,7 @@ func (c *Client) UploadFromFile(file *os.File, filePathName string, checkSize ..
 func (c *Client) UploadFromFileHeader(header *multipart.FileHeader, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
     switch c.defaultDriver {
     case DriverCos:
-        return c.cosClient.UploadFromFileHeader(header, filePathName, checkSize ...)
+        return c.CosClient.UploadFromFileHeader(header, filePathName, checkSize ...)
     default:
         return c.LocalClient.UploadFromFileHeader(header, filePathName, checkSize ...)
     }
@@ -75,7 +75,7 @@ func (c *Client) UploadFromFileHeader(header *multipart.FileHeader, filePathName
 func (c *Client) UploadFromPath(Path string, filePathName string, checkSize ...int64) (fileInfo FileInfo, err error) {
     switch c.defaultDriver {
     case DriverCos:
-        return c.cosClient.UploadFromPath(Path, filePathName, checkSize ...)
+        return c.CosClient.UploadFromPath(Path, filePathName, checkSize ...)
     default:
         return c.LocalClient.UploadFromPath(Path, filePathName, checkSize ...)
     }
@@ -85,7 +85,7 @@ func (c *Client) UploadFromPath(Path string, filePathName string, checkSize ...i
 func (c *Client) DeleteFile(url_filePathName string) (err error) {
     switch c.defaultDriver {
     case DriverCos:
-        return c.cosClient.DeleteFile(url_filePathName)
+        return c.CosClient.DeleteFile(url_filePathName)
     default:
         return c.LocalClient.DeleteFile(url_filePathName)
     }
