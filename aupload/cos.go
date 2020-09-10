@@ -214,6 +214,9 @@ func (c *CosClient) CopyFile(source_url_filePathName string, filePathName string
         if err != nil {
             return fileInfo, err
         } else {
+            if filepath.Ext(filePathName) == "" {
+                filePathName += filepath.Ext(source_url_filePathName)
+            }
             info, err := defaultClient.LocalClient.UploadFromByte(res, filepath.Join("temp", filePathName))
             if err != nil {
                 return fileInfo, err

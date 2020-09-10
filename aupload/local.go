@@ -237,6 +237,9 @@ func (c *LocalClient) CopyFile(source_url_filePathName string, filePathName stri
         if err != nil {
             return fileInfo, err
         } else {
+            if filepath.Ext(filePathName) == "" {
+                filePathName += filepath.Ext(source_url_filePathName)
+            }
             info, err := c.UploadFromByte(res, filepath.Join("temp", filePathName))
             if err != nil {
                 return fileInfo, err
