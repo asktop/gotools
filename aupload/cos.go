@@ -249,7 +249,7 @@ func (c *CosClient) GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
     for _, f := range v.Contents {
         if !strings.HasSuffix(f.Key, "/") {
             fileInfo := FileInfo{}
-            fileInfo.Path = astring.JoinURL(c.GetBucket(), f.Key)
+            fileInfo.Path = "/" + strings.TrimPrefix(f.Key, "/")
             fileInfo.Uri = fileInfo.Path
             fileInfo.Url = astring.JoinURL(c.GetSite(), fileInfo.Uri)
             fileInfos = append(fileInfos, fileInfo)
