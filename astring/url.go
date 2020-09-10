@@ -8,8 +8,8 @@ func JoinURL(uris ...string) string {
     var urisTemp []string
     for _, uri := range uris {
         uri = strings.Trim(uri, " ")
+        uri = strings.ReplaceAll(uri, `\`, "/")
         uri = strings.Trim(uri, "/")
-        uri = strings.Trim(uri, `\`)
         if uri != "" {
             urisTemp = append(urisTemp, uri)
         }
