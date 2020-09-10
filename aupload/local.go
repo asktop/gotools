@@ -2,6 +2,7 @@ package aupload
 
 import (
     "errors"
+    "github.com/asktop/gotools/aclient"
     "github.com/asktop/gotools/afile"
     "github.com/asktop/gotools/astring"
     "io"
@@ -223,4 +224,33 @@ func (c *LocalClient) DeleteFile(url_filePathName string) (err error) {
     //获取存储路径
     localFilePathName := c.GetUploadPath(filePathName)
     return afile.Delete(localFilePathName)
+}
+
+//复制文件
+func (c *LocalClient) CopyFile(source_url_filePathName string, filePathName string) (fileInfo FileInfo, err error) {
+    if source_url_filePathName == "" || filePathName == "" {
+        return fileInfo, errors.New("文件不能为空")
+    }
+    var tempFilePath string
+    if strings.HasPrefix(source_url_filePathName, "http://") || strings.HasPrefix(source_url_filePathName, "https://") {
+        res, _, err := aclient.NewClient().Get(source_url_filePathName, nil)
+        if err != nil {
+            return fileInfo, err
+        } else {
+            info, err := c.UploadFromByte(res, filepath.Join("temp", filePathName))
+            if err != nil {
+                return fileInfo, err
+            } else {
+                tempFilePath = info.Path
+            }
+        }
+        fileInfo, err = c.UploadFromPath(c.GetUploadPath(tempFilePath), filePathName)
+        c.DeleteFile(tempFilePath)
+        return fileInfo, err
+    } else {
+        tempFilePath = strings.TrimPrefix(source_url_filePathName, c.GetBucket())
+        tempFilePath = strings.TrimPrefix(tempFilePath, "/")
+        fileInfo, err = c.UploadFromPath(c.GetUploadPath(tempFilePath), filePathName)
+        return fileInfo, err
+    }
 }

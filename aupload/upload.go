@@ -91,3 +91,13 @@ func (c *Client) DeleteFile(url_filePathName string) (err error) {
         return c.LocalClient.DeleteFile(url_filePathName)
     }
 }
+
+//复制文件
+func (c *Client) CopyFile(source_url_filePathName string, filePathName string) (fileInfo FileInfo, err error) {
+    switch c.defaultDriver {
+    case DriverCos:
+        return c.CosClient.CopyFile(source_url_filePathName, filePathName)
+    default:
+        return c.LocalClient.CopyFile(source_url_filePathName, filePathName)
+    }
+}

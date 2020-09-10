@@ -45,3 +45,8 @@ func UploadFromPath(Path string, filePathName string, checkSize ...int64) (fileI
 func DeleteFile(url_filePathName string) (err error) {
     return defaultClient.DeleteFile(url_filePathName)
 }
+
+//复制文件
+func CopyFile(source_url_filePathName string, filePathName string) (fileInfo FileInfo, err error) {
+    return defaultClient.CopyFile(source_url_filePathName, filePathName)
+}
