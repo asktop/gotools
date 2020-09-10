@@ -269,7 +269,7 @@ func (c *LocalClient) GetFiles(fileDir string) (fileInfos []FileInfo, err error)
     udir := c.GetUploadPath()
     for _, f := range filePaths {
         fileInfo := FileInfo{}
-        fileInfo.Path = strings.TrimPrefix(f, udir)
+        fileInfo.Path = astring.JoinURL(strings.TrimPrefix(f, udir))
         fileInfo.Uri = astring.JoinURL(c.GetBucket(), fileInfo.Path)
         fileInfo.Url = astring.JoinURL(c.GetSite(), fileInfo.Uri)
         fileInfos = append(fileInfos, fileInfo)
