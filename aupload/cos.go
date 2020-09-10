@@ -237,7 +237,10 @@ func (c *CosClient) CopyFile(source_url_filePathName string, filePathName string
 
 //获取文件列表
 func (c *CosClient) GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
-    dir := strings.TrimPrefix(astring.JoinURL(c.GetBucket(), fileDir), "/")
+    if !strings.HasPrefix(fileDir, "/") {
+        fileDir = astring.JoinURL(c.GetBucket(), fileDir)
+    }
+    dir := strings.TrimPrefix(fileDir, "/")
     opt := &cos.BucketGetOptions{
         Prefix: dir,
     }
