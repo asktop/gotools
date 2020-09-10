@@ -181,7 +181,6 @@ func (c *CosClient) UploadFromPath(Path string, filePathName string, checkSize .
         return fileInfo, err
     }
     fileInfo.Url = c.GetUrl(filePathName)
-    fileInfo.Path = strings.TrimPrefix(fileInfo.Url, c.GetSite())
     fileInfo.Uri = c.GetUri(filePathName)
     return fileInfo, nil
 }
