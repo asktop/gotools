@@ -18,11 +18,9 @@ func defaultGetUploadPath(path ...string) string {
 
 //生成不同角色文件存放路径（不包括扩展名）
 func NewFilePathName(role string, roleId int64, tableName string, tableColumn string, fileName ...string) string {
-    if role == "" {
-        role = "sys"
-    }
-    newFilePathName := role
-    if role != "sys" {
+    var newFilePathName string
+    if role != "" {
+        newFilePathName = role
         if roleId < 0 {
             roleId = 0
         }
@@ -41,6 +39,21 @@ func NewFilePathName(role string, roleId int64, tableName string, tableColumn st
             fName = strings.TrimSuffix(fName, ext)
         }
         newFilePathName = filepath.Join(newFilePathName, fName)
+    } else {
+        newFilePathName = filepath.Join(newFilePathName, afile.NewFileName())
+    }
+    newFilePathName = strings.ReplaceAll(newFilePathName, `\`, `/`)
+    return newFilePathName
+}
+
+func NewOtherFilePathName(fileName ...string) string {
+    var newFilePathName string
+    if len(fileName) > 0 {
+        newFilePathName = filepath.Join(fileName...)
+        ext := filepath.Ext(newFilePathName)
+        if ext != "" {
+            newFilePathName = strings.TrimSuffix(newFilePathName, ext)
+        }
     } else {
         newFilePathName = filepath.Join(newFilePathName, afile.NewFileName())
     }
