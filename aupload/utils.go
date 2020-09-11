@@ -54,7 +54,8 @@ func NewOtherFilePathName(fileName ...string) string {
         if ext != "" {
             newFilePathName = strings.TrimSuffix(newFilePathName, ext)
         }
-    } else {
+    }
+    if newFilePathName == "" {
         newFilePathName = filepath.Join(newFilePathName, afile.NewFileName())
     }
     newFilePathName = strings.ReplaceAll(newFilePathName, `\`, `/`)
