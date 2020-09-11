@@ -6,6 +6,29 @@ import (
     "strings"
 )
 
+//获取文件类型
+func GetFileType(fileName string) string {
+    ext := filepath.Ext(fileName)
+    ctpye := GetContentType(strings.ToLower(ext))
+    if strings.HasPrefix(ctpye, "image") ||
+        ctpye == "application/x-bmp" {
+        return "image"
+    } else if strings.HasPrefix(ctpye, "video") {
+        return "video"
+    } else if strings.HasPrefix(ctpye, "audio") {
+        return "audio"
+    } else if ext == ".doc" ||
+        ext == ".docx" ||
+        ext == ".xls" ||
+        ext == ".xlsx" ||
+        ext == ".ppt" ||
+        ext == ".pptx" {
+        return "text"
+    } else {
+        return "file"
+    }
+}
+
 //根据文件名或扩展名获取ContentType
 func GetContentType(ext string) string {
     _, ext = filepath.Split(ext)
@@ -76,6 +99,7 @@ var contentType = map[string]string{
     ".dib":     "application/x-dib",
     ".dll":     "application/x-msdownload",
     ".doc":     "application/msword",
+    ".docx":    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ".dot":     "application/msword",
     ".drw":     "application/x-drw",
     ".dtd":     "text/xml",
@@ -210,6 +234,7 @@ var contentType = map[string]string{
     ".ppm":     "application/x-ppm",
     ".pps":     "application/vnd.ms-powerpoint",
     ".ppt":     "application/x-ppt",
+    ".pptx":    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     ".pr":      "application/x-pr",
     ".prf":     "application/pics-rules",
     ".prn":     "application/x-prn",
@@ -332,6 +357,7 @@ var contentType = map[string]string{
     ".xfdf":    "application/vnd.adobe.xfdf",
     ".xhtml":   "text/html",
     ".xls":     "application/x-xls",
+    ".xlsx":    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     ".xlw":     "application/x-xlw",
     ".xml":     "text/xml",
     ".xpl":     "audio/scpls",
