@@ -259,3 +259,26 @@ func (c *CosClient) GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
     }
     return fileInfos, nil
 }
+
+//删除文件夹下所有文件
+func (c *CosClient) DeleteDir(fileDir string) (err error) {
+    fileInfos, err := c.GetFiles(fileDir)
+    if err != nil {
+        return err
+    }
+    if len(fileInfos) == 0 {
+        return nil
+    }
+    obs := []cos.Object{}
+    for _, fileInfo := range fileInfos {
+        obs = append(obs, cos.Object{Key: fileInfo.Path})
+    }
+    opt := &cos.ObjectDeleteMultiOptions{
+        Objects: obs,
+    }
+    _, _, err = c.GetClient().Object.DeleteMulti(context.Background(), opt)
+    if err != nil {
+        return err
+    }
+    return nil
+}

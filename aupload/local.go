@@ -276,3 +276,10 @@ func (c *LocalClient) GetFiles(fileDir string) (fileInfos []FileInfo, err error)
     }
     return fileInfos, nil
 }
+
+//删除文件夹下所有文件
+func (c *LocalClient) DeleteDir(fileDir string) (err error) {
+    //获取存储路径
+    localFilePathName := c.GetUploadPath(fileDir)
+    return afile.Delete(localFilePathName, true)
+}

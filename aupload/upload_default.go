@@ -55,3 +55,8 @@ func CopyFile(source_url_filePathName string, filePathName string) (fileInfo Fil
 func GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
     return defaultClient.GetFiles(fileDir)
 }
+
+//删除文件夹下所有文件
+func DeleteDir(fileDir string) (err error) {
+    return defaultClient.DeleteDir(fileDir)
+}

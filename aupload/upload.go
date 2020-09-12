@@ -111,3 +111,13 @@ func (c *Client) GetFiles(fileDir string) (fileInfos []FileInfo, err error) {
         return c.LocalClient.GetFiles(fileDir)
     }
 }
+
+//删除文件夹下所有文件
+func (c *Client) DeleteDir(fileDir string) (err error) {
+    switch c.defaultDriver {
+    case DriverCos:
+        return c.CosClient.DeleteDir(fileDir)
+    default:
+        return c.LocalClient.DeleteDir(fileDir)
+    }
+}
