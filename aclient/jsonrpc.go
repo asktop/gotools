@@ -48,10 +48,18 @@ func NewJsonRpcClient(url string, server string, tlsCert ...TLSCert) *JsonRpcCli
 			TLSClientConfig:     tlsConfig,
 			TLSHandshakeTimeout: time.Second * 10,
 		},
-		Timeout: time.Minute * 10, //Client请求的时间限制,该超时限制包括连接时间、重定向和读取response body时间;Timeout为零值表示不设置超时
+		Timeout: time.Second * 10, //Client请求的时间限制,该超时限制包括连接时间、重定向和读取response body时间;Timeout为零值表示不设置超时
 	}
 	jsonRpcClient.client = client
 	return jsonRpcClient
+}
+
+func (c *JsonRpcClient) SetClient(client http.Client) {
+    c.client = client
+}
+
+func (c *JsonRpcClient) SetTimeout(timeout time.Duration) {
+	c.client.Timeout = timeout
 }
 
 func (c *JsonRpcClient) Call(method string, in interface{}, out interface{}) error {
