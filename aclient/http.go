@@ -123,9 +123,16 @@ func (c *Client) PostForm(URL string, params map[string]interface{}, headers ...
     }
     data := url.Values{}
     for k, v := range params {
-        nv, err := acast.ToStringSliceE(v)
-        if err != nil {
-            return nil, 0, err
+        var nv []string
+        switch vtemp := v.(type) {
+        case string:
+            nv = append(nv, vtemp)
+        default:
+            var e error
+            nv, e = acast.ToStringSliceE(v)
+            if e != nil {
+                return nil, 0, e
+            }
         }
         data[k] = nv
     }
