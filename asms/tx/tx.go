@@ -43,21 +43,19 @@ func (c *TxClient) SendSms(phoneNumber, signName, tplCode string, tplParams []st
     if err != nil {
         return
     }
-    if len(tplParams) == 0 {
-        err = errors.New("TemplateParam required")
-        return
-    }
     //参数
     var client = qcloudsms.NewClient(qcloudsms.NewOptions(c.appId, c.appKey, ""))
     req := qcloudsms.SMSSingleReq{
-        Tel:    qcloudsms.SMSTel{Nationcode: "86", Mobile: phoneNumber},
-        Sign:   signName,
-        TplID:  tplId,
-        Params: tplParams,
+        Tel:   qcloudsms.SMSTel{Nationcode: "86", Mobile: phoneNumber},
+        Sign:  signName,
+        TplID: tplId,
+    }
+    if tplParams != nil {
+        req.Params = tplParams
     }
     ok, err := client.SendSMSSingle(req)
     if ok {
-        return err.Error(), nil
+        return "", nil
     } else {
         return "", err
     }
