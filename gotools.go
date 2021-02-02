@@ -41,6 +41,7 @@ import (
     _ "github.com/asktop/gotools/aurl"
     _ "github.com/asktop/gotools/auuid"
     _ "github.com/asktop/gotools/avalid"
+    _ "github.com/asktop/gotools/awx"
     _ "github.com/asktop/gotools/ayaml"
     _ "github.com/asktop/gotools/azlib"
     _ "github.com/asktop/gotools/cache"
