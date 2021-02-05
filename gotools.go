@@ -6,6 +6,7 @@ import (
     _ "github.com/asktop/gotools/acast"
     _ "github.com/asktop/gotools/aclient"
     _ "github.com/asktop/gotools/acron"
+    _ "github.com/asktop/gotools/add"
     _ "github.com/asktop/gotools/aemail"
     _ "github.com/asktop/gotools/afile"
     _ "github.com/asktop/gotools/agzip"
